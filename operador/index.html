@@ -389,6 +389,130 @@
             flex-shrink: 0;
         }
         #btnInstalar:active { opacity: 0.8; }
+
+        /* =========================================
+           BOTÓN ? DE AYUDA CONTEXTUAL
+           ========================================= */
+        .help-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background: transparent;
+            border: 1.5px solid #4da6ff;
+            border-radius: 50%;
+            color: #4da6ff;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            flex-shrink: 0;
+            vertical-align: middle;
+            line-height: 1;
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .help-btn:hover { background: #4da6ff; color: #000; }
+        .help-btn:active { transform: scale(0.9); }
+
+        .btn-ayuda-general {
+            width: 100%;
+            margin-top: 8px;
+            padding: 9px;
+            background: transparent;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #777;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-ayuda-general:hover { border-color: #4da6ff; color: #4da6ff; }
+
+        /* =========================================
+           MODAL DE AYUDA
+           ========================================= */
+        .help-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.82);
+            z-index: 5000;
+            padding: 16px;
+            overflow-y: auto;
+        }
+        .help-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+
+        .help-modal {
+            background: #1a1a1a;
+            border: 1px solid #4da6ff;
+            border-radius: 14px;
+            padding: 22px 20px 24px;
+            max-width: 560px;
+            width: 100%;
+            margin: auto;
+            position: relative;
+        }
+        .help-modal-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: #4da6ff;
+            margin-bottom: 16px;
+            padding-right: 36px;
+            line-height: 1.3;
+        }
+        .help-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: #333;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            color: #aaa;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .help-close:hover { background: #555; color: white; }
+
+        .help-block {
+            background: #242424;
+            border-radius: 8px;
+            padding: 13px 15px;
+            margin-bottom: 10px;
+            border-left: 3px solid #4da6ff;
+        }
+        .help-block.warn    { border-left-color: #ff9944; }
+        .help-block.success { border-left-color: #33cc44; }
+
+        .help-block-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 7px;
+        }
+        .help-block p  { font-size: 13px; color: #bbb; line-height: 1.65; margin: 0; }
+        .help-block ul,
+        .help-block ol { margin: 6px 0 0 16px; font-size: 13px; color: #bbb; line-height: 1.8; }
+        .help-block li { margin-bottom: 2px; }
+
+        .help-chip {
+            display: inline-block;
+            padding: 1px 9px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 1px 2px;
+        }
+        .help-chip.red   { background: #5a0000; color: #ff7070; }
+        .help-chip.black { background: #2a2a2a; color: #fff; border: 1px solid #555; }
+        .help-chip.green { background: #003a00; color: #44ff44; }
+        .help-chip.blue  { background: #00224a; color: #4da6ff; border: 1px solid #4da6ff; }
     </style>
 </head>
 <body>
@@ -407,9 +531,13 @@
     <div class="header">
         <h1 id="panelTitle">⚙️ Panel de Operador — Ruleta Americana</h1>
         <p>Casino Puerto Varas · Los cambios se reflejan instantáneamente en la pantalla de la mesa</p>
-        <button class="btn-pantalla" onclick="abrirPantalla()">
-            📺 Abrir Pantalla de la Mesa en Nueva Ventana
-        </button>
+        <div style="display:flex;gap:8px;align-items:stretch;margin-top:12px;">
+            <button class="btn-pantalla" style="flex:1;margin-top:0;" onclick="abrirPantalla()">
+                📺 Abrir Pantalla de la Mesa en Nueva Ventana
+            </button>
+            <button class="help-btn" onclick="openHelp('pantalla')" title="Ayuda: cómo usar la segunda pantalla" style="width:36px;height:auto;font-size:15px;">?</button>
+        </div>
+        <button class="btn-ayuda-general" onclick="openHelp('general')">📚 Ver guía de uso completa del panel</button>
     </div>
 
     <!-- COLUMNA IZQUIERDA: teclado + límites -->
@@ -417,7 +545,10 @@
 
         <!-- TECLADO NUMÉRICO -->
         <div class="admin-section">
-            <h3>1. Ingreso de Número</h3>
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">
+                1. Ingreso de Número
+                <button class="help-btn" onclick="openHelp('numpad')" title="Ayuda: ingreso de números">?</button>
+            </h3>
 
             <div class="display-label">Número a ingresar</div>
             <div class="number-display-wrapper">
@@ -458,7 +589,10 @@
         <div class="admin-section">
             <div class="limits-header" id="toggleLimitsBtn">
                 2. Configuración de Límites
-                <span id="toggleIcon">▼</span>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <button class="help-btn" onclick="event.stopPropagation();openHelp('limites')" title="Ayuda: límites de apuesta">?</button>
+                    <span id="toggleIcon">▼</span>
+                </div>
             </div>
 
             <div class="limits-content" id="limitsContent">
@@ -498,7 +632,10 @@
 
         <!-- NOMBRE DE LA RULETA -->
         <div class="nombre-ruleta-section" style="margin-top:0;">
-            <h3>3. Nombre de la Ruleta en Pantalla</h3>
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">
+                3. Nombre de la Ruleta en Pantalla
+                <button class="help-btn" onclick="openHelp('nombre')" title="Ayuda: tipos de ruleta">?</button>
+            </h3>
             <div class="nombre-btn-group">
                 <button class="btn-nombre" id="btnNombreAmericana">
                     🎡 RULETA AMERICANA
@@ -513,7 +650,10 @@
 
     <!-- COLUMNA DERECHA: historial -->
     <div class="admin-section" style="height:100%;">
-        <h3>3. Gestión de Historial</h3>
+        <h3 style="display:flex;align-items:center;justify-content:space-between;">
+            3. Gestión de Historial
+            <button class="help-btn" onclick="openHelp('historial')" title="Ayuda: gestión del historial">?</button>
+        </h3>
         <p style="font-size:12px; color:#777; margin-bottom:10px;">
             Último número en la parte superior. Toca "Borrar" para eliminar uno individual.
         </p>
@@ -819,6 +959,13 @@
         var btnF = document.getElementById('btnNombreFrancesa');
         if (btnA) btnA.addEventListener('click', function() { setNombreRuleta('RULETA AMERICANA'); });
         if (btnF) btnF.addEventListener('click', function() { setNombreRuleta('RULETA FRANCESA'); });
+        document.getElementById('helpCloseBtn').addEventListener('click', closeHelp);
+        document.getElementById('helpOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeHelp();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeHelp();
+        });
         document.getElementById('btnInstalar').addEventListener('click', function() {
             if (!deferredInstall) return;
             deferredInstall.prompt();
@@ -830,6 +977,210 @@
             });
         });
     };
+
+    /* =========================================
+       AYUDA CONTEXTUAL — CONTENIDO
+       ========================================= */
+    var HELP = {
+        numpad: {
+            title: '1. Ingreso de Número',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🎯 Cómo ingresar el número ganador</div>' +
+                '<p>Usa el teclado numérico para digitar el número que salió en la ruleta. El resultado aparece en el display grande del panel.</p>' +
+                '<ul>' +
+                '<li>Números válidos: <strong>0</strong>, <strong>00</strong> y del <strong>1 al 36</strong></li>' +
+                '<li>El display cambia de color al instante:<br>' +
+                '<span class="help-chip red">● ROJO</span> ' +
+                '<span class="help-chip black">● NEGRO</span> ' +
+                '<span class="help-chip green">● VERDE (0 y 00)</span></li>' +
+                '<li>Si el número no es válido (ej: 37 o 99), el display se pone <strong style="color:#ff6600">naranja</strong> y CONFIRMAR queda bloqueado</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">✔ Botón CONFIRMAR NÚMERO</div>' +
+                '<p>Se activa solo cuando el número es válido. Al presionarlo:</p>' +
+                '<ul>' +
+                '<li>El número queda registrado en el historial de la sesión</li>' +
+                '<li>Aparece <strong>automáticamente</strong> en la pantalla de la mesa</li>' +
+                '<li>El display se limpia listo para el siguiente ingreso</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">⬅ Borrar Último</div>' +
+                '<p>Elimina el <strong>último número confirmado</strong> del historial en caso de error de ingreso. Pide confirmación. Los números anteriores quedan intactos.</p></div>' +
+
+                '<div class="help-block warn"><div class="help-block-title">🗑 Limpiar Todo</div>' +
+                '<p>Borra <strong>todos los números</strong> del historial y la pantalla queda en blanco. Úsalo solo al iniciar una nueva sesión o cambiar de mesa.</p>' +
+                '<p style="margin-top:8px;color:#ff9944;"><strong>⚠ Esta acción no se puede deshacer.</strong></p></div>'
+        },
+
+        limites: {
+            title: '2. Configuración de Límites de Apuesta',
+            body:
+                '<div class="help-block success"><div class="help-block-title">💰 ¿Para qué sirven los límites?</div>' +
+                '<p>Son los montos mínimos y máximos de apuesta que se muestran en la <strong>pantalla de la mesa</strong>, para que los jugadores vean las reglas antes de apostar.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🎯 Plenos — Apuesta directa a un número</div>' +
+                '<p>El jugador apuesta a que saldrá <strong>un único número</strong> (ej: solo el 17). Paga <strong>35 a 1</strong>. Es la apuesta de mayor riesgo, por eso tiene los límites más bajos.</p>' +
+                '<p style="margin-top:6px;color:#888;">Ej. típico: Mín <strong>$1.000</strong> — Máx <strong>$20.000</strong></p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🔲 Chanzas Dobles — Apuestas combinadas</div>' +
+                '<p>Cubren entre 2 y 6 números a la vez:</p>' +
+                '<ul>' +
+                '<li><strong>Caballo</strong>: 2 números — paga 17 a 1</li>' +
+                '<li><strong>Calle</strong>: 3 números — paga 11 a 1</li>' +
+                '<li><strong>Cuadro</strong>: 4 números — paga 8 a 1</li>' +
+                '<li><strong>Seisena</strong>: 6 números — paga 5 a 1</li>' +
+                '</ul>' +
+                '<p style="margin-top:6px;color:#888;">Ej. típico: Mín <strong>$10.000</strong> — Máx <strong>$350.000</strong></p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🔴 Chanzas Simples — Mitad de la mesa</div>' +
+                '<p>Apuestas que cubren la mitad del tablero:</p>' +
+                '<ul>' +
+                '<li><span class="help-chip red">ROJO</span> / <span class="help-chip black">NEGRO</span> — paga 1 a 1</li>' +
+                '<li>Par / Impar — paga 1 a 1</li>' +
+                '<li>1–18 / 19–36 — paga 1 a 1</li>' +
+                '<li>Docenas y Columnas — paga 2 a 1</li>' +
+                '</ul>' +
+                '<p style="margin-top:6px;color:#888;">Ej. típico: Mín <strong>$20.000</strong> — Máx <strong>$700.000</strong></p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">💾 Cómo guardar los límites</div>' +
+                '<ol>' +
+                '<li>Expande la sección haciendo clic en el título "2. Configuración de Límites"</li>' +
+                '<li>Escribe los montos — el sistema agrega <strong>$</strong> y los puntos automáticamente</li>' +
+                '<li>Presiona <strong>"💾 Guardar Límites en Pantalla"</strong></li>' +
+                '</ol>' +
+                '<p style="margin-top:8px;">Los cambios se reflejan al instante en la pantalla de la mesa y se guardan para la próxima sesión.</p></div>'
+        },
+
+        nombre: {
+            title: '3. Nombre de la Ruleta en Pantalla',
+            body:
+                '<div class="help-block"><div class="help-block-title">🎡 Ruleta Americana</div>' +
+                '<p>Tiene <strong>38 casillas</strong>: números del 1 al 36, más el <strong>0</strong> y el <strong>00</strong> (ambos de color verde).</p>' +
+                '<ul>' +
+                '<li>Estándar en la mayoría de casinos de Chile</li>' +
+                '<li>Ventaja de la casa: <strong>5,26%</strong></li>' +
+                '<li>Dos casillas verdes (0 y 00) favorecen más a la casa</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🎰 Ruleta Francesa (Europea)</div>' +
+                '<p>Tiene <strong>37 casillas</strong>: números del 1 al 36, más solo el <strong>0</strong> (sin casilla 00).</p>' +
+                '<ul>' +
+                '<li>Ventaja de la casa: <strong>2,70%</strong> — más favorable para el jugador</li>' +
+                '<li>Puede incluir reglas especiales: <em>La Partage</em> y <em>En Prison</em></li>' +
+                '</ul></div>' +
+
+                '<div class="help-block success"><div class="help-block-title">🔄 Qué cambia al seleccionar</div>' +
+                '<ul>' +
+                '<li>El nombre que aparece en la <strong>pantalla de la mesa</strong></li>' +
+                '<li>El título de este <strong>panel del operador</strong></li>' +
+                '<li>Se guarda automáticamente — se recuerda al abrir el panel de nuevo</li>' +
+                '</ul>' +
+                '<p style="margin-top:8px;">El cambio es <strong>instantáneo</strong>, no es necesario recargar nada.</p></div>'
+        },
+
+        historial: {
+            title: '4. Gestión del Historial',
+            body:
+                '<div class="help-block success"><div class="help-block-title">📋 ¿Qué muestra el historial?</div>' +
+                '<p>La lista completa de todos los números ingresados en la sesión actual. El número más reciente aparece <strong>arriba</strong>. Este mismo historial es lo que la pantalla de la mesa muestra a los jugadores como "últimos resultados".</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🗑 Borrar un número individual</div>' +
+                '<p>Cada número tiene un botón <strong>"Borrar"</strong> que lo elimina del historial.</p>' +
+                '<ul>' +
+                '<li>Úsalo si ingresaste el número equivocado</li>' +
+                '<li>El sistema pedirá confirmación antes de borrar</li>' +
+                '<li>La pantalla de la mesa se actualiza automáticamente</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block warn"><div class="help-block-title">⚠️ Cuándo limpiar el historial completo</div>' +
+                '<p>El botón <strong>"🗑 Limpiar Todo"</strong> (en la sección del teclado) elimina <strong>todos</strong> los números de la sesión y la pantalla queda en blanco.</p>' +
+                '<ul>' +
+                '<li>Úsalo al iniciar una nueva sesión de juego</li>' +
+                '<li>Úsalo al cambiar de turno o de mesa</li>' +
+                '<li style="color:#ff9944;"><strong>Esta acción NO se puede deshacer</strong></li>' +
+                '</ul></div>'
+        },
+
+        pantalla: {
+            title: '📺 Pantalla de la Mesa',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🖥️ Configurar dos monitores</div>' +
+                '<p>Presiona <strong>"📺 Abrir Pantalla de la Mesa"</strong> para abrir el letrero en una nueva ventana del navegador.</p>' +
+                '<ol>' +
+                '<li>Se abre una nueva ventana del navegador con la pantalla de la mesa</li>' +
+                '<li>Arrastra esa ventana al <strong>segundo monitor</strong> (el de los jugadores)</li>' +
+                '<li>Presiona <strong>F11</strong> en esa ventana para modo pantalla completa</li>' +
+                '<li>Este panel queda en el monitor del croupier/operador</li>' +
+                '</ol></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🔄 Sincronización automática</div>' +
+                '<p>Todo lo que hagas en este panel se refleja <strong>al instante</strong> en la pantalla de la mesa:</p>' +
+                '<ul>' +
+                '<li>Números ingresados y confirmados</li>' +
+                '<li>Cambios en los límites de apuesta</li>' +
+                '<li>Cambio de nombre (Americana / Francesa)</li>' +
+                '</ul>' +
+                '<p style="margin-top:8px;color:#888;">No es necesario recargar la pantalla de la mesa. Ambas ventanas comparten los datos en tiempo real.</p></div>' +
+
+                '<div class="help-block warn"><div class="help-block-title">⚠️ Ventanas emergentes bloqueadas</div>' +
+                '<p>Si el botón no abre la ventana, el navegador está bloqueando las ventanas emergentes:</p>' +
+                '<ol>' +
+                '<li>Busca el ícono de bloqueo (🚫) en la barra de direcciones del navegador</li>' +
+                '<li>Haz clic en él y selecciona <strong>"Permitir siempre"</strong> para este sitio</li>' +
+                '<li>Intenta abrir la pantalla nuevamente</li>' +
+                '</ol></div>'
+        },
+
+        general: {
+            title: '📚 Guía de Uso — Panel del Operador',
+            body:
+                '<div class="help-block success"><div class="help-block-title">📌 Flujo de trabajo de una sesión</div>' +
+                '<ol>' +
+                '<li>Abre la pantalla de la mesa en el segundo monitor (<strong>📺 Abrir Pantalla</strong>)</li>' +
+                '<li>Selecciona el tipo de ruleta: <strong>Americana</strong> o <strong>Francesa</strong></li>' +
+                '<li>Configura los <strong>límites de apuesta</strong> de la mesa y guárdalos</li>' +
+                '<li>Con cada tirada, ingresa el número ganador y presiona <strong>✔ CONFIRMAR</strong></li>' +
+                '<li>El historial y la pantalla de la mesa se actualizan automáticamente</li>' +
+                '<li>Al finalizar la sesión, usa <strong>🗑 Limpiar Todo</strong> si corresponde</li>' +
+                '</ol></div>' +
+
+                '<div class="help-block"><div class="help-block-title">1️⃣ Ingreso de Número <span class="help-chip blue">?</span></div>' +
+                '<p>Teclado para ingresar el resultado de la ruleta. Acepta 0, 00 y 1–36. El display cambia de color: ' +
+                '<span class="help-chip red">ROJO</span> <span class="help-chip black">NEGRO</span> <span class="help-chip green">VERDE</span>. ' +
+                'Requiere presionar <strong>CONFIRMAR</strong> para registrar.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">2️⃣ Límites de Apuesta <span class="help-chip blue">?</span></div>' +
+                '<p>Define los montos por tipo: <strong>Plenos</strong> (un número, paga 35:1), <strong>Chanzas Dobles</strong> (2–6 números, paga 5:1–17:1) y <strong>Chanzas Simples</strong> (mitad de mesa, paga 1:1–2:1). Presionar <strong>Guardar</strong> actualiza la pantalla.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">3️⃣ Nombre de la Ruleta <span class="help-chip blue">?</span></div>' +
+                '<p>Cambia entre <strong>Americana</strong> (38 casillas, con 00) y <strong>Francesa</strong> (37 casillas, sin 00). El cambio actualiza el nombre en la pantalla de la mesa y el título de este panel instantáneamente.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">4️⃣ Historial <span class="help-chip blue">?</span></div>' +
+                '<p>Lista de todos los números de la sesión (el más reciente arriba). Se pueden borrar números individuales (en caso de error) o limpiar toda la pizarra. Siempre pide confirmación antes de borrar.</p></div>' +
+
+                '<div class="help-block" style="border-left-color:#f1c40f;"><div class="help-block-title">💡 Consejos prácticos</div>' +
+                '<ul>' +
+                '<li>Toca <span class="help-chip blue">?</span> en cualquier sección para ver ayuda específica de esa función</li>' +
+                '<li>Si la pantalla de la mesa no se actualiza, presiona <strong>F5</strong> en esa ventana</li>' +
+                '<li>Los datos se guardan en el navegador y no se pierden al cerrar la pestaña</li>' +
+                '<li>Para instalar este panel como app de escritorio, busca el banner <strong>"📲 Instalar App"</strong> en la parte superior</li>' +
+                '</ul></div>'
+        }
+    };
+
+    function openHelp(key) {
+        var h = HELP[key];
+        if (!h) return;
+        document.getElementById('helpModalTitle').textContent = h.title;
+        document.getElementById('helpModalBody').innerHTML = h.body;
+        document.getElementById('helpOverlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeHelp() {
+        document.getElementById('helpOverlay').classList.remove('open');
+        document.body.style.overflow = '';
+    }
 
     /* =========================================
        ABRIR PANTALLA DE MESA EN NUEVA VENTANA
@@ -866,6 +1217,15 @@
         showToast('✔ App instalada correctamente', 'success');
     });
 </script>
+<!-- ========== MODAL DE AYUDA ========== -->
+<div class="help-overlay" id="helpOverlay">
+    <div class="help-modal">
+        <button class="help-close" id="helpCloseBtn">✕</button>
+        <div class="help-modal-title" id="helpModalTitle"></div>
+        <div id="helpModalBody"></div>
+    </div>
+</div>
+
     <!-- Marca desarrollador -->
     <div style="
         position: fixed;
