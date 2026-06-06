@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Panel de Control - Ruleta</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/svg+xml" href="./icon.svg">
+    <link rel="apple-touch-icon" href="./icon.svg">
+    <meta name="theme-color" content="#4da6ff">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Operador Ruleta">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
@@ -326,11 +334,71 @@
         @media (max-width: 600px) {
             .dashboard-container { grid-template-columns: 1fr; }
         }
+
+        /* =========================================
+           BOTÓN ABRIR PANTALLA DE MESA
+           ========================================= */
+        .btn-pantalla {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 12px;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #001833, #002f66);
+            border: 2px solid #4da6ff;
+            border-radius: 10px;
+            color: #4da6ff;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-pantalla:hover { background: linear-gradient(135deg, #002244, #004088); border-color: #80c4ff; color: #80c4ff; }
+        .btn-pantalla:active { transform: scale(0.98); opacity: 0.85; }
+
+        /* =========================================
+           BANNER PWA INSTALAR
+           ========================================= */
+        #pwa-install-bar {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            background: #002244;
+            border: 1px solid #4da6ff;
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin-bottom: 12px;
+        }
+        #pwa-install-bar.visible { display: flex; }
+        #btnInstalar {
+            padding: 9px 18px;
+            background: #4da6ff;
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        #btnInstalar:active { opacity: 0.8; }
     </style>
 </head>
 <body>
 
 <div class="toast" id="toast"></div>
+
+<!-- Banner de instalación PWA (se muestra solo cuando el navegador lo permite) -->
+<div id="pwa-install-bar">
+    <span style="font-size:13px; color:#a8ccf0;">📲 Instala este panel como app en tu computador o tablet</span>
+    <button id="btnInstalar">⬇ Instalar App</button>
+</div>
 
 <div class="dashboard-container">
 
@@ -338,6 +406,9 @@
     <div class="header">
         <h1>⚙️ Panel de Operador — Ruleta Americana</h1>
         <p>Casino Puerto Varas · Los cambios se reflejan instantáneamente en la pantalla de la mesa</p>
+        <button class="btn-pantalla" onclick="abrirPantalla()">
+            📺 Abrir Pantalla de la Mesa en Nueva Ventana
+        </button>
     </div>
 
     <!-- COLUMNA IZQUIERDA: teclado + límites -->
@@ -698,7 +769,52 @@
         var btnF = document.getElementById('btnNombreFrancesa');
         if (btnA) btnA.addEventListener('click', function() { setNombreRuleta('RULETA AMERICANA'); });
         if (btnF) btnF.addEventListener('click', function() { setNombreRuleta('RULETA FRANCESA'); });
+        document.getElementById('btnInstalar').addEventListener('click', function() {
+            if (!deferredInstall) return;
+            deferredInstall.prompt();
+            deferredInstall.userChoice.then(function(result) {
+                if (result.outcome === 'accepted') {
+                    document.getElementById('pwa-install-bar').classList.remove('visible');
+                }
+                deferredInstall = null;
+            });
+        });
     };
+
+    /* =========================================
+       ABRIR PANTALLA DE MESA EN NUEVA VENTANA
+       ========================================= */
+    function abrirPantalla() {
+        var pantalla = window.open('../', 'pantalla-ruleta-mesa');
+        if (!pantalla) {
+            showToast('⚠️ Activa ventanas emergentes en tu navegador', 'error');
+        } else {
+            showToast('Pantalla de mesa abierta', 'success');
+        }
+    }
+
+    /* =========================================
+       SERVICE WORKER + PWA INSTALL PROMPT
+       ========================================= */
+    var deferredInstall = null;
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(function(err) {
+            console.warn('SW:', err);
+        });
+    }
+
+    window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        deferredInstall = e;
+        document.getElementById('pwa-install-bar').classList.add('visible');
+    });
+
+    window.addEventListener('appinstalled', function() {
+        document.getElementById('pwa-install-bar').classList.remove('visible');
+        deferredInstall = null;
+        showToast('✔ App instalada correctamente', 'success');
+    });
 </script>
     <!-- Marca desarrollador -->
     <div style="
