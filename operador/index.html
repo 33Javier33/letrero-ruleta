@@ -331,9 +331,40 @@
         .toast.success { border-color: #33ff33; color: #33ff33; }
         .toast.error   { border-color: #ff4444; color: #ff6666; }
 
-        /* Responsive: en pantallas pequeñas, una sola columna */
-        @media (max-width: 600px) {
+        /* En portrait estrecho → una sola columna */
+        @media (orientation: portrait) and (max-width: 600px) {
             .dashboard-container { grid-template-columns: 1fr; }
+        }
+
+        /* En landscape siempre mostramos 2 columnas */
+        @media (orientation: landscape) {
+            .dashboard-container { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* Landscape compacto (phones / tablets pequeños) */
+        @media (orientation: landscape) and (max-height: 520px) {
+            body { padding: 8px; }
+            .dashboard-container { gap: 8px; }
+            .header { padding: 8px 14px; }
+            .header h1 { font-size: 16px; margin-bottom: 0; }
+            .header p  { font-size: 11px; }
+            .btn-pantalla { padding: 9px 12px; font-size: 13px; margin-top: 8px; }
+            .btn-ayuda-general { padding: 6px; font-size: 12px; margin-top: 5px; }
+            .url-pantalla-wrap { margin-top: 7px; }
+            .admin-section { padding: 10px; }
+            .admin-section h3 { margin-bottom: 8px; padding-bottom: 7px; font-size: 14px; }
+            .number-display { font-size: 26px; min-height: 48px; padding: 6px; }
+            .number-display-wrapper { margin-bottom: 8px; }
+            .display-label { font-size: 10px; }
+            .numpad { gap: 5px; margin-bottom: 7px; }
+            .numpad-key { padding: 10px 6px; font-size: 18px; }
+            .btn-confirm { padding: 11px; font-size: 16px; margin-bottom: 6px; }
+            .btn { padding: 9px 6px; font-size: 12px; }
+            .btn-row { gap: 5px; }
+            .admin-history-list { max-height: 200px; }
+            .nombre-ruleta-section { padding: 10px; }
+            .nombre-ruleta-section h3 { margin-bottom: 8px; padding-bottom: 7px; font-size: 14px; }
+            .btn-nombre { padding: 11px; font-size: 15px; }
         }
 
         /* =========================================
