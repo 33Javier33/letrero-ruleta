@@ -1,11 +1,11 @@
-const CACHE = 'operador-ruleta-v2';
+const CACHE = 'operador-ruleta-v3';
 const FILES = [
-    './',
-    './index.html',
-    './manifest.json',
-    './icon.svg',
-    './icon-192.png',
-    './icon-512.png'
+    '/operador/',
+    '/operador/index.html',
+    '/operador/manifest.json',
+    '/operador/icon.svg',
+    '/operador/icon-192.png',
+    '/operador/icon-512.png'
 ];
 
 self.addEventListener('install', function(e) {

@@ -2,8 +2,8 @@
   "name": "Panel Operador — Ruleta Casino",
   "short_name": "Operador",
   "description": "Panel de control del operador para la pantalla de ruleta de casino",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/operador/",
+  "scope": "/operador/",
   "display": "standalone",
   "background_color": "#111111",
   "theme_color": "#4da6ff",
@@ -11,25 +11,25 @@
   "lang": "es",
   "icons": [
     {
-      "src": "./icon-192.png",
+      "src": "/operador/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icon-512.png",
+      "src": "/operador/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icon-512.png",
+      "src": "/operador/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "./icon.svg",
+      "src": "/operador/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"

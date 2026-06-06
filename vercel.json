@@ -1,0 +1,25 @@
+{
+  "redirects": [
+    {
+      "source": "/operador",
+      "destination": "/operador/",
+      "permanent": false
+    }
+  ],
+  "headers": [
+    {
+      "source": "/operador/manifest.json",
+      "headers": [
+        { "key": "Content-Type", "value": "application/manifest+json" },
+        { "key": "Cache-Control", "value": "no-cache" }
+      ]
+    },
+    {
+      "source": "/operador/sw.js",
+      "headers": [
+        { "key": "Service-Worker-Allowed", "value": "/operador/" },
+        { "key": "Cache-Control", "value": "no-cache, no-store" }
+      ]
+    }
+  ]
+}
