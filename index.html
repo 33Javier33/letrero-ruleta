@@ -6,61 +6,62 @@
     <title>Pantalla Ruleta Americana - Casino</title>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
-        body { background:linear-gradient(180deg,#0022cc 0%,#0044ff 100%); width:100vw; height:100vh; overflow:hidden; }
+        /* --s = container width (fits 9:16 into any screen) | --u = 1 design-px */
+        :root { --s: min(100vw, 56.25vh); --u: calc(var(--s) / 540); }
+        body { background:linear-gradient(180deg,#0022cc 0%,#0044ff 100%); width:100vw; height:100vh; overflow:hidden; display:flex; align-items:center; justify-content:center; }
 
         .screen-container {
-            width:540px; height:960px;
+            width:var(--s); height:calc(var(--s) * 960 / 540);
             background:linear-gradient(180deg,#0022cc 0%,#0044ff 100%);
-            position:fixed; top:0; left:0;
             display:flex; flex-direction:column;
-            transform-origin:0 0;
+            flex-shrink:0;
         }
 
         /* SECCION SUPERIOR */
-        .top-section { display:flex; height:60%; padding:8px 15px 6px; gap:12px; }
+        .top-section { display:flex; height:60%; padding:calc(var(--u)*8) calc(var(--u)*15) calc(var(--u)*6); gap:calc(var(--u)*12); }
         .left-column { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:space-evenly; }
 
         /* LOGO */
-        .logo-area { width:100%; margin-bottom:0; padding-top:4px; display:flex; align-items:center; justify-content:center; }
-        .logo-area img { width:82%; max-width:240px; height:auto; display:block; margin:0 auto; }
+        .logo-area { width:100%; margin-bottom:0; padding-top:calc(var(--u)*4); display:flex; align-items:center; justify-content:center; }
+        .logo-area img { width:82%; max-width:calc(var(--u)*240); height:auto; display:block; margin:0 auto; }
 
         /* RULETA */
-        .wheel-wrapper { width:148px; height:148px; margin-bottom:4px; position:relative; flex-shrink:0; }
-        .wheel-wrapper canvas { position:absolute; top:0; left:0; border-radius:50%; }
+        .wheel-wrapper { width:calc(var(--u)*148); height:calc(var(--u)*148); margin-bottom:calc(var(--u)*4); position:relative; flex-shrink:0; }
+        .wheel-wrapper canvas { position:absolute; top:0; left:0; width:100%; height:100%; border-radius:50%; }
         .current-number-display {
             position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-            width:60px; height:60px; background-color:#d1e8ff; border-radius:50%;
+            width:calc(var(--u)*60); height:calc(var(--u)*60); background-color:#d1e8ff; border-radius:50%;
             display:flex; justify-content:center; align-items:center;
-            font-size:30px; font-weight:bold; color:#000;
-            border:4px solid #fff; box-shadow:0 0 12px rgba(0,0,0,0.7); z-index:10;
+            font-size:calc(var(--u)*30); font-weight:bold; color:#000;
+            border:calc(var(--u)*4) solid #fff; box-shadow:0 0 calc(var(--u)*12) rgba(0,0,0,0.7); z-index:10;
         }
         .current-number-display.num-red   { background-color:#cc0000!important; color:#fff!important; border-color:#ff6666; }
         .current-number-display.num-black { background-color:#111!important;    color:#fff!important; border-color:#aaa; }
         .current-number-display.num-green { background-color:#006600!important; color:#fff!important; border-color:#33ff33; }
 
         /* ESTADISTICAS - TARJETA GIRATORIA */
-        .stats-container { width:100%; display:flex; flex-direction:column; gap:6px; margin-top:auto; }
+        .stats-container { width:100%; display:flex; flex-direction:column; gap:calc(var(--u)*6); margin-top:auto; }
         .stats-carousel {
-            width:100%; background:rgba(0,0,0,0.65); border-radius:10px;
-            border:1px solid rgba(255,255,255,0.2); box-shadow:inset 0 0 10px rgba(0,0,0,0.8);
+            width:100%; background:rgba(0,0,0,0.65); border-radius:calc(var(--u)*10);
+            border:1px solid rgba(255,255,255,0.2); box-shadow:inset 0 0 calc(var(--u)*10) rgba(0,0,0,0.8);
             overflow:hidden;
         }
-        .carousel-dots { display:flex; justify-content:center; gap:5px; padding:4px 0 2px; }
-        .carousel-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.25); transition:background 0.3s; }
+        .carousel-dots { display:flex; justify-content:center; gap:calc(var(--u)*5); padding:calc(var(--u)*4) 0 calc(var(--u)*2); }
+        .carousel-dot { width:calc(var(--u)*6); height:calc(var(--u)*6); border-radius:50%; background:rgba(255,255,255,0.25); transition:background 0.3s; }
         .carousel-dot.active { background:rgba(255,255,255,0.85); }
         .stat-panel {
-            display: none; padding:8px 10px 6px; }
+            display: none; padding:calc(var(--u)*8) calc(var(--u)*10) calc(var(--u)*6); }
         .stat-panel.active { display:block; animation:fadeIn 0.5s ease; }
         @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-        .panel-title { text-align:center; font-size:9px; font-weight:bold; text-transform:uppercase; color:rgba(255,255,255,0.55); letter-spacing:1.5px; margin-bottom:6px; }
-        .pct-labels { display:flex; justify-content:space-between; margin-bottom:7px; }
-        .pct-label { text-align:center; font-size:10px; font-weight:bold; text-transform:uppercase; text-shadow:1px 1px 3px black; flex:1; }
-        .pct-label span { font-size:22px; display:block; margin-top:2px; text-shadow:0 0 8px currentColor; }
+        .panel-title { text-align:center; font-size:calc(var(--u)*9); font-weight:bold; text-transform:uppercase; color:rgba(255,255,255,0.55); letter-spacing:calc(var(--u)*1.5); margin-bottom:calc(var(--u)*6); }
+        .pct-labels { display:flex; justify-content:space-between; margin-bottom:calc(var(--u)*7); }
+        .pct-label { text-align:center; font-size:calc(var(--u)*10); font-weight:bold; text-transform:uppercase; text-shadow:1px 1px 3px black; flex:1; }
+        .pct-label span { font-size:calc(var(--u)*22); display:block; margin-top:calc(var(--u)*2); text-shadow:0 0 calc(var(--u)*8) currentColor; }
         .c-red{color:#ff4d4d;} .c-green{color:#4dff4d;} .c-black{color:#e6e6e6;}
         .c-par{color:#ffe066;} .c-impar{color:#ff99cc;}
         .c-menor{color:#66ccff;} .c-mayor{color:#ff9944;}
         .c-d1{color:#66ccff;} .c-d2{color:#99ff99;} .c-d3{color:#ffbb66;}
-        .pct-bar-container { width:100%; height:10px; background:#111; border-radius:10px; display:flex; overflow:hidden; border:1px solid #333; }
+        .pct-bar-container { width:100%; height:calc(var(--u)*10); background:#111; border-radius:calc(var(--u)*10); display:flex; overflow:hidden; border:1px solid #333; }
         .pct-bar { height:100%; transition:width 0.6s ease-in-out; }
         .bar-red{background:linear-gradient(90deg,#990000,#ff3333);}
         .bar-green{background:linear-gradient(90deg,#006600,#33cc33);}
@@ -74,7 +75,7 @@
         .bar-d3{background:linear-gradient(90deg,#885500,#ffbb66);}
 
         /* CALIENTES Y FRIOS */
-        .hot-cold-box { width:100%; height:68px; border-radius:10px; display:flex; justify-content:space-around; align-items:center; padding:5px; position:relative; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,0.5); }
+        .hot-cold-box { width:100%; height:calc(var(--u)*68); border-radius:calc(var(--u)*10); display:flex; justify-content:space-around; align-items:center; padding:calc(var(--u)*5); position:relative; overflow:hidden; box-shadow:0 calc(var(--u)*4) calc(var(--u)*10) rgba(0,0,0,0.5); }
         .hot-box { background:linear-gradient(180deg,#990000,#ff1a1a); border:2px solid #ff4d4d; }
         .fire-layer { position:absolute; bottom:-10px; left:0; width:100%; height:120%; background:radial-gradient(circle at 50% 100%,rgba(255,150,0,0.6),transparent 60%); animation:flicker 0.15s infinite alternate; pointer-events:none; z-index:1; }
         .fire-layer::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:50%; background:linear-gradient(to top,rgba(255,200,0,0.5),transparent); filter:blur(5px); animation:flicker2 0.3s infinite alternate; }
@@ -84,21 +85,21 @@
         .snow-layer { position:absolute; top:-50px; left:0; width:100%; height:150%; background-image:radial-gradient(white 2px,transparent 2px),radial-gradient(rgba(255,255,255,.8) 1px,transparent 1px),radial-gradient(rgba(255,255,255,.5) 2px,transparent 2px); background-size:30px 30px,20px 20px,40px 40px; background-position:0 0,10px 10px,20px 20px; animation:snow 4s linear infinite; pointer-events:none; z-index:1; }
         @keyframes snow{0%{transform:translateY(0)}100%{transform:translateY(30px)}}
         .stat-number-hot { display:flex; flex-direction:column; align-items:center; z-index:2; gap:1px; }
-        .flame { font-size:13px; animation:flameF 0.6s ease-in-out infinite alternate; filter:drop-shadow(0 0 4px #ff6600); }
+        .flame { font-size:calc(var(--u)*13); animation:flameF 0.6s ease-in-out infinite alternate; filter:drop-shadow(0 0 calc(var(--u)*4) #ff6600); }
         @keyframes flameF{0%{transform:translateY(0) scale(1)}100%{transform:translateY(-3px) scale(1.15)}}
-        .num-circle { width:44px; height:44px; background:#fff; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:18px; font-weight:bold; color:#000; box-shadow:0 0 8px rgba(255,100,0,0.6); border:2px solid #ff6600; }
-        .stat-number { width:44px; height:44px; background:#fff; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:16px; font-weight:bold; color:#000; z-index:2; }
+        .num-circle { width:calc(var(--u)*44); height:calc(var(--u)*44); background:#fff; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:calc(var(--u)*18); font-weight:bold; color:#000; box-shadow:0 0 calc(var(--u)*8) rgba(255,100,0,0.6); border:calc(var(--u)*2) solid #ff6600; }
+        .stat-number { width:calc(var(--u)*44); height:calc(var(--u)*44); background:#fff; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:calc(var(--u)*16); font-weight:bold; color:#000; z-index:2; }
 
         /* COLUMNA DERECHA - PIZARRA CON IMAGEN AL PIE */
-        .right-column { width:155px; display:flex; flex-direction:column; height:100%; }
+        .right-column { width:calc(var(--u)*155); display:flex; flex-direction:column; height:100%; }
         .history-board {
-            flex:1; background:#000; border:6px solid #e6b800; border-radius:5px;
+            flex:1; background:#000; border:calc(var(--u)*6) solid #e6b800; border-radius:calc(var(--u)*5);
             display:flex; flex-direction:column; align-items:center;
-            padding:6px 0 0; overflow:hidden;
+            padding:calc(var(--u)*6) 0 0; overflow:hidden;
         }
-        .history-item { font-size:23px; font-weight:bold; margin:2px 0; width:100%; box-sizing:border-box; text-shadow:0 0 5px rgba(255,255,255,0.5); }
-        .color-red   { color:#ff3333; text-align:right; padding-right:22px; }
-        .color-black { color:#ffff99; text-align:left;  padding-left:22px; }
+        .history-item { font-size:calc(var(--u)*23); font-weight:bold; margin:calc(var(--u)*2) 0; width:100%; box-sizing:border-box; text-shadow:0 0 calc(var(--u)*5) rgba(255,255,255,0.5); }
+        .color-red   { color:#ff3333; text-align:right; padding-right:calc(var(--u)*22); }
+        .color-black { color:#ffff99; text-align:left;  padding-left:calc(var(--u)*22); }
         .color-green { color:#33ff33; text-align:center; }
 
         /* IMAGEN RULETA AL PIE DE LA PIZARRA */
@@ -106,28 +107,28 @@
             width:100%;
             flex-shrink:0;
             margin-top:auto;
-            height:90px;
+            height:calc(var(--u)*90);
             overflow:hidden;
         }
         .ruleta-pie img {
             width:100%;
-            height:90px;
+            height:calc(var(--u)*90);
             object-fit:cover;
             object-position:center 30%;
             display:block;
         }
 
         /* SECCION INFERIOR */
-        .bottom-section { height:40%; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; padding:0 15px 10px; }
-        .title-ruleta { color:white; font-size:36px; font-weight:bold; text-shadow:2px 4px 8px rgba(0,0,0,0.6),0 0 20px rgba(255,255,255,0.3); margin-bottom:10px; letter-spacing:1px; text-align:center; width:100%; }
-        .limits-table-container { width:100%; background:linear-gradient(135deg,rgba(0,150,255,.9),rgba(0,200,255,.6)); border-radius:15px; border:2px solid #66ccff; padding:15px; box-shadow:inset 0 0 15px rgba(255,255,255,0.3); }
+        .bottom-section { height:40%; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; padding:0 calc(var(--u)*15) calc(var(--u)*10); }
+        .title-ruleta { color:white; font-size:calc(var(--u)*36); font-weight:bold; text-shadow:2px 4px 8px rgba(0,0,0,0.6),0 0 20px rgba(255,255,255,0.3); margin-bottom:calc(var(--u)*10); letter-spacing:calc(var(--u)*1); text-align:center; width:100%; }
+        .limits-table-container { width:100%; background:linear-gradient(135deg,rgba(0,150,255,.9),rgba(0,200,255,.6)); border-radius:calc(var(--u)*15); border:2px solid #66ccff; padding:calc(var(--u)*15); box-shadow:inset 0 0 calc(var(--u)*15) rgba(255,255,255,0.3); }
         .limits-table { width:100%; border-collapse:collapse; color:#003366; font-weight:bold; }
-        .limits-table th, .limits-table td { text-align:center; padding:10px 5px; border-right:1px solid rgba(0,51,102,.2); }
+        .limits-table th, .limits-table td { text-align:center; padding:calc(var(--u)*10) calc(var(--u)*5); border-right:1px solid rgba(0,51,102,.2); }
         .limits-table th:last-child, .limits-table td:last-child { border-right:none; }
-        .limits-table th { font-size:14px; text-transform:uppercase; border-bottom:1px solid rgba(0,51,102,.2); }
-        .limits-table td { font-size:21px; }
-        .row-label { font-size:14px!important; text-align:left!important; text-transform:uppercase; width:25%; }
-        .casino-name { text-align:center; color:#003366; font-size:14px; margin-top:8px; letter-spacing:1px; }
+        .limits-table th { font-size:calc(var(--u)*14); text-transform:uppercase; border-bottom:1px solid rgba(0,51,102,.2); }
+        .limits-table td { font-size:calc(var(--u)*21); }
+        .row-label { font-size:calc(var(--u)*14)!important; text-align:left!important; text-transform:uppercase; width:25%; }
+        .casino-name { text-align:center; color:#003366; font-size:calc(var(--u)*14); margin-top:calc(var(--u)*8); letter-spacing:1px; }
     </style>
 </head>
 <body>
@@ -260,8 +261,8 @@
 </div>
 
 <script>
-function adjustScale(){var c=document.getElementById('screenContainer'),s=Math.max(window.innerWidth/540,window.innerHeight/960),tx=(window.innerWidth-540*s)/2,ty=(window.innerHeight-960*s)/2;c.style.transform='translate('+tx+'px,'+ty+'px) scale('+s+')';}
-window.addEventListener('resize',adjustScale);
+function resizeCanvas(){var w=document.getElementById('wheelWrapper'),sz=w.offsetWidth,c=document.getElementById('wheelCanvas');c.width=sz;c.height=sz;mO={ob:sz*.486,or:sz*.459,no:sz*.439,ni:sz*.318,ii:sz*.291,hr:sz*.068,fs:Math.max(4,sz*.047),aw:sz*.024,br:sz*.024,diamonds:true};}
+window.addEventListener('resize',resizeCanvas);
 
 var WHEEL_ORDER=['0','28','9','26','30','11','7','20','32','17','5','22','34','15','3','24','36','13','1','00','27','10','25','29','12','8','19','31','18','6','21','33','16','4','23','35','14','2'];
 var numberColors={'0':'green','00':'green','1':'red','2':'black','3':'red','4':'black','5':'red','6':'black','7':'red','8':'black','9':'red','10':'black','11':'black','12':'red','13':'black','14':'red','15':'black','16':'red','17':'black','18':'red','19':'red','20':'black','21':'red','22':'black','23':'red','24':'black','25':'red','26':'black','27':'red','28':'black','29':'black','30':'red','31':'black','32':'red','33':'black','34':'red','35':'black','36':'red'};
@@ -352,7 +353,7 @@ function checkStorage(){var r=localStorage.getItem(LS);if(r&&r!==lastD){lastD=r;
 window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();});
 
 window.onload=function(){
-    adjustScale();
+    resizeCanvas();
     elN=document.getElementById('display-current-number');
     elB=document.getElementById('history-board');
     h1=document.getElementById('hot-1');h2=document.getElementById('hot-2');h3=document.getElementById('hot-3');
