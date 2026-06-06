@@ -767,11 +767,14 @@
         // Máximo 2 dígitos
         if (numpadBuffer.length >= 2) return;
 
-        // Evitar "00" vía teclas individuales (solo via botón especial)
-        // Evitar leading zeros: si ya hay un '0', no agregar más dígitos → sería inválido de 1-36
+        // Pressing 0 again while buffer is '0' produces '00'
+        if (numpadBuffer === '0' && key === '0') {
+            numpadBuffer = '00';
+            updateDisplay();
+            return;
+        }
+        // "0X" where X > 0 is invalid in roulette — replace with the new digit
         if (numpadBuffer === '0' && key !== '') {
-            // "0X" donde X > 0 es inválido en ruleta, limpiar y empezar con el nuevo dígito
-            // Excepción: solo "0" es válido por sí solo, así que reemplazar
             numpadBuffer = key;
             updateDisplay();
             return;
@@ -1018,7 +1021,21 @@
             if (e.target === this) closeHelp();
         });
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeHelp();
+            if (e.key === 'Escape') { closeHelp(); return; }
+            // Skip numpad shortcuts when typing in any input/textarea
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            // Skip when help modal is open
+            if (document.getElementById('helpOverlay').classList.contains('open')) return;
+            if (e.key >= '0' && e.key <= '9') {
+                e.preventDefault();
+                window.numpadPress(e.key);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (!btnConfirm.disabled) window.numpadConfirm();
+            } else if (e.key === 'Backspace' || e.key === 'Delete') {
+                e.preventDefault();
+                window.numpadDel();
+            }
         });
         document.getElementById('btnInstalar').addEventListener('click', function() {
             if (!deferredInstall) return;
