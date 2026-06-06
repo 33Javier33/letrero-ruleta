@@ -465,31 +465,31 @@
                 <div class="input-section-title">Plenos</div>
                 <div class="input-group">
                     <label>Mínimo:</label>
-                    <input type="text" id="inputMinPleno">
+                    <input type="text" inputmode="numeric" id="inputMinPleno">
                 </div>
                 <div class="input-group">
                     <label>Máximo:</label>
-                    <input type="text" id="inputMaxPleno">
+                    <input type="text" inputmode="numeric" id="inputMaxPleno">
                 </div>
 
                 <div class="input-section-title">Chanzas Dobles</div>
                 <div class="input-group">
                     <label>Mínimo:</label>
-                    <input type="text" id="inputMinDobles">
+                    <input type="text" inputmode="numeric" id="inputMinDobles">
                 </div>
                 <div class="input-group">
                     <label>Máximo:</label>
-                    <input type="text" id="inputMaxDobles">
+                    <input type="text" inputmode="numeric" id="inputMaxDobles">
                 </div>
 
                 <div class="input-section-title">Chanzas Simples</div>
                 <div class="input-group">
                     <label>Mínimo:</label>
-                    <input type="text" id="inputMinSimples">
+                    <input type="text" inputmode="numeric" id="inputMinSimples">
                 </div>
                 <div class="input-group">
                     <label>Máximo:</label>
-                    <input type="text" id="inputMaxSimples">
+                    <input type="text" inputmode="numeric" id="inputMaxSimples">
                 </div>
 
                 <button class="btn-save-limits" id="btnUpdateLimits">💾 Guardar Límites en Pantalla</button>
@@ -664,12 +664,13 @@
     }
 
     function fillLimitsInputs() {
-        document.getElementById('inputMinPleno').value   = appData.limits.minPleno   || '';
-        document.getElementById('inputMaxPleno').value   = appData.limits.maxPleno   || '';
-        document.getElementById('inputMinDobles').value  = appData.limits.minDobles  || '';
-        document.getElementById('inputMaxDobles').value  = appData.limits.maxDobles  || '';
-        document.getElementById('inputMinSimples').value = appData.limits.minSimples || '';
-        document.getElementById('inputMaxSimples').value = appData.limits.maxSimples || '';
+        var l = appData.limits;
+        document.getElementById('inputMinPleno').value   = formatCLP(l.minPleno)   || '';
+        document.getElementById('inputMaxPleno').value   = formatCLP(l.maxPleno)   || '';
+        document.getElementById('inputMinDobles').value  = formatCLP(l.minDobles)  || '';
+        document.getElementById('inputMaxDobles').value  = formatCLP(l.maxDobles)  || '';
+        document.getElementById('inputMinSimples').value = formatCLP(l.minSimples) || '';
+        document.getElementById('inputMaxSimples').value = formatCLP(l.maxSimples) || '';
     }
 
     /* =========================================
@@ -747,6 +748,48 @@
     });
 
     /* =========================================
+       FORMATO MONEDA CHILENA ($1.000.000)
+       ========================================= */
+    function formatCLP(raw) {
+        var digits = String(raw == null ? '' : raw).replace(/[^\d]/g, '');
+        if (!digits) return '';
+        var num = parseInt(digits, 10);
+        if (isNaN(num)) return '';
+        return '$' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    function setupLimitInputs() {
+        var ids = [
+            'inputMinPleno', 'inputMaxPleno',
+            'inputMinDobles', 'inputMaxDobles',
+            'inputMinSimples', 'inputMaxSimples'
+        ];
+        ids.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+
+            el.addEventListener('focus', function() { this.select(); });
+
+            el.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    var digits = this.value.replace(/[^\d]/g, '').slice(0, -1);
+                    this.value = formatCLP(digits);
+                    var len = this.value.length;
+                    this.setSelectionRange(len, len);
+                }
+            });
+
+            el.addEventListener('input', function() {
+                var digits = this.value.replace(/[^\d]/g, '');
+                this.value = formatCLP(digits);
+                var len = this.value.length;
+                this.setSelectionRange(len, len);
+            });
+        });
+    }
+
+    /* =========================================
        INICIALIZACIÓN
        ========================================= */
     function actualizarBotonesNombre(nombre) {
@@ -763,6 +806,7 @@
     }
 
     window.onload = function() {
+        setupLimitInputs();
         loadData();
         var nombreActual = localStorage.getItem('ruleta_nombre') || 'RULETA AMERICANA';
         actualizarBotonesNombre(nombreActual);
