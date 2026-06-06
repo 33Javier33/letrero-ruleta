@@ -405,7 +405,7 @@
 
     <!-- ENCABEZADO -->
     <div class="header">
-        <h1>⚙️ Panel de Operador — Ruleta Americana</h1>
+        <h1 id="panelTitle">⚙️ Panel de Operador — Ruleta Americana</h1>
         <p>Casino Puerto Varas · Los cambios se reflejan instantáneamente en la pantalla de la mesa</p>
         <button class="btn-pantalla" onclick="abrirPantalla()">
             📺 Abrir Pantalla de la Mesa en Nueva Ventana
@@ -797,6 +797,11 @@
         var btnF = document.getElementById('btnNombreFrancesa');
         if (btnA) btnA.classList.toggle('selected', nombre === 'RULETA AMERICANA');
         if (btnF) btnF.classList.toggle('selected', nombre === 'RULETA FRANCESA');
+        var titulo = document.getElementById('panelTitle');
+        if (titulo) {
+            var display = nombre === 'RULETA FRANCESA' ? 'Ruleta Francesa' : 'Ruleta Americana';
+            titulo.textContent = '⚙️ Panel de Operador — ' + display;
+        }
     }
 
     function setNombreRuleta(nombre) {
