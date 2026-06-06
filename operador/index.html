@@ -428,6 +428,45 @@
             transition: all 0.2s;
             -webkit-tap-highlight-color: transparent;
         }
+
+        /* =========================================
+           URL DE LA PANTALLA DE MESA
+           ========================================= */
+        .url-pantalla-wrap {
+            margin-top: 10px;
+            text-align: left;
+        }
+        .url-pantalla-label {
+            display: block;
+            font-size: 11px;
+            color: #555;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .url-pantalla-input {
+            flex: 1;
+            padding: 9px 12px;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #888;
+            font-size: 13px;
+            min-width: 0;
+        }
+        .url-pantalla-input:focus { outline: none; border-color: #4da6ff; color: #fff; }
+        .url-save-btn {
+            padding: 9px 14px;
+            background: #0d2b0d;
+            border: 1px solid #2a5a2a;
+            border-radius: 8px;
+            color: #44cc44;
+            font-size: 16px;
+            cursor: pointer;
+            flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .url-save-btn:active { opacity: 0.7; }
         .btn-ayuda-general:hover { border-color: #4da6ff; color: #4da6ff; }
 
         /* =========================================
@@ -538,6 +577,16 @@
             <button class="help-btn" onclick="openHelp('pantalla')" title="Ayuda: cómo usar la segunda pantalla" style="width:36px;height:auto;font-size:15px;">?</button>
         </div>
         <button class="btn-ayuda-general" onclick="openHelp('general')">📚 Ver guía de uso completa del panel</button>
+
+        <div class="url-pantalla-wrap">
+            <label class="url-pantalla-label">🔗 URL de la pantalla de la mesa</label>
+            <div style="display:flex;gap:8px;">
+                <input type="url" id="inputPantallaUrl" class="url-pantalla-input"
+                       placeholder="https://letrero-ruleta.vercel.app/"
+                       inputmode="url" autocomplete="url" spellcheck="false">
+                <button class="url-save-btn" onclick="guardarUrlPantalla()" title="Guardar URL">💾</button>
+            </div>
+        </div>
     </div>
 
     <!-- COLUMNA IZQUIERDA: teclado + límites -->
@@ -959,6 +1008,11 @@
         var btnF = document.getElementById('btnNombreFrancesa');
         if (btnA) btnA.addEventListener('click', function() { setNombreRuleta('RULETA AMERICANA'); });
         if (btnF) btnF.addEventListener('click', function() { setNombreRuleta('RULETA FRANCESA'); });
+        var savedUrl = localStorage.getItem('ruleta_pantalla_url') || '';
+        document.getElementById('inputPantallaUrl').value = savedUrl;
+        document.getElementById('inputPantallaUrl').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') guardarUrlPantalla();
+        });
         document.getElementById('helpCloseBtn').addEventListener('click', closeHelp);
         document.getElementById('helpOverlay').addEventListener('click', function(e) {
             if (e.target === this) closeHelp();
@@ -1186,12 +1240,29 @@
        ABRIR PANTALLA DE MESA EN NUEVA VENTANA
        ========================================= */
     function abrirPantalla() {
-        var pantalla = window.open('../', 'pantalla-ruleta-mesa');
-        if (!pantalla) {
-            showToast('⚠️ Activa ventanas emergentes en tu navegador', 'error');
-        } else {
-            showToast('Pantalla de mesa abierta', 'success');
+        var url = localStorage.getItem('ruleta_pantalla_url') || '';
+        if (!url) {
+            showToast('⚠️ Primero guarda la URL de la pantalla', 'error');
+            document.getElementById('inputPantallaUrl').focus();
+            return;
         }
+        /* Usar ancla con target="_blank" para forzar apertura en el
+           navegador del sistema, no dentro de la PWA instalada */
+        var a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noreferrer noopener';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('Abriendo pantalla de mesa...', 'success');
+    }
+
+    function guardarUrlPantalla() {
+        var url = document.getElementById('inputPantallaUrl').value.trim();
+        if (!url) { showToast('Escribe la URL de la pantalla', 'error'); return; }
+        localStorage.setItem('ruleta_pantalla_url', url);
+        showToast('URL guardada ✔', 'success');
     }
 
     /* =========================================
