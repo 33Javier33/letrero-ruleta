@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Panel de Control - Ruleta</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body { background-color: #111; color: white; padding: 15px; }
+
+        .dashboard-container {
+            max-width: 960px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            background: #222;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            text-align: center;
+        }
+        .header h1 { color: #4da6ff; font-size: 20px; margin-bottom: 3px; }
+        .header p { color: #888; font-size: 13px; }
+
+        /* =========================================
+           SECCIÓN INGRESO CON TECLADO NUMÉRICO
+           ========================================= */
+        .admin-section {
+            background: #222;
+            padding: 18px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-section h3 {
+            margin-bottom: 14px;
+            color: #4da6ff;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            font-size: 15px;
+        }
+
+        /* Display del número seleccionado */
+        .number-display-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .number-display {
+            flex: 1;
+            background: #000;
+            border: 2px solid #555;
+            border-radius: 8px;
+            padding: 14px 10px;
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            color: #fff;
+            letter-spacing: 4px;
+            min-height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+        }
+
+        .number-display.valid-red    { border-color: #ff3333; color: #ff5555; background: #1a0000; }
+        .number-display.valid-black  { border-color: #aaaaaa; color: #ffffff; background: #111111; }
+        .number-display.valid-green  { border-color: #33ff33; color: #33ff33; background: #001a00; }
+        .number-display.invalid      { border-color: #ff6600; color: #ff6600; }
+
+        .display-label {
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 2px;
+        }
+
+        /* Teclado numérico */
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .numpad-key {
+            background: #333;
+            border: 1px solid #555;
+            border-radius: 8px;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 16px 10px;
+            cursor: pointer;
+            text-align: center;
+            user-select: none;
+            transition: background 0.1s, transform 0.1s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .numpad-key:active { background: #555; transform: scale(0.95); }
+        .numpad-key:hover  { background: #3a3a3a; }
+
+        /* Tecla especial "00" */
+        .numpad-key.key-double-zero {
+            background: #1a3a1a;
+            border-color: #2a6a2a;
+            color: #44ff44;
+        }
+        .numpad-key.key-double-zero:active { background: #2a5a2a; }
+
+        /* Tecla borrar (⌫) */
+        .numpad-key.key-del {
+            background: #3a1a1a;
+            border-color: #6a2a2a;
+            color: #ff6666;
+            font-size: 20px;
+        }
+        .numpad-key.key-del:active { background: #5a2a2a; }
+
+        /* Botón CONFIRMAR */
+        .btn-confirm {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #005500, #009900);
+            border: 2px solid #00cc00;
+            border-radius: 10px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: opacity 0.15s, transform 0.1s;
+            -webkit-tap-highlight-color: transparent;
+            margin-bottom: 10px;
+        }
+        .btn-confirm:active { transform: scale(0.98); opacity: 0.85; }
+        .btn-confirm:disabled { background: #2a2a2a; border-color: #444; color: #666; cursor: not-allowed; transform: none; }
+
+        /* Botones secundarios */
+        .btn-row { display: flex; gap: 8px; }
+
+        .btn {
+            flex: 1;
+            padding: 13px 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: opacity 0.15s, transform 0.1s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn:active { transform: scale(0.97); opacity: 0.8; }
+        .btn-danger  { background: #8b0000; color: white; border: 1px solid #cc0000; }
+        .btn-warning { background: #7a2900; color: white; border: 1px solid #d35400; }
+
+        /* =========================================
+           SECCIÓN LÍMITES
+           ========================================= */
+        .limits-header {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            margin-bottom: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+            color: #4da6ff;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .limits-header:hover { color: #80bfff; }
+
+        .limits-content { display: none; margin-top: 12px; }
+        .limits-content.active { display: block; }
+
+        .input-group { display: flex; gap: 10px; margin-bottom: 12px; align-items: center; }
+        .input-group label { width: 120px; font-size: 13px; color: #bbb; flex-shrink: 0; }
+        .input-group input {
+            flex: 1;
+            padding: 9px 12px;
+            background: #000;
+            border: 1px solid #555;
+            color: white;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        .input-section-title { font-size: 12px; color: #666; margin: 10px 0 8px; text-transform: uppercase; letter-spacing: 1px; }
+
+        .btn-save-limits {
+            width: 100%;
+            padding: 14px;
+            background: #005a1f;
+            border: 1px solid #00cc44;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-save-limits:active { opacity: 0.8; }
+
+        /* Selector de nombre de ruleta */
+        .nombre-ruleta-section {
+            background: #222;
+            padding: 18px;
+            border-radius: 10px;
+            border: 1px solid #444;
+        }
+        .nombre-ruleta-section h3 {
+            margin-bottom: 14px;
+            color: #4da6ff;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            font-size: 15px;
+        }
+        .nombre-btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .btn-nombre {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            background: #1a1a1a;
+            color: #aaa;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-nombre:active { transform: scale(0.97); }
+        .btn-nombre.selected {
+            background: #003366;
+            border-color: #4da6ff;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(77,166,255,0.3);
+        }
+
+        /* =========================================
+           HISTORIAL
+           ========================================= */
+        .admin-history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            overflow-y: auto;
+            background: #1a1a1a;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #333;
+            max-height: 420px;
+            flex: 1;
+        }
+
+        .admin-history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2a2a2a;
+            padding: 9px 12px;
+            border-radius: 6px;
+            border-left: 5px solid #555;
+        }
+
+        .admin-history-item.c-red   { border-left-color: #ff3333; }
+        .admin-history-item.c-black { border-left-color: #aaaaaa; }
+        .admin-history-item.c-green { border-left-color: #33ff33; }
+
+        .admin-history-item span { font-size: 17px; font-weight: bold; }
+
+        .btn-delete-item {
+            background: #6a0000;
+            color: white;
+            border: 1px solid #aa0000;
+            border-radius: 5px;
+            padding: 7px 14px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-delete-item:active { background: #aa0000; }
+
+        /* =========================================
+           TOAST
+           ========================================= */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #222;
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 2000;
+            transition: transform 0.3s ease;
+            border: 1px solid #444;
+            white-space: nowrap;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.success { border-color: #33ff33; color: #33ff33; }
+        .toast.error   { border-color: #ff4444; color: #ff6666; }
+
+        /* Responsive: en pantallas pequeñas, una sola columna */
+        @media (max-width: 600px) {
+            .dashboard-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="dashboard-container">
+
+    <!-- ENCABEZADO -->
+    <div class="header">
+        <h1>⚙️ Panel de Operador — Ruleta Americana</h1>
+        <p>Casino Puerto Varas · Los cambios se reflejan instantáneamente en la pantalla de la mesa</p>
+    </div>
+
+    <!-- COLUMNA IZQUIERDA: teclado + límites -->
+    <div style="display:flex; flex-direction:column; gap:15px;">
+
+        <!-- TECLADO NUMÉRICO -->
+        <div class="admin-section">
+            <h3>1. Ingreso de Número</h3>
+
+            <div class="display-label">Número a ingresar</div>
+            <div class="number-display-wrapper">
+                <div class="number-display" id="numDisplay">—</div>
+            </div>
+
+            <!-- Teclado: 4 filas -->
+            <div class="numpad">
+                <!-- Fila 1: 1 2 3 -->
+                <button class="numpad-key" onclick="window.numpadPress('1')">1</button>
+                <button class="numpad-key" onclick="window.numpadPress('2')">2</button>
+                <button class="numpad-key" onclick="window.numpadPress('3')">3</button>
+                <!-- Fila 2: 4 5 6 -->
+                <button class="numpad-key" onclick="window.numpadPress('4')">4</button>
+                <button class="numpad-key" onclick="window.numpadPress('5')">5</button>
+                <button class="numpad-key" onclick="window.numpadPress('6')">6</button>
+                <!-- Fila 3: 7 8 9 -->
+                <button class="numpad-key" onclick="window.numpadPress('7')">7</button>
+                <button class="numpad-key" onclick="window.numpadPress('8')">8</button>
+                <button class="numpad-key" onclick="window.numpadPress('9')">9</button>
+                <!-- Fila 4: 00  0  ⌫ -->
+                <button class="numpad-key key-double-zero" onclick="window.numpadPress('00')">00</button>
+                <button class="numpad-key" onclick="window.numpadPress('0')">0</button>
+                <button class="numpad-key key-del" onclick="window.numpadDel()">⌫</button>
+            </div>
+
+            <button class="btn-confirm" id="btnConfirm" disabled onclick="window.numpadConfirm()">
+                ✔ CONFIRMAR NÚMERO
+            </button>
+
+            <div class="btn-row">
+                <button class="btn btn-danger" id="btnDeleteLast">⬅ Borrar Último</button>
+                <button class="btn btn-warning" id="btnClearAll">🗑 Limpiar Todo</button>
+            </div>
+        </div>
+
+        <!-- LÍMITES (acordeón) -->
+        <div class="admin-section">
+            <div class="limits-header" id="toggleLimitsBtn">
+                2. Configuración de Límites
+                <span id="toggleIcon">▼</span>
+            </div>
+
+            <div class="limits-content" id="limitsContent">
+                <div class="input-section-title">Plenos</div>
+                <div class="input-group">
+                    <label>Mínimo:</label>
+                    <input type="text" id="inputMinPleno">
+                </div>
+                <div class="input-group">
+                    <label>Máximo:</label>
+                    <input type="text" id="inputMaxPleno">
+                </div>
+
+                <div class="input-section-title">Chanzas Dobles</div>
+                <div class="input-group">
+                    <label>Mínimo:</label>
+                    <input type="text" id="inputMinDobles">
+                </div>
+                <div class="input-group">
+                    <label>Máximo:</label>
+                    <input type="text" id="inputMaxDobles">
+                </div>
+
+                <div class="input-section-title">Chanzas Simples</div>
+                <div class="input-group">
+                    <label>Mínimo:</label>
+                    <input type="text" id="inputMinSimples">
+                </div>
+                <div class="input-group">
+                    <label>Máximo:</label>
+                    <input type="text" id="inputMaxSimples">
+                </div>
+
+                <button class="btn-save-limits" id="btnUpdateLimits">💾 Guardar Límites en Pantalla</button>
+            </div>
+        </div>
+
+        <!-- NOMBRE DE LA RULETA -->
+        <div class="nombre-ruleta-section" style="margin-top:0;">
+            <h3>3. Nombre de la Ruleta en Pantalla</h3>
+            <div class="nombre-btn-group">
+                <button class="btn-nombre" id="btnNombreAmericana">
+                    🎡 RULETA AMERICANA
+                </button>
+                <button class="btn-nombre" id="btnNombreFrancesa">
+                    🎰 RULETA FRANCESA
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- COLUMNA DERECHA: historial -->
+    <div class="admin-section" style="height:100%;">
+        <h3>3. Gestión de Historial</h3>
+        <p style="font-size:12px; color:#777; margin-bottom:10px;">
+            Último número en la parte superior. Toca "Borrar" para eliminar uno individual.
+        </p>
+        <div id="adminHistoryList" class="admin-history-list"></div>
+    </div>
+
+</div>
+
+<script>
+    /* =========================================
+       DATOS Y COLORES
+       ========================================= */
+    var LS_KEY = 'ruleta_casino_data';
+
+    var numberColors = {
+        '0':'green','00':'green',
+        '1':'red','2':'black','3':'red','4':'black','5':'red','6':'black',
+        '7':'red','8':'black','9':'red','10':'black','11':'black','12':'red',
+        '13':'black','14':'red','15':'black','16':'red','17':'black','18':'red',
+        '19':'red','20':'black','21':'red','22':'black','23':'red','24':'black',
+        '25':'red','26':'black','27':'red','28':'black','29':'black','30':'red',
+        '31':'black','32':'red','33':'black','34':'red','35':'black','36':'red'
+    };
+
+    var appData = { history: [], limits: {} };
+
+    /* =========================================
+       TECLADO NUMÉRICO
+       ========================================= */
+    var numpadBuffer = ''; // lo que el usuario ha tecleado (máx 2 dígitos)
+    var numDisplay   = document.getElementById('numDisplay');
+    var btnConfirm   = document.getElementById('btnConfirm');
+
+    function updateDisplay() {
+        if (numpadBuffer === '') {
+            numDisplay.textContent = '—';
+            numDisplay.className = 'number-display';
+            btnConfirm.disabled = true;
+            return;
+        }
+
+        numDisplay.textContent = numpadBuffer;
+
+        if (numberColors.hasOwnProperty(numpadBuffer)) {
+            var c = numberColors[numpadBuffer];
+            numDisplay.className = 'number-display valid-' + c;
+            btnConfirm.disabled = false;
+        } else {
+            numDisplay.className = 'number-display invalid';
+            btnConfirm.disabled = true;
+        }
+    }
+
+    window.numpadPress = function(key) {
+        // "00" es un valor especial directo
+        if (key === '00') {
+            numpadBuffer = '00';
+            updateDisplay();
+            return;
+        }
+
+        // Máximo 2 dígitos
+        if (numpadBuffer.length >= 2) return;
+
+        // Evitar "00" vía teclas individuales (solo via botón especial)
+        // Evitar leading zeros: si ya hay un '0', no agregar más dígitos → sería inválido de 1-36
+        if (numpadBuffer === '0' && key !== '') {
+            // "0X" donde X > 0 es inválido en ruleta, limpiar y empezar con el nuevo dígito
+            // Excepción: solo "0" es válido por sí solo, así que reemplazar
+            numpadBuffer = key;
+            updateDisplay();
+            return;
+        }
+
+        numpadBuffer += key;
+        updateDisplay();
+    };
+
+    window.numpadDel = function() {
+        if (numpadBuffer.length === 0) return;
+        numpadBuffer = numpadBuffer.slice(0, -1);
+        updateDisplay();
+    };
+
+    window.numpadConfirm = function() {
+        var val = numpadBuffer;
+        if (!numberColors.hasOwnProperty(val)) {
+            showToast('Número inválido: ' + val, 'error');
+            return;
+        }
+        appData.history.push(val);
+        saveLocal();
+        renderAdminHistory();
+        // Feedback visual en display antes de limpiar
+        numDisplay.textContent = '✔ ' + val;
+        setTimeout(function() {
+            numpadBuffer = '';
+            updateDisplay();
+        }, 600);
+        showToast('Número ' + val + ' ingresado', 'success');
+    };
+
+    /* =========================================
+       TOAST
+       ========================================= */
+    var toastEl = document.getElementById('toast');
+    var toastTimer = null;
+    function showToast(msg, type) {
+        toastEl.textContent = msg;
+        toastEl.className = 'toast show ' + (type || '');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function() { toastEl.className = 'toast'; }, 2500);
+    }
+
+    /* =========================================
+       ACORDEÓN LÍMITES
+       ========================================= */
+    document.getElementById('toggleLimitsBtn').addEventListener('click', function() {
+        var content = document.getElementById('limitsContent');
+        content.classList.toggle('active');
+        document.getElementById('toggleIcon').textContent = content.classList.contains('active') ? '▲' : '▼';
+    });
+
+    /* =========================================
+       GUARDAR / CARGAR LOCALSTORAGE
+       ========================================= */
+    function saveLocal() {
+        localStorage.setItem(LS_KEY, JSON.stringify(appData));
+    }
+
+    function loadData() {
+        var rawData = localStorage.getItem(LS_KEY);
+        if (rawData) {
+            appData = JSON.parse(rawData);
+        } else {
+            appData = {
+                history: [],
+                limits: {
+                    minPleno:'$1.000', maxPleno:'$20.000',
+                    minDobles:'$10.000', maxDobles:'$350.000',
+                    minSimples:'$20.000', maxSimples:'$700.000'
+                }
+            };
+            saveLocal();
+        }
+        fillLimitsInputs();
+        renderAdminHistory();
+    }
+
+    function fillLimitsInputs() {
+        document.getElementById('inputMinPleno').value   = appData.limits.minPleno   || '';
+        document.getElementById('inputMaxPleno').value   = appData.limits.maxPleno   || '';
+        document.getElementById('inputMinDobles').value  = appData.limits.minDobles  || '';
+        document.getElementById('inputMaxDobles').value  = appData.limits.maxDobles  || '';
+        document.getElementById('inputMinSimples').value = appData.limits.minSimples || '';
+        document.getElementById('inputMaxSimples').value = appData.limits.maxSimples || '';
+    }
+
+    /* =========================================
+       RENDERIZAR HISTORIAL
+       ========================================= */
+    function renderAdminHistory() {
+        var list = document.getElementById('adminHistoryList');
+        list.innerHTML = '';
+
+        if (appData.history.length === 0) {
+            list.innerHTML = '<div style="padding:20px;color:#666;text-align:center;">Pizarra en blanco</div>';
+            return;
+        }
+
+        for (var i = appData.history.length - 1; i >= 0; i--) {
+            var num = appData.history[i];
+            var colorClass = numberColors[num];
+            var colorText = colorClass === 'red' ? 'Rojo' : (colorClass === 'black' ? 'Negro' : 'Verde');
+            var itemDiv = document.createElement('div');
+            itemDiv.className = 'admin-history-item c-' + colorClass;
+            itemDiv.innerHTML =
+                '<span>N&ordm; ' + num + ' <small style="color:#888;font-weight:normal;margin-left:8px;">(' + colorText + ')</small></span>' +
+                '<button class="btn-delete-item" onclick="window.deleteIndividualNumber(' + i + ')">Borrar</button>';
+            list.appendChild(itemDiv);
+        }
+    }
+
+    /* =========================================
+       ACCIONES
+       ========================================= */
+    window.deleteIndividualNumber = function(index) {
+        if (index < 0 || index >= appData.history.length) return;
+        var numToDelete = appData.history[index];
+        if (!confirm('¿Eliminar el número ' + numToDelete + ' del historial?')) return;
+        appData.history.splice(index, 1);
+        saveLocal();
+        renderAdminHistory();
+    };
+
+    document.getElementById('btnDeleteLast').addEventListener('click', function() {
+        if (appData.history.length === 0) { showToast('No hay números para borrar', 'error'); return; }
+        var numToDelete = appData.history[appData.history.length - 1];
+        if (!confirm('¿Borrar el último número ingresado (' + numToDelete + ')?')) return;
+        appData.history.pop();
+        saveLocal();
+        renderAdminHistory();
+        showToast('Número ' + numToDelete + ' eliminado', '');
+    });
+
+    document.getElementById('btnClearAll').addEventListener('click', function() {
+        if (appData.history.length === 0) { showToast('La pizarra ya está en blanco', 'error'); return; }
+        if (!confirm('⚠️ ¿Eliminar TODOS los números de la pantalla? Esta acción no se puede deshacer.')) return;
+        appData.history = [];
+        saveLocal();
+        renderAdminHistory();
+        showToast('Pizarra limpiada', '');
+    });
+
+    document.getElementById('btnUpdateLimits').addEventListener('click', function() {
+        appData.limits = {
+            minPleno:   document.getElementById('inputMinPleno').value,
+            maxPleno:   document.getElementById('inputMaxPleno').value,
+            minDobles:  document.getElementById('inputMinDobles').value,
+            maxDobles:  document.getElementById('inputMaxDobles').value,
+            minSimples: document.getElementById('inputMinSimples').value,
+            maxSimples: document.getElementById('inputMaxSimples').value
+        };
+        saveLocal();
+        var btn = document.getElementById('btnUpdateLimits');
+        var orig = btn.textContent;
+        btn.textContent = '✔ ¡Guardado!';
+        btn.style.background = '#007a2f';
+        setTimeout(function() { btn.textContent = orig; btn.style.background = ''; }, 1500);
+        showToast('Límites actualizados en pantalla', 'success');
+    });
+
+    /* =========================================
+       INICIALIZACIÓN
+       ========================================= */
+    function actualizarBotonesNombre(nombre) {
+        var btnA = document.getElementById('btnNombreAmericana');
+        var btnF = document.getElementById('btnNombreFrancesa');
+        if (btnA) btnA.classList.toggle('selected', nombre === 'RULETA AMERICANA');
+        if (btnF) btnF.classList.toggle('selected', nombre === 'RULETA FRANCESA');
+    }
+
+    function setNombreRuleta(nombre) {
+        localStorage.setItem('ruleta_nombre', nombre);
+        actualizarBotonesNombre(nombre);
+        showToast('Pantalla actualizada: ' + nombre, 'success');
+    }
+
+    window.onload = function() {
+        loadData();
+        var nombreActual = localStorage.getItem('ruleta_nombre') || 'RULETA AMERICANA';
+        actualizarBotonesNombre(nombreActual);
+        var btnA = document.getElementById('btnNombreAmericana');
+        var btnF = document.getElementById('btnNombreFrancesa');
+        if (btnA) btnA.addEventListener('click', function() { setNombreRuleta('RULETA AMERICANA'); });
+        if (btnF) btnF.addEventListener('click', function() { setNombreRuleta('RULETA FRANCESA'); });
+    };
+</script>
+    <!-- Marca desarrollador -->
+    <div style="
+        position: fixed;
+        bottom: 8px;
+        right: 12px;
+        z-index: 10;
+        color: rgba(255,255,255,0.35);
+        font-size: 11px;
+        font-style: italic;
+        letter-spacing: 0.5px;
+        pointer-events: none;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    ">CarlosPN Interactive ®</div>
+</body>
+</html>
