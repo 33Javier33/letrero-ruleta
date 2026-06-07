@@ -1043,7 +1043,9 @@
         if (btnA) btnA.addEventListener('click', function() { setNombreRuleta('RULETA AMERICANA'); });
         if (btnF) btnF.addEventListener('click', function() { setNombreRuleta('RULETA FRANCESA'); });
         var savedUrl = localStorage.getItem('ruleta_pantalla_url') || '';
-        document.getElementById('inputPantallaUrl').value = savedUrl;
+        var defaultUrl = window.location.origin + '/';
+        document.getElementById('inputPantallaUrl').value = savedUrl || defaultUrl;
+        document.getElementById('inputPantallaUrl').placeholder = defaultUrl;
         document.getElementById('inputPantallaUrl').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') guardarUrlPantalla();
         });
@@ -1287,13 +1289,13 @@
     /* =========================================
        ABRIR PANTALLA DE MESA EN NUEVA VENTANA
        ========================================= */
+    function getUrlPantalla() {
+        var saved = localStorage.getItem('ruleta_pantalla_url') || '';
+        return saved || (window.location.origin + '/');
+    }
+
     function abrirPantalla() {
-        var url = localStorage.getItem('ruleta_pantalla_url') || '';
-        if (!url) {
-            showToast('⚠️ Primero guarda la URL de la pantalla', 'error');
-            document.getElementById('inputPantallaUrl').focus();
-            return;
-        }
+        var url = getUrlPantalla();
         /* Usar ancla con target="_blank" para forzar apertura en el
            navegador del sistema, no dentro de la PWA instalada */
         var a = document.createElement('a');
@@ -1308,7 +1310,11 @@
 
     function guardarUrlPantalla() {
         var url = document.getElementById('inputPantallaUrl').value.trim();
-        if (!url) { showToast('Escribe la URL de la pantalla', 'error'); return; }
+        if (!url) {
+            localStorage.removeItem('ruleta_pantalla_url');
+            showToast('URL restablecida al valor automático', 'success');
+            return;
+        }
         localStorage.setItem('ruleta_pantalla_url', url);
         showToast('URL guardada ✔', 'success');
     }
