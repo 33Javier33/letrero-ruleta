@@ -121,17 +121,17 @@
         /* SECCION INFERIOR */
         .bottom-section { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:calc(var(--u)*8) calc(var(--u)*15) calc(var(--u)*10); }
         .title-ruleta { color:white; font-size:calc(var(--u)*36); font-weight:bold; text-shadow:2px 4px 8px rgba(0,0,0,0.6),0 0 20px rgba(255,255,255,0.3); margin-bottom:calc(var(--u)*6); letter-spacing:calc(var(--u)*1); text-align:center; width:100%; }
-        .limits-table-container { flex:1; width:100%; position:relative; background:linear-gradient(135deg,rgba(0,15,60,0.97),rgba(0,35,100,0.94)); border-radius:calc(var(--u)*12); border:calc(var(--u)*2) solid #e6b800; padding:calc(var(--u)*8); box-shadow:inset 0 0 calc(var(--u)*15) rgba(0,0,60,0.6),0 0 calc(var(--u)*8) rgba(230,184,0,0.35); display:flex; flex-direction:column; justify-content:flex-start; }
-        .limits-table { flex:1; width:100%; border-collapse:collapse; color:#ffffff; font-weight:bold; }
-        .limits-table th, .limits-table td { text-align:center; padding:0 calc(var(--u)*4); border-right:1px solid rgba(100,180,255,0.2); vertical-align:middle; height:1px; }
+        .limits-table-container { flex:1; width:100%; background:linear-gradient(135deg,rgba(0,150,255,.9),rgba(0,200,255,.6)); border-radius:calc(var(--u)*12); border:2px solid #66ccff; padding:calc(var(--u)*8); box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,0.3); display:flex; flex-direction:column; justify-content:flex-start; }
+        .limits-table { flex:1; width:100%; border-collapse:collapse; color:#003366; font-weight:bold; }
+        .limits-table th, .limits-table td { text-align:center; padding:0 calc(var(--u)*4); border-right:1px solid rgba(0,51,102,.2); vertical-align:middle; height:1px; }
         .limits-table th:last-child, .limits-table td:last-child { border-right:none; }
-        .limits-table th { font-size:calc(var(--u)*18); text-transform:uppercase; border-bottom:1px solid rgba(100,180,255,0.25); color:#55d4f5; }
+        .limits-table th { font-size:calc(var(--u)*18); text-transform:uppercase; border-bottom:1px solid rgba(0,51,102,.2); color:#001a4d; }
         .limits-table td { font-size:calc(var(--u)*26); }
-        .row-label { font-size:calc(var(--u)*18)!important; text-align:left!important; text-transform:uppercase; width:25%; color:#55d4f5; }
-        .casino-name { flex-shrink:0; text-align:center; color:rgba(180,220,255,0.75); font-size:calc(var(--u)*14); padding:calc(var(--u)*6) 0 calc(var(--u)*2); letter-spacing:calc(var(--u)*2); }
+        .row-label { font-size:calc(var(--u)*18)!important; text-align:left!important; text-transform:uppercase; width:25%; color:#001a4d; }
+        .casino-name { flex-shrink:0; text-align:center; color:#003366; font-size:calc(var(--u)*14); padding:calc(var(--u)*6) 0 calc(var(--u)*2); letter-spacing:1px; }
 
-        /* LOGO DORADO EN LA TABLA */
-        .table-badge { position:absolute; bottom:calc(var(--u)*8); right:calc(var(--u)*8); width:calc(var(--u)*38); height:calc(var(--u)*38); border-radius:50%; background:radial-gradient(circle at 35% 35%,#f5d760,#e6b800,#b8860b,#7a5500); border:calc(var(--u)*2) solid #f0c040; box-shadow:0 0 calc(var(--u)*8) rgba(230,184,0,0.9),inset 0 0 calc(var(--u)*4) rgba(255,255,200,0.4); display:flex; align-items:center; justify-content:center; font-size:calc(var(--u)*18); font-weight:900; color:#3a1a00; font-family:Georgia,serif; text-shadow:0 1px 1px rgba(255,240,100,0.6); z-index:5; }
+        /* LOGO PEQUEÑO EN LA TABLA */
+        .table-logo-img { width:90%; max-width:calc(var(--u)*70); height:auto; object-fit:contain; display:block; margin:0 auto; }
     </style>
 </head>
 <body>
@@ -241,7 +241,7 @@
         <div class="limits-table-container">
             <table class="limits-table">
                 <thead>
-                    <tr><th></th><th>PLENO</th><th>CHANZAS<br>DOBLES</th><th>CHANZAS<br>SIMPLES</th></tr>
+                    <tr><th><img class="table-logo-img" id="tableLogoImg" src="" alt=""></th><th>PLENO</th><th>CHANZAS<br>DOBLES</th><th>CHANZAS<br>SIMPLES</th></tr>
                 </thead>
                 <tbody>
                     <tr>
@@ -259,7 +259,6 @@
                 </tbody>
             </table>
             <div class="casino-name">CASINO PUERTO VARAS</div>
-            <div class="table-badge">D</div>
         </div>
     </div>
 </div>
@@ -358,6 +357,7 @@ window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();});
 
 window.onload=function(){
     resizeCanvas();
+    var tl=document.getElementById('tableLogoImg'),ml=document.getElementById('logoImg');if(tl&&ml)tl.src=ml.src;
     elN=document.getElementById('display-current-number');
     elB=document.getElementById('history-board');
     h1=document.getElementById('hot-1');h2=document.getElementById('hot-2');h3=document.getElementById('hot-3');
