@@ -8,7 +8,7 @@
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
         /* --s = container width (fits 9:16 into any screen) | --u = 1 design-px */
         :root { --s: min(100vw, 56.25vh); --u: calc(var(--s) / 540); }
-        body { background:linear-gradient(180deg,#0022cc 0%,#0044ff 100%); width:100vw; height:100vh; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+        body { background:linear-gradient(180deg,#0022cc 0%,#0044ff 100%); width:100vw; height:100vh; overflow:hidden; display:flex; align-items:flex-start; justify-content:center; }
 
         .screen-container {
             width:var(--s); height:calc(var(--s) * 960 / 540);
@@ -97,9 +97,9 @@
             display:flex; flex-direction:column; align-items:center;
             padding:calc(var(--u)*6) 0 0; overflow:hidden;
         }
-        .history-item { font-size:calc(var(--u)*23); font-weight:bold; margin:calc(var(--u)*2) 0; width:100%; box-sizing:border-box; text-shadow:0 0 calc(var(--u)*5) rgba(255,255,255,0.5); }
-        .color-red   { color:#ff3333; text-align:right; padding-right:calc(var(--u)*22); }
-        .color-black { color:#ffff99; text-align:left;  padding-left:calc(var(--u)*22); }
+        .history-item { font-size:calc(var(--u)*40); font-weight:bold; margin:calc(var(--u)*1) 0; width:100%; box-sizing:border-box; line-height:1; }
+        .color-red   { color:#ff3333; text-align:right; padding-right:calc(var(--u)*8); }
+        .color-black { color:#ffff99; text-align:left;  padding-left:calc(var(--u)*8); }
         .color-green { color:#33ff33; text-align:center; }
 
         /* IMAGEN RULETA AL PIE DE LA PIZARRA */
@@ -107,12 +107,12 @@
             width:100%;
             flex-shrink:0;
             margin-top:auto;
-            height:calc(var(--u)*90);
+            height:calc(var(--u)*65);
             overflow:hidden;
         }
         .ruleta-pie img {
             width:100%;
-            height:calc(var(--u)*90);
+            height:calc(var(--u)*65);
             object-fit:cover;
             object-position:center 30%;
             display:block;
@@ -288,7 +288,7 @@ var wA=0;
 var mO={ob:72,or:68,no:65,ni:47,ii:43,hr:10,fs:7,aw:3.5,br:3.5,diamonds:true};
 function animW(){wA+=.008;drawWheel(document.getElementById('wheelCanvas'),wA,mO);requestAnimationFrame(animW);}
 
-var MAX_H=12,LS='ruleta_casino_data',lastD='';
+var MAX_H=7,LS='ruleta_casino_data',lastD='';
 var elN,elB,h1,h2,h3,c1,c2,c3,elT,eMP,eMxP,eMD,eMxD,eMS,eMxS;
 
 function sT(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
