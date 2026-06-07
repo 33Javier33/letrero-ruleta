@@ -1,4 +1,4 @@
-const CACHE = 'pantalla-ruleta-v20';
+const CACHE = 'pantalla-ruleta-v21';
 const FILES = [
     '/',
     '/index.html',
