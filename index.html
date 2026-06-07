@@ -75,11 +75,19 @@
         .bar-d3{background:linear-gradient(90deg,#885500,#ffbb66);}
 
         /* CALIENTES Y FRIOS */
-        .hot-cold-box { width:100%; height:calc(var(--u)*68); border-radius:calc(var(--u)*10); display:flex; justify-content:space-around; align-items:center; padding:calc(var(--u)*5); position:relative; overflow:hidden; box-shadow:0 calc(var(--u)*4) calc(var(--u)*10) rgba(0,0,0,0.5); background-size:cover; background-position:center; }
-        .hot-box { background-image:url('/hot-bg.png'); border:2px solid #ff4d4d; }
-        .cold-box { background-image:url('/cold-bg.png'); border:2px solid #66b3ff; }
+        .hot-cold-box { width:100%; height:calc(var(--u)*68); border-radius:calc(var(--u)*10); display:flex; justify-content:space-around; align-items:center; padding:calc(var(--u)*5); position:relative; overflow:hidden; box-shadow:0 calc(var(--u)*4) calc(var(--u)*10) rgba(0,0,0,0.5); }
+        .hot-box { background:linear-gradient(180deg,#990000,#ff1a1a); border:2px solid #ff4d4d; }
+        .fire-layer { position:absolute; bottom:-10px; left:0; width:100%; height:120%; background:radial-gradient(circle at 50% 100%,rgba(255,150,0,0.6),transparent 60%); animation:flicker 0.15s infinite alternate; pointer-events:none; z-index:1; }
+        .fire-layer::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:50%; background:linear-gradient(to top,rgba(255,200,0,0.5),transparent); filter:blur(5px); animation:flicker2 0.3s infinite alternate; }
+        @keyframes flicker{0%{opacity:.7;transform:scaleY(1)}100%{opacity:1;transform:scaleY(1.1)}}
+        @keyframes flicker2{0%{opacity:.5;transform:translateY(0)}100%{opacity:.9;transform:translateY(-5px)}}
+        .cold-box { background:linear-gradient(180deg,#0044cc,#0088ff); border:2px solid #66b3ff; }
+        .snow-layer { position:absolute; top:-50px; left:0; width:100%; height:150%; background-image:radial-gradient(white 2px,transparent 2px),radial-gradient(rgba(255,255,255,.8) 1px,transparent 1px),radial-gradient(rgba(255,255,255,.5) 2px,transparent 2px); background-size:30px 30px,20px 20px,40px 40px; background-position:0 0,10px 10px,20px 20px; animation:snow 4s linear infinite; pointer-events:none; z-index:1; }
+        @keyframes snow{0%{transform:translateY(0)}100%{transform:translateY(30px)}}
         .stat-number-hot { display:flex; flex-direction:column; align-items:center; z-index:2; gap:1px; }
-        .num-circle { width:calc(var(--u)*44); height:calc(var(--u)*44); background:#fff; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:calc(var(--u)*18); font-weight:bold; color:#000; box-shadow:0 0 calc(var(--u)*8) rgba(0,0,0,0.4); }
+        .flame { font-size:calc(var(--u)*13); animation:flameF 0.6s ease-in-out infinite alternate; filter:drop-shadow(0 0 calc(var(--u)*4) #ff6600); }
+        @keyframes flameF{0%{transform:translateY(0) scale(1)}100%{transform:translateY(-3px) scale(1.15)}}
+        .num-circle { width:calc(var(--u)*44); height:calc(var(--u)*44); background:#fff; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:calc(var(--u)*18); font-weight:bold; color:#000; box-shadow:0 0 calc(var(--u)*8) rgba(255,100,0,0.6); border:calc(var(--u)*2) solid #ff6600; }
         .stat-number { width:calc(var(--u)*44); height:calc(var(--u)*44); background:#fff; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:calc(var(--u)*16); font-weight:bold; color:#000; z-index:2; }
 
         /* COLUMNA DERECHA - PIZARRA CON IMAGEN AL PIE */
@@ -201,6 +209,7 @@
 
                 <!-- CALIENTES -->
                 <div class="hot-cold-box hot-box">
+                    <div class="fire-layer"></div>
                     <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-1">36</div></div>
                     <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-2">35</div></div>
                     <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-3">34</div></div>
@@ -208,6 +217,7 @@
 
                 <!-- FRIOS -->
                 <div class="hot-cold-box cold-box">
+                    <div class="snow-layer"></div>
                     <div class="stat-number" id="cold-1">0</div>
                     <div class="stat-number" id="cold-2">00</div>
                     <div class="stat-number" id="cold-3">1</div>
