@@ -376,6 +376,7 @@ window.onload=function(){
         if(np)np.classList.add('active');if(nd)nd.classList.add('active');
     }
     setInterval(function(){goPanel(cp+1);},15000);
+    if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js',{scope:'/'});}
 };
 </script>
 </body>

@@ -20,6 +20,13 @@
         { "key": "Service-Worker-Allowed", "value": "/operador/" },
         { "key": "Cache-Control", "value": "no-cache, no-store" }
       ]
+    },
+    {
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Service-Worker-Allowed", "value": "/" },
+        { "key": "Cache-Control", "value": "no-cache, no-store" }
+      ]
     }
   ]
 }
