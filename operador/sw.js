@@ -5,7 +5,8 @@ const FILES = [
     '/operador/manifest.json',
     '/operador/icon.svg',
     '/operador/icon-192.png',
-    '/operador/icon-512.png'
+    '/operador/icon-512.png',
+    '/dreams-logo.png'
 ];
 
 self.addEventListener('install', function(e) {

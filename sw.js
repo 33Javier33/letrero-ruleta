@@ -1,7 +1,8 @@
-const CACHE = 'pantalla-ruleta-v12';
+const CACHE = 'pantalla-ruleta-v13';
 const FILES = [
     '/',
-    '/index.html'
+    '/index.html',
+    '/dreams-logo.png'
 ];
 
 self.addEventListener('install', function(e) {

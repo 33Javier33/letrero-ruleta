@@ -26,6 +26,11 @@
             gap: 15px;
         }
 
+
+        /* LOGO DREAMS EN HEADER */
+        .header { position:relative; }
+        .op-dreams-logo { position:absolute; top:12px; right:16px; width:80px; height:auto; opacity:0.85; }
+        @media (max-width:480px) { .op-dreams-logo { width:56px; top:8px; right:10px; } }
         .header {
             grid-column: 1 / -1;
             background: #222;
@@ -345,7 +350,12 @@
         @media (orientation: landscape) and (max-height: 520px) {
             body { padding: 8px; }
             .dashboard-container { gap: 8px; }
-            .header { padding: 8px 14px; }
+    
+        /* LOGO DREAMS EN HEADER */
+        .header { position:relative; }
+        .op-dreams-logo { position:absolute; top:12px; right:16px; width:80px; height:auto; opacity:0.85; }
+        @media (max-width:480px) { .op-dreams-logo { width:56px; top:8px; right:10px; } }
+        .header { padding: 8px 14px; }
             .header h1 { font-size: 16px; margin-bottom: 0; }
             .header p  { font-size: 11px; }
             .btn-pantalla { padding: 9px 12px; font-size: 13px; margin-top: 8px; }
@@ -599,6 +609,7 @@
 
     <!-- ENCABEZADO -->
     <div class="header">
+        <img src="/dreams-logo.png" class="op-dreams-logo" alt="Dreams">
         <h1 id="panelTitle">⚙️ Panel de Operador — Ruleta Americana</h1>
         <p>Casino Puerto Varas · Los cambios se reflejan instantáneamente en la pantalla de la mesa</p>
         <div style="display:flex;gap:8px;align-items:stretch;margin-top:12px;">
