@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Pantalla Ruleta Americana - Casino</title>
     <!-- Set --vh100 from window.innerHeight so 100vh-chrome browsers don't clip content -->
     <script>(function(){function u(){var h=window.innerHeight;document.documentElement.style.setProperty('--vh100',h+'px');document.documentElement.style.setProperty('--vh',(h*.01)+'px');}u();window.addEventListener('resize',u);window.addEventListener('orientationchange',function(){setTimeout(u,150);});}());</script>
@@ -20,7 +23,7 @@
         }
 
         /* SECCION SUPERIOR */
-        .top-section { display:flex; height:55%; padding:calc(var(--u)*8) calc(var(--u)*15) calc(var(--u)*6); gap:calc(var(--u)*12); overflow:hidden; }
+        .top-section { display:flex; height:60%; padding:calc(var(--u)*8) calc(var(--u)*15) calc(var(--u)*6); gap:calc(var(--u)*12); overflow:hidden; }
         .left-column { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:space-between; }
 
         /* LOGO */
@@ -93,14 +96,14 @@
         .stat-number { width:calc(var(--u)*36); height:calc(var(--u)*36); background:#fff; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:calc(var(--u)*13); font-weight:bold; color:#000; z-index:2; }
 
         /* COLUMNA DERECHA - PIZARRA CON IMAGEN AL PIE */
-        .right-column { width:calc(var(--u)*155); display:flex; flex-direction:column; height:100%; }
+        .right-column { width:calc(var(--u)*185); display:flex; flex-direction:column; height:100%; }
         .history-board {
             flex:1; background:#000; border:calc(var(--u)*6) solid #e6b800; border-radius:calc(var(--u)*5);
             display:flex; flex-direction:column; align-items:center;
             padding:calc(var(--u)*6) 0 0; overflow:hidden;
         }
         .history-items-wrapper { flex:1; width:100%; display:flex; flex-direction:column; overflow:hidden; }
-        .history-item { flex:1; font-size:calc(var(--u)*40); font-weight:bold; width:100%; box-sizing:border-box; display:flex; align-items:center; }
+        .history-item { flex:1; font-size:calc(var(--u)*28); font-weight:bold; width:100%; box-sizing:border-box; display:flex; align-items:center; }
         .color-red   { color:#ff3333; justify-content:flex-end; padding-right:calc(var(--u)*8); }
         .color-black { color:#ffd700; justify-content:flex-start; padding-left:calc(var(--u)*8); }
         .color-green { color:#33ff33; justify-content:center; }
@@ -109,12 +112,12 @@
         .ruleta-pie {
             width:100%;
             flex-shrink:0;
-            height:calc(var(--u)*65);
+            height:calc(var(--u)*45);
             overflow:hidden;
         }
         .ruleta-pie img {
             width:100%;
-            height:calc(var(--u)*65);
+            height:calc(var(--u)*45);
             object-fit:cover;
             object-position:center 30%;
             display:block;
@@ -127,7 +130,7 @@
         .limits-table { flex:1; width:100%; border-collapse:collapse; color:#003366; font-weight:bold; }
         .limits-table th, .limits-table td { text-align:center; padding:0 calc(var(--u)*4); border-right:1px solid rgba(0,51,102,.2); vertical-align:middle; height:1px; }
         .limits-table th:last-child, .limits-table td:last-child { border-right:none; }
-        .limits-table th { font-size:calc(var(--u)*14); text-transform:uppercase; border-bottom:1px solid rgba(0,51,102,.2); color:#66ccff; text-shadow:0 1px 3px rgba(0,0,80,0.7); }
+        .limits-table th { font-size:calc(var(--u)*14); text-transform:uppercase; border-bottom:1px solid rgba(0,51,102,.2); color:#000; text-shadow:none; }
         .limits-table td { font-size:calc(var(--u)*20); }
         .row-label { font-size:calc(var(--u)*14)!important; text-align:left!important; text-transform:uppercase; width:25%; color:#003366; }
         .casino-name { flex-shrink:0; text-align:center; color:#e6b800; font-size:calc(var(--u)*14); padding:calc(var(--u)*6) 0 calc(var(--u)*2); letter-spacing:calc(var(--u)*2); font-weight:bold; text-shadow:0 0 calc(var(--u)*6) rgba(230,184,0,0.5); }
