@@ -122,6 +122,16 @@
         .color-black { color:#ffd700; justify-content:flex-start; padding-left:calc(var(--u)*8); }
         .color-green { color:#33ff33; justify-content:center; }
 
+        /* BOLAS MODE PIZARRA */
+        .history-board.ball-mode { background:#1c1c3a; }
+        .ball-mode .history-items-wrapper { flex-direction:row; flex-wrap:wrap; align-content:flex-start; padding:calc(var(--u)*4); gap:calc(var(--u)*4); }
+        .ball-mode .history-item { flex:none; width:calc((100% - var(--u)*8) / 3); aspect-ratio:1; border-radius:50%; font-size:calc(var(--u)*16); font-weight:bold; justify-content:center !important; padding:0 !important; box-shadow:inset -2px -3px 6px rgba(0,0,0,0.55),inset 1px 2px 4px rgba(255,255,255,0.2),0 2px 6px rgba(0,0,0,0.5); }
+        .ball-mode .color-red { background:radial-gradient(circle at 35% 30%,#ff5555,#8b0000) !important; color:#fff !important; }
+        .ball-mode .color-black { background:radial-gradient(circle at 35% 30%,#666,#111) !important; color:#fff !important; border:1px solid #444 !important; }
+        .ball-mode .color-green { background:radial-gradient(circle at 35% 30%,#44dd44,#004400) !important; color:#fff !important; }
+        @keyframes ballEntry { 0%{transform:scale(0) rotate(-180deg);opacity:0;} 55%{transform:scale(1.2) rotate(15deg);opacity:1;} 80%{transform:scale(0.92) rotate(-3deg);} 100%{transform:scale(1) rotate(0);} }
+        .ball-new { animation:ballEntry .65s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
         /* IMAGEN RULETA AL PIE DE LA PIZARRA */
         .ruleta-pie {
             width:100%;
@@ -442,9 +452,12 @@ function updateScreen(data){
     var iW=document.getElementById('history-items');
     iW.innerHTML='';
     var nums=data.history.slice().reverse().slice(0,MAX_H);
-    for(var i=0;i<MAX_H;i++){
+    var bp=localStorage.getItem('rlt_ballpizarra')==='1';
+    var brd=document.getElementById('history-board');if(brd)brd.classList.toggle('ball-mode',bp);
+    var count=bp?nums.length:MAX_H;
+    for(var i=0;i<count;i++){
         var d=document.createElement('div');d.className='history-item';
-        if(i<nums.length){var num=nums[i];d.textContent=num;var c=numberColors[num];d.classList.add(c==='red'?'color-red':c==='black'?'color-black':'color-green');}
+        if(i<nums.length){var num=nums[i];d.textContent=num;var c=numberColors[num];d.classList.add(c==='red'?'color-red':c==='black'?'color-black':'color-green');if(bp&&i===0)d.classList.add('ball-new');}
         iW.appendChild(d);
     }
     if(data.history.length){
@@ -475,7 +488,7 @@ function updateScreen(data){
 }
 
 function checkStorage(){var r=localStorage.getItem(LS);if(r&&r!==lastD){lastD=r;try{var d=JSON.parse(r);if(d.history&&d.history.length&&localStorage.getItem('rlt_ballspin')==='1'&&!ballAnim.active){spinToNumber(d);}else{updateScreen(d);}}catch(e){}}}
-window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();});
+window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();if(e.key==='rlt_ballpizarra'){lastD=null;checkStorage();}});
 
 window.onload=function(){
     resizeCanvas();
@@ -488,6 +501,7 @@ window.onload=function(){
     eMP=document.getElementById('display-min-pleno');eMxP=document.getElementById('display-max-pleno');
     eMD=document.getElementById('display-min-dobles');eMxD=document.getElementById('display-max-dobles');
     eMS=document.getElementById('display-min-simples');eMxS=document.getElementById('display-max-simples');
+    var brdInit=document.getElementById('history-board');if(brdInit)brdInit.classList.toggle('ball-mode',localStorage.getItem('rlt_ballpizarra')==='1');
     if(!localStorage.getItem(LS))localStorage.setItem(LS,JSON.stringify({history:[],limits:{minPleno:'$1.000',maxPleno:'$20.000',minDobles:'$10.000',maxDobles:'$350.000',minSimples:'$20.000',maxSimples:'$700.000'}}));
     var nom=localStorage.getItem('ruleta_nombre');if(nom&&elT)elT.textContent=nom;
     window.addEventListener('storage',function(e){if(e.key==='ruleta_nombre'&&elT)elT.textContent=e.newValue;});

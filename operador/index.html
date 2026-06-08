@@ -833,6 +833,15 @@
             </button>
         </div>
 
+        <!-- PIZARRA EN BOLAS -->
+        <div class="nombre-ruleta-section" style="margin-top:0;">
+            <h3>6. Pizarra en Bolas</h3>
+            <p style="font-size:12px;color:#777;margin-bottom:12px;">Muestra el historial como bolas de colores con animación de entrada al llegar un número nuevo.</p>
+            <button id="btnBallPizarra" class="btn-nombre">
+                🔴 Bolas en Pizarra: <span id="ballPizarraLabel">DESACTIVADA</span>
+            </button>
+        </div>
+
     </div>
 
     <!-- COLUMNA DERECHA: historial -->
@@ -1203,6 +1212,13 @@
             localStorage.setItem('rlt_ballspin',ballOn?'1':'0');
             updateBallBtn(ballOn);
         });
+
+        var btnBP=document.getElementById('btnBallPizarra');
+        var bpLabel=document.getElementById('ballPizarraLabel');
+        function updateBPBtn(on){if(!btnBP||!bpLabel)return;bpLabel.textContent=on?'ACTIVADA':'DESACTIVADA';btnBP.classList.toggle('selected',on);}
+        var bpOn=localStorage.getItem('rlt_ballpizarra')==='1';
+        updateBPBtn(bpOn);
+        if(btnBP)btnBP.addEventListener('click',function(){bpOn=!bpOn;localStorage.setItem('rlt_ballpizarra',bpOn?'1':'0');updateBPBtn(bpOn);});
 
         // Textura papel
         var chkTextura = document.getElementById('chkTextura');
