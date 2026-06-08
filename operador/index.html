@@ -794,7 +794,9 @@
 
         <!-- TEMA DE FONDO -->
         <div class="tema-section">
-            <h3>4. Tema de Fondo</h3>
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">4. Tema de Fondo
+                <button class="help-btn" onclick="openHelp('tema')" title="Ayuda: temas y textura">?</button>
+            </h3>
             <div class="textura-toggle">
                 <input type="checkbox" id="chkTextura" checked>
                 <label for="chkTextura">Textura papel arrugado</label>
@@ -826,7 +828,9 @@
 
         <!-- ANIMACION DE BOLA -->
         <div class="nombre-ruleta-section" style="margin-top:0;">
-            <h3>5. Animación Ruleta</h3>
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">5. Animación Ruleta
+                <button class="help-btn" onclick="openHelp('ballspin')" title="Ayuda: animación de la bolita">?</button>
+            </h3>
             <p style="font-size:12px;color:#777;margin-bottom:12px;">Activa para ver la bola girar y caer al número ganador en pantalla.</p>
             <button id="btnBallAnim" class="btn-nombre">
                 🎱 Animación de Bola: <span id="ballAnimLabel">DESACTIVADA</span>
@@ -835,7 +839,9 @@
 
         <!-- PIZARRA EN BOLAS -->
         <div class="nombre-ruleta-section" style="margin-top:0;">
-            <h3>6. Pizarra en Bolas</h3>
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">6. Pizarra en Bolas
+                <button class="help-btn" onclick="openHelp('ballpizarra')" title="Ayuda: historial en bolas">?</button>
+            </h3>
             <p style="font-size:12px;color:#777;margin-bottom:12px;">Muestra el historial como bolas de colores con animación de entrada al llegar un número nuevo.</p>
             <button id="btnBallPizarra" class="btn-nombre">
                 🔴 Bolas en Pizarra: <span id="ballPizarraLabel">DESACTIVADA</span>
@@ -1424,6 +1430,71 @@
                 '</ol></div>'
         },
 
+        tema: {
+            title: '4. Tema de Fondo',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🎨 Colores de fondo</div>' +
+                '<p>Cambia el color de fondo de la pantalla de la mesa. El cambio es <strong>instantáneo</strong> y se guarda automáticamente — no hay que recargar nada.</p>' +
+                '<ul>' +
+                '<li><strong>Mesa Negro ★</strong> — Fondo negro profundo. Principal para mesas con tapete negro.</li>' +
+                '<li><strong>Mesa Rojo ★</strong> — Rojo oscuro. Principal para mesas con tapete rojo.</li>' +
+                '<li>Los otros 5 temas (Azul, Verde, Violeta, Dorado, Teal) son alternativos decorativos.</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">📄 Textura papel arrugado</div>' +
+                '<p>La casilla "Textura papel arrugado" agrega una capa de textura sutil sobre el tema seleccionado. Aporta profundidad visual sin afectar la legibilidad de los datos.</p>' +
+                '<ul>' +
+                '<li>Se aplica encima de cualquier tema de color</li>' +
+                '<li>El cambio es instantáneo en la pantalla de la mesa</li>' +
+                '<li>Se puede activar o desactivar en cualquier momento</li>' +
+                '</ul></div>'
+        },
+
+        ballspin: {
+            title: '5. Animación Ruleta',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🎱 ¿Qué hace la animación?</div>' +
+                '<p>Cuando está <strong>ACTIVADA</strong>, al confirmar un número la ruleta en pantalla muestra una bolita blanca que:</p>' +
+                '<ol>' +
+                '<li>Gira rápido en el borde exterior de la ruleta</li>' +
+                '<li>Desacelera junto con la ruleta hasta llegar al número ganador</li>' +
+                '<li>Cae hacia el interior y se posiciona en el slot del número</li>' +
+                '<li>Se desplaza hacia la ranura exterior dejando ver el número</li>' +
+                '<li>Queda descansando en la ranura y rueda con la ruleta mientras gira lento</li>' +
+                '</ol></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🔄 Comportamiento</div>' +
+                '<ul>' +
+                '<li>El número nuevo aparece en pantalla cuando la bolita llega al slot</li>' +
+                '<li>La bolita permanece visible sobre el número hasta el próximo giro</li>' +
+                '<li>Al llegar un nuevo número, la bolita sale disparada y comienza un nuevo giro</li>' +
+                '<li>Si se <strong>DESACTIVA</strong>, el número aparece directamente sin animación</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block warn"><div class="help-block-title">⏱ Tiempo de la animación</div>' +
+                '<p>La animación dura aproximadamente <strong>3–5 segundos</strong>. Durante ese tiempo la pantalla muestra el número anterior mientras la bolita gira. El número nuevo aparece cuando la bolita llega al slot.</p>' +
+                '<p style="margin-top:8px;color:#ff9944;">Si el ritmo de juego es muy rápido, se puede desactivar la animación para que el número aparezca de inmediato.</p></div>'
+        },
+
+        ballpizarra: {
+            title: '6. Pizarra en Bolas',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🔴 Modo bolas en el historial</div>' +
+                '<p>Cuando está <strong>ACTIVADA</strong>, los números de la pizarra (columna derecha de la pantalla) se muestran como <strong>bolas de colores</strong> en lugar de texto plano. Se mantiene la misma distribución:</p>' +
+                '<ul>' +
+                '<li><span style="color:#ff5555;">●</span> <strong>Bola roja</strong> → número rojo, alineada a la derecha</li>' +
+                '<li><span style="color:#aaa;">●</span> <strong>Bola gris</strong> → número negro, alineada a la izquierda</li>' +
+                '<li><span style="color:#44dd44;">●</span> <strong>Bola verde</strong> → 0 o 00, centrada</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">✨ Animación de entrada</div>' +
+                '<p>Cada vez que se confirma un número nuevo, la bola más reciente aparece con una animación de giro + escala que llama la atención del jugador hacia el último resultado.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🎨 Apariencia en pantalla</div>' +
+                '<p>Al activar el modo bolas el fondo de la pizarra cambia a azul oscuro para que los colores de las bolas resalten mejor.</p>' +
+                '<p style="margin-top:8px;">Se puede combinar con cualquier tema de fondo y con la animación de ruleta al mismo tiempo.</p></div>'
+        },
+
         general: {
             title: '📚 Guía de Uso — Panel del Operador',
             body:
@@ -1450,6 +1521,15 @@
 
                 '<div class="help-block"><div class="help-block-title">4️⃣ Historial <span class="help-chip blue">?</span></div>' +
                 '<p>Lista de todos los números de la sesión (el más reciente arriba). Se pueden borrar números individuales (en caso de error) o limpiar toda la pizarra. Siempre pide confirmación antes de borrar.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">4️⃣ Tema de Fondo <span class="help-chip blue">?</span></div>' +
+                '<p>7 temas de color para el fondo de la pantalla (<strong>Mesa Negro</strong> y <strong>Mesa Rojo</strong> son los principales). También activa/desactiva la textura de papel arrugado. Los cambios son instantáneos.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">5️⃣ Animación Ruleta <span class="help-chip blue">?</span></div>' +
+                '<p>Activa una bolita blanca animada en la ruleta giratoria que gira, desacelera y se posa sobre el número ganador, quedando visible en la ranura exterior mientras la ruleta sigue girando lento.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">6️⃣ Pizarra en Bolas <span class="help-chip blue">?</span></div>' +
+                '<p>Convierte el historial de números de texto plano a <strong>bolas de colores</strong> con efecto 3D y animación de entrada. Cada bola mantiene la posición izquierda/centro/derecha según su color.</p></div>' +
 
                 '<div class="help-block" style="border-left-color:#f1c40f;"><div class="help-block-title">💡 Consejos prácticos</div>' +
                 '<ul>' +
