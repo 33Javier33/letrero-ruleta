@@ -343,7 +343,7 @@ function drawBallOnCanvas(canvas){
     if(ballAnim.phase==='idle')return;
     if(localStorage.getItem('rlt_ballspin')!=='1'){ballAnim.phase='idle';ballAnim.active=false;return;}
     var ctx=canvas.getContext('2d'),W=canvas.width,cx=W/2,cy=W/2;
-    if(ballAnim.phase==='rest'){ballAnim.bR=(mO.no+mO.ni)/2;ballAnim.bAngle=ballAnim.restOffset+wA;}
+    if(ballAnim.phase==='rest'){ballAnim.bR=mO.no*1.02;ballAnim.bAngle=ballAnim.restOffset+wA;}
     var bx=cx+ballAnim.bR*Math.cos(ballAnim.bAngle);
     var by=cy+ballAnim.bR*Math.sin(ballAnim.bAngle);
     var br=mO.ob*0.065;
@@ -385,6 +385,7 @@ function tickBall(){
             ballAnim.phase='reveal';ballAnim.timer=0;
         }
     }else if(ballAnim.phase==='reveal'){
+        ballAnim.bR+=(mO.no*1.02-ballAnim.bR)*0.04;
         ballAnim.timer++;
         if(ballAnim.timer===1&&ballAnim.pendingData){
             updateScreen(ballAnim.pendingData);
