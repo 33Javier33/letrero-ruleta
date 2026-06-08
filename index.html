@@ -23,7 +23,7 @@
         }
 
         /* SECCION SUPERIOR */
-        .top-section { display:flex; height:60%; padding:calc(var(--u)*8) calc(var(--u)*15) calc(var(--u)*6); gap:calc(var(--u)*12); overflow:hidden; }
+        .top-section { display:flex; height:66%; padding:calc(var(--u)*8) calc(var(--u)*15) calc(var(--u)*6); gap:calc(var(--u)*12); overflow:hidden; }
         .left-column { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:space-between; }
 
         /* LOGO */
@@ -55,13 +55,13 @@
         .carousel-dot { width:calc(var(--u)*6); height:calc(var(--u)*6); border-radius:50%; background:rgba(255,255,255,0.25); transition:background 0.3s; }
         .carousel-dot.active { background:rgba(255,255,255,0.85); }
         .stat-panel {
-            display: none; padding:calc(var(--u)*5) calc(var(--u)*10) calc(var(--u)*4); }
+            display: none; padding:calc(var(--u)*7) calc(var(--u)*10) calc(var(--u)*5); }
         .stat-panel.active { display:block; animation:fadeIn 0.5s ease; }
         @keyframes fadeIn { from{opacity:0} to{opacity:1} }
         .panel-title { text-align:center; font-size:calc(var(--u)*9); font-weight:bold; text-transform:uppercase; color:rgba(255,255,255,0.55); letter-spacing:calc(var(--u)*1.5); margin-bottom:calc(var(--u)*4); }
-        .pct-labels { display:flex; justify-content:space-between; margin-bottom:calc(var(--u)*4); }
+        .pct-labels { display:flex; justify-content:space-between; margin-bottom:calc(var(--u)*5); }
         .pct-label { text-align:center; font-size:calc(var(--u)*10); font-weight:bold; text-transform:uppercase; text-shadow:1px 1px 3px black; flex:1; }
-        .pct-label span { font-size:calc(var(--u)*18); display:block; margin-top:calc(var(--u)*1); text-shadow:0 0 calc(var(--u)*8) currentColor; }
+        .pct-label span { font-size:calc(var(--u)*20); display:block; margin-top:calc(var(--u)*2); text-shadow:0 0 calc(var(--u)*8) currentColor; }
         .c-red{color:#ff4d4d;} .c-green{color:#4dff4d;} .c-black{color:#e6e6e6;}
         .c-par{color:#ffe066;} .c-impar{color:#ff99cc;}
         .c-menor{color:#66ccff;} .c-mayor{color:#ff9944;}
@@ -112,14 +112,14 @@
         .ruleta-pie {
             width:100%;
             flex-shrink:0;
-            height:calc(var(--u)*45);
+            height:calc(var(--u)*70);
             overflow:hidden;
         }
         .ruleta-pie img {
             width:100%;
-            height:calc(var(--u)*45);
+            height:calc(var(--u)*70);
             object-fit:cover;
-            object-position:center 30%;
+            object-position:center 20%;
             display:block;
         }
 
