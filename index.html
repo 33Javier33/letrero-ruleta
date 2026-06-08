@@ -127,14 +127,17 @@
         .bottom-section { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:calc(var(--u)*6); padding:calc(var(--u)*5) calc(var(--u)*15) calc(var(--u)*6); }
         .title-card { width:100%; flex-shrink:0; background:linear-gradient(135deg,rgba(0,80,180,.85),rgba(0,140,255,.65)); border-radius:calc(var(--u)*12); border:2px solid #66ccff; padding:calc(var(--u)*6) calc(var(--u)*8); box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; }
         .title-ruleta { color:white; font-size:calc(var(--u)*28); font-weight:bold; text-shadow:2px 4px 8px rgba(0,0,0,0.6),0 0 20px rgba(255,255,255,0.3); letter-spacing:calc(var(--u)*1); text-align:center; width:100%; }
-        .limits-table-container { flex:1; width:100%; background:linear-gradient(135deg,rgba(0,150,255,.9),rgba(0,200,255,.6)); border-radius:calc(var(--u)*12); border:2px solid #66ccff; padding:calc(var(--u)*6) calc(var(--u)*8); box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,0.3); display:flex; flex-direction:column; justify-content:center; gap:calc(var(--u)*6); }
-        .limits-table { width:100%; border-collapse:collapse; color:#003366; font-weight:bold; }
-        .limits-table th, .limits-table td { text-align:center; padding:0 calc(var(--u)*4); border-right:1px solid rgba(0,51,102,.2); vertical-align:middle; height:1px; }
+        .limits-table-container { flex:1; width:100%; background:linear-gradient(135deg,rgba(0,150,255,.9),rgba(0,200,255,.6)); border-radius:calc(var(--u)*12); border:2px solid #66ccff; padding:calc(var(--u)*8); box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,0.3); display:flex; flex-direction:column; }
+        .limits-table-wrapper { flex:1; overflow:hidden; }
+        .limits-table { width:100%; height:100%; border-collapse:collapse; color:#003366; font-weight:bold; }
+        .limits-table thead tr { height:28%; }
+        .limits-table tbody tr { height:36%; }
+        .limits-table th, .limits-table td { text-align:center; padding:0 calc(var(--u)*4); border-right:1px solid rgba(0,51,102,.2); vertical-align:middle; }
         .limits-table th:last-child, .limits-table td:last-child { border-right:none; }
-        .limits-table th { font-size:calc(var(--u)*12); text-transform:uppercase; border-bottom:1px solid rgba(0,51,102,.2); color:#000; text-shadow:none; }
-        .limits-table td { font-size:calc(var(--u)*16); }
-        .row-label { font-size:calc(var(--u)*12)!important; text-align:left!important; text-transform:uppercase; width:25%; color:#003366; }
-        .casino-name { flex-shrink:0; text-align:center; color:#e6b800; font-size:calc(var(--u)*14); padding:0; letter-spacing:calc(var(--u)*2); font-weight:bold; text-shadow:0 0 calc(var(--u)*6) rgba(230,184,0,0.5); }
+        .limits-table th { font-size:calc(var(--u)*14); text-transform:uppercase; border-bottom:1px solid rgba(0,51,102,.2); color:#000; text-shadow:none; }
+        .limits-table td { font-size:calc(var(--u)*22); }
+        .row-label { font-size:calc(var(--u)*14)!important; text-align:left!important; text-transform:uppercase; width:25%; color:#003366; }
+        .casino-name { flex-shrink:0; text-align:center; color:#e6b800; font-size:calc(var(--u)*16); padding:calc(var(--u)*6) 0 0; letter-spacing:calc(var(--u)*2); font-weight:bold; text-shadow:0 0 calc(var(--u)*6) rgba(230,184,0,0.5); }
 
         /* LOGO PEQUEÑO EN LA TABLA */
         .table-logo-img { width:90%; max-width:calc(var(--u)*70); height:auto; object-fit:contain; display:block; margin:0 auto; }
@@ -248,25 +251,27 @@
             <div class="title-ruleta" id="titulo-ruleta">RULETA AMERICANA</div>
         </div>
         <div class="limits-table-container">
-            <table class="limits-table">
-                <thead>
-                    <tr><th><img class="table-logo-img" id="tableLogoImg" src="" alt=""></th><th>PLENO</th><th>CHANZAS<br>DOBLES</th><th>CHANZAS<br>SIMPLES</th></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="row-label">M&Iacute;NIMO :</td>
-                        <td id="display-min-pleno">$1.000</td>
-                        <td id="display-min-dobles">$10.000</td>
-                        <td id="display-min-simples">$20.000</td>
-                    </tr>
-                    <tr>
-                        <td class="row-label">M&Aacute;XIMO :</td>
-                        <td id="display-max-pleno">$20.000</td>
-                        <td id="display-max-dobles">$350.000</td>
-                        <td id="display-max-simples">$700.000</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="limits-table-wrapper">
+                <table class="limits-table">
+                    <thead>
+                        <tr><th><img class="table-logo-img" id="tableLogoImg" src="" alt=""></th><th>PLENO</th><th>CHANZAS<br>DOBLES</th><th>CHANZAS<br>SIMPLES</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="row-label">M&Iacute;NIMO :</td>
+                            <td id="display-min-pleno">$1.000</td>
+                            <td id="display-min-dobles">$10.000</td>
+                            <td id="display-min-simples">$20.000</td>
+                        </tr>
+                        <tr>
+                            <td class="row-label">M&Aacute;XIMO :</td>
+                            <td id="display-max-pleno">$20.000</td>
+                            <td id="display-max-dobles">$350.000</td>
+                            <td id="display-max-simples">$700.000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div class="casino-name">CASINO PUERTO VARAS</div>
         </div>
     </div>
