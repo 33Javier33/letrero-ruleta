@@ -302,6 +302,18 @@
         }
 
         /* =========================================
+           TEMAS DE FONDO
+           ========================================= */
+        .tema-section { background:#222; padding:18px; border-radius:10px; border:1px solid #444; }
+        .tema-section h3 { margin-bottom:14px; color:#4da6ff; border-bottom:1px solid #444; padding-bottom:10px; font-size:15px; }
+        .tema-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+        .tema-swatch { border:2px solid #555; border-radius:8px; padding:10px 6px 8px; cursor:pointer; color:#fff; font-size:11px; font-weight:bold; text-shadow:0 1px 3px rgba(0,0,0,0.9); min-height:64px; display:flex; align-items:flex-end; justify-content:center; transition:border-color .2s,transform .1s; -webkit-tap-highlight-color:transparent; }
+        .tema-swatch:active { transform:scale(0.94); }
+        .tema-swatch.tema-active { border-color:#4da6ff; border-width:3px; box-shadow:0 0 12px rgba(77,166,255,0.45); }
+        .tema-badge { display:inline-block; background:rgba(0,0,0,0.5); border-radius:4px; padding:2px 6px; text-align:center; }
+        .tema-principal { font-size:9px; color:#ffcc00; display:block; text-align:center; margin-bottom:2px; letter-spacing:0.5px; }
+
+        /* =========================================
            HISTORIAL
            ========================================= */
         .admin-history-list {
@@ -777,6 +789,34 @@
             </div>
         </div>
 
+        <!-- TEMA DE FONDO -->
+        <div class="tema-section">
+            <h3>4. Tema de Fondo</h3>
+            <div class="tema-grid">
+                <button class="tema-swatch" data-theme="negro" style="background:linear-gradient(135deg,#0a0a14,#1c1c38)">
+                    <span class="tema-principal">★ Principal</span><span class="tema-badge">Mesa Negro</span>
+                </button>
+                <button class="tema-swatch" data-theme="rojo" style="background:linear-gradient(135deg,#5c0000,#aa0000)">
+                    <span class="tema-principal">★ Principal</span><span class="tema-badge">Mesa Rojo</span>
+                </button>
+                <button class="tema-swatch" data-theme="azul" style="background:linear-gradient(135deg,#0022cc,#0044ff)">
+                    <span class="tema-badge">Azul</span>
+                </button>
+                <button class="tema-swatch" data-theme="verde" style="background:linear-gradient(135deg,#003300,#005800)">
+                    <span class="tema-badge">Verde Casino</span>
+                </button>
+                <button class="tema-swatch" data-theme="violeta" style="background:linear-gradient(135deg,#1a0033,#440088)">
+                    <span class="tema-badge">Violeta</span>
+                </button>
+                <button class="tema-swatch" data-theme="dorado" style="background:linear-gradient(135deg,#0f0800,#2d1a00)">
+                    <span class="tema-badge">Dorado</span>
+                </button>
+                <button class="tema-swatch" data-theme="teal" style="background:linear-gradient(135deg,#002233,#004455)">
+                    <span class="tema-badge">Teal</span>
+                </button>
+            </div>
+        </div>
+
     </div>
 
     <!-- COLUMNA DERECHA: historial -->
@@ -1119,6 +1159,18 @@
         var btnF = document.getElementById('btnNombreFrancesa');
         if (btnA) btnA.addEventListener('click', function() { setNombreRuleta('RULETA AMERICANA'); });
         if (btnF) btnF.addEventListener('click', function() { setNombreRuleta('RULETA FRANCESA'); });
+
+        // ===== TEMAS DE FONDO =====
+        function setTema(key) {
+            localStorage.setItem('rlt_theme', key);
+            document.querySelectorAll('.tema-swatch').forEach(function(b) {
+                b.classList.toggle('tema-active', b.dataset.theme === key);
+            });
+        }
+        document.querySelectorAll('.tema-swatch').forEach(function(b) {
+            b.addEventListener('click', function() { setTema(this.dataset.theme); });
+        });
+        setTema(localStorage.getItem('rlt_theme') || 'azul');
         var savedUrl = localStorage.getItem('ruleta_pantalla_url') || '';
         var defaultUrl = window.location.origin + '/';
         document.getElementById('inputPantallaUrl').value = savedUrl || defaultUrl;

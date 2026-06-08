@@ -8,16 +8,16 @@
     <meta http-equiv="Expires" content="0">
     <title>Pantalla Ruleta Americana - Casino</title>
     <!-- Set --vh100 from window.innerHeight so 100vh-chrome browsers don't clip content -->
-    <script>(function(){function u(){var h=window.innerHeight;document.documentElement.style.setProperty('--vh100',h+'px');document.documentElement.style.setProperty('--vh',(h*.01)+'px');}u();window.addEventListener('resize',u);window.addEventListener('orientationchange',function(){setTimeout(u,150);});}());</script>
+    <script>(function(){function u(){var h=window.innerHeight;document.documentElement.style.setProperty('--vh100',h+'px');document.documentElement.style.setProperty('--vh',(h*.01)+'px');}u();window.addEventListener('resize',u);window.addEventListener('orientationchange',function(){setTimeout(u,150);});var T={negro:'linear-gradient(180deg,#0a0a14 0%,#1c1c38 100%)',rojo:'linear-gradient(180deg,#5c0000 0%,#aa0000 100%)',azul:'linear-gradient(180deg,#0022cc 0%,#0044ff 100%)',verde:'linear-gradient(180deg,#003300 0%,#005800 100%)',violeta:'linear-gradient(180deg,#1a0033 0%,#440088 100%)',dorado:'linear-gradient(180deg,#0f0800 0%,#2d1a00 100%)',teal:'linear-gradient(180deg,#002233 0%,#004455 100%)'};function applyT(k){var g=T[k]||T.azul;document.documentElement.style.setProperty('--bg',g);}var sv=localStorage.getItem('rlt_theme');if(sv)applyT(sv);window.addEventListener('storage',function(e){if(e.key==='rlt_theme')applyT(e.newValue);});}());</script>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
         /* --s = container width (fits 9:16 into any screen) | --u = 1 design-px */
         :root { --s: min(100vw, calc(56.25 * var(--vh, 1vh))); --u: calc(var(--s) / 540); }
-        body { background:linear-gradient(180deg,#0022cc 0%,#0044ff 100%); width:100vw; height:var(--vh100, 100vh); overflow:hidden; display:flex; align-items:flex-start; justify-content:center; }
+        body { background:var(--bg,linear-gradient(180deg,#0022cc 0%,#0044ff 100%)); width:100vw; height:var(--vh100, 100vh); overflow:hidden; display:flex; align-items:flex-start; justify-content:center; }
 
         .screen-container {
             width:var(--s); height:var(--vh100, 100vh);
-            background:linear-gradient(180deg,#0022cc 0%,#0044ff 100%);
+            background:var(--bg,linear-gradient(180deg,#0022cc 0%,#0044ff 100%));
             display:flex; flex-direction:column;
             flex-shrink:0;
         }
