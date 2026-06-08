@@ -80,7 +80,8 @@
         .bar-d3{background:linear-gradient(90deg,#885500,#ffbb66);}
 
         /* CALIENTES Y FRIOS */
-        .hot-cold-box { width:100%; height:calc(var(--u)*50); border-radius:calc(var(--u)*10); display:flex; justify-content:space-around; align-items:center; padding:calc(var(--u)*4); position:relative; overflow:hidden; box-shadow:0 calc(var(--u)*4) calc(var(--u)*10) rgba(0,0,0,0.5); }
+        .hot-cold-row { width:100%; display:flex; flex-direction:row; gap:calc(var(--u)*6); flex-shrink:0; }
+        .hot-cold-box { flex:1; height:calc(var(--u)*46); border-radius:calc(var(--u)*10); display:flex; justify-content:space-around; align-items:center; padding:calc(var(--u)*4); position:relative; overflow:hidden; box-shadow:0 calc(var(--u)*4) calc(var(--u)*10) rgba(0,0,0,0.5); }
         .hot-box { background:linear-gradient(180deg,#990000,#ff1a1a); border:2px solid #ff4d4d; }
         .fire-layer { position:absolute; bottom:-10px; left:0; width:100%; height:120%; background:radial-gradient(circle at 50% 100%,rgba(255,150,0,0.6),transparent 60%); animation:flicker 0.15s infinite alternate; pointer-events:none; z-index:1; }
         .fire-layer::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:50%; background:linear-gradient(to top,rgba(255,200,0,0.5),transparent); filter:blur(5px); animation:flicker2 0.3s infinite alternate; }
@@ -124,10 +125,10 @@
         }
 
         /* SECCION INFERIOR */
-        .bottom-section { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:calc(var(--u)*8) calc(var(--u)*15) calc(var(--u)*10); }
-        .title-ruleta { color:white; font-size:calc(var(--u)*28); font-weight:bold; text-shadow:2px 4px 8px rgba(0,0,0,0.6),0 0 20px rgba(255,255,255,0.3); margin-bottom:calc(var(--u)*4); letter-spacing:calc(var(--u)*1); text-align:center; width:100%; flex-shrink:0; }
-        .limits-table-container { flex:1; width:100%; background:linear-gradient(135deg,rgba(0,150,255,.9),rgba(0,200,255,.6)); border-radius:calc(var(--u)*12); border:2px solid #66ccff; padding:calc(var(--u)*8); box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,0.3); display:flex; flex-direction:column; justify-content:flex-start; }
-        .limits-table { flex:1; width:100%; border-collapse:collapse; color:#003366; font-weight:bold; }
+        .bottom-section { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:calc(var(--u)*5) calc(var(--u)*15) calc(var(--u)*6); }
+        .title-ruleta { color:white; font-size:calc(var(--u)*28); font-weight:bold; text-shadow:2px 4px 8px rgba(0,0,0,0.6),0 0 20px rgba(255,255,255,0.3); letter-spacing:calc(var(--u)*1); text-align:center; width:100%; flex-shrink:0; }
+        .limits-table-container { width:100%; background:linear-gradient(135deg,rgba(0,150,255,.9),rgba(0,200,255,.6)); border-radius:calc(var(--u)*12); border:2px solid #66ccff; padding:calc(var(--u)*6) calc(var(--u)*8); box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,0.3); flex-shrink:0; }
+        .limits-table { width:100%; border-collapse:collapse; color:#003366; font-weight:bold; }
         .limits-table th, .limits-table td { text-align:center; padding:0 calc(var(--u)*4); border-right:1px solid rgba(0,51,102,.2); vertical-align:middle; height:1px; }
         .limits-table th:last-child, .limits-table td:last-child { border-right:none; }
         .limits-table th { font-size:calc(var(--u)*12); text-transform:uppercase; border-bottom:1px solid rgba(0,51,102,.2); color:#000; text-shadow:none; }
@@ -213,21 +214,6 @@
                     </div>
                 </div>
 
-                <!-- CALIENTES -->
-                <div class="hot-cold-box hot-box">
-                    <div class="fire-layer"></div>
-                    <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-1">36</div></div>
-                    <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-2">35</div></div>
-                    <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-3">34</div></div>
-                </div>
-
-                <!-- FRIOS -->
-                <div class="hot-cold-box cold-box">
-                    <div class="snow-layer"></div>
-                    <div class="stat-number" id="cold-1">0</div>
-                    <div class="stat-number" id="cold-2">00</div>
-                    <div class="stat-number" id="cold-3">1</div>
-                </div>
             </div>
         </div>
 
@@ -243,6 +229,20 @@
     </div>
 
     <div class="bottom-section">
+        <div class="hot-cold-row">
+            <div class="hot-cold-box hot-box">
+                <div class="fire-layer"></div>
+                <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-1">36</div></div>
+                <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-2">35</div></div>
+                <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-3">34</div></div>
+            </div>
+            <div class="hot-cold-box cold-box">
+                <div class="snow-layer"></div>
+                <div class="stat-number" id="cold-1">0</div>
+                <div class="stat-number" id="cold-2">00</div>
+                <div class="stat-number" id="cold-3">1</div>
+            </div>
+        </div>
         <div class="title-ruleta" id="titulo-ruleta">RULETA AMERICANA</div>
         <div class="limits-table-container">
             <table class="limits-table">
@@ -264,8 +264,8 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="casino-name">CASINO PUERTO VARAS</div>
         </div>
+        <div class="casino-name">CASINO PUERTO VARAS</div>
     </div>
 </div>
 
