@@ -191,10 +191,12 @@
                         <div class="panel-title">Par / Impar</div>
                         <div class="pct-labels">
                             <div class="pct-label c-par">PAR<span id="txt-pct-par">0%</span></div>
+                            <div class="pct-label c-green">VERDE<span id="txt-pct-pi-green">0%</span></div>
                             <div class="pct-label c-impar">IMPAR<span id="txt-pct-impar">0%</span></div>
                         </div>
                         <div class="pct-bar-container">
                             <div class="pct-bar bar-par" id="bar-par" style="width:0%"></div>
+                            <div class="pct-bar bar-green" id="bar-pi-green" style="width:0%"></div>
                             <div class="pct-bar bar-impar" id="bar-impar" style="width:0%"></div>
                         </div>
                     </div>
@@ -202,10 +204,12 @@
                         <div class="panel-title">Menor / Mayor</div>
                         <div class="pct-labels">
                             <div class="pct-label c-menor">MENOR<span id="txt-pct-menor">0%</span></div>
+                            <div class="pct-label c-green">VERDE<span id="txt-pct-mm-green">0%</span></div>
                             <div class="pct-label c-mayor">MAYOR<span id="txt-pct-mayor">0%</span></div>
                         </div>
                         <div class="pct-bar-container">
                             <div class="pct-bar bar-menor" id="bar-menor" style="width:0%"></div>
+                            <div class="pct-bar bar-green" id="bar-mm-green" style="width:0%"></div>
                             <div class="pct-bar bar-mayor" id="bar-mayor" style="width:0%"></div>
                         </div>
                     </div>
@@ -359,8 +363,10 @@ function updateScreen(data){
     sT('txt-pct-green',s.pctGreen+'%');sW('bar-green',s.pctGreen);
     sT('txt-pct-black',s.pctBlack+'%');sW('bar-black',s.pctBlack);
     sT('txt-pct-par',s.pctPar+'%');sW('bar-par',s.pctPar);
+    sT('txt-pct-pi-green',s.pctGreen+'%');sW('bar-pi-green',s.pctGreen);
     sT('txt-pct-impar',s.pctImpar+'%');sW('bar-impar',s.pctImpar);
     sT('txt-pct-menor',s.pctMenor+'%');sW('bar-menor',s.pctMenor);
+    sT('txt-pct-mm-green',s.pctGreen+'%');sW('bar-mm-green',s.pctGreen);
     sT('txt-pct-mayor',s.pctMayor+'%');sW('bar-mayor',s.pctMayor);
     sT('txt-pct-d1',s.pctD1+'%');sW('bar-d1',s.pctD1);
     sT('txt-pct-d2',s.pctD2+'%');sW('bar-d2',s.pctD2);
