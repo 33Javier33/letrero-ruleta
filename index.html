@@ -124,11 +124,10 @@
 
         /* BOLAS MODE PIZARRA */
         .history-board.ball-mode { background:#1c1c3a; }
-        .ball-mode .history-items-wrapper { flex-direction:row; flex-wrap:wrap; align-content:flex-start; padding:calc(var(--u)*4); gap:calc(var(--u)*4); }
-        .ball-mode .history-item { flex:none; width:calc((100% - var(--u)*8) / 3); aspect-ratio:1; border-radius:50%; font-size:calc(var(--u)*16); font-weight:bold; justify-content:center !important; padding:0 !important; box-shadow:inset -2px -3px 6px rgba(0,0,0,0.55),inset 1px 2px 4px rgba(255,255,255,0.2),0 2px 6px rgba(0,0,0,0.5); }
-        .ball-mode .color-red { background:radial-gradient(circle at 35% 30%,#ff5555,#8b0000) !important; color:#fff !important; }
-        .ball-mode .color-black { background:radial-gradient(circle at 35% 30%,#666,#111) !important; color:#fff !important; border:1px solid #444 !important; }
-        .ball-mode .color-green { background:radial-gradient(circle at 35% 30%,#44dd44,#004400) !important; color:#fff !important; }
+        .ball-circle { display:inline-flex; align-items:center; justify-content:center; width:calc(var(--u)*36); height:calc(var(--u)*36); border-radius:50%; font-size:calc(var(--u)*20); font-weight:bold; color:#fff; box-shadow:inset -2px -3px 6px rgba(0,0,0,0.5),inset 1px 2px 4px rgba(255,255,255,0.2),0 2px 5px rgba(0,0,0,0.5); }
+        .color-red .ball-circle   { background:radial-gradient(circle at 35% 30%,#ff5555,#8b0000); }
+        .color-black .ball-circle { background:radial-gradient(circle at 35% 30%,#666,#111); }
+        .color-green .ball-circle { background:radial-gradient(circle at 35% 30%,#44dd44,#004400); }
         @keyframes ballEntry { 0%{transform:scale(0) rotate(-180deg);opacity:0;} 55%{transform:scale(1.2) rotate(15deg);opacity:1;} 80%{transform:scale(0.92) rotate(-3deg);} 100%{transform:scale(1) rotate(0);} }
         .ball-new { animation:ballEntry .65s cubic-bezier(0.34,1.56,0.64,1) forwards; }
 
@@ -454,10 +453,14 @@ function updateScreen(data){
     var nums=data.history.slice().reverse().slice(0,MAX_H);
     var bp=localStorage.getItem('rlt_ballpizarra')==='1';
     var brd=document.getElementById('history-board');if(brd)brd.classList.toggle('ball-mode',bp);
-    var count=bp?nums.length:MAX_H;
-    for(var i=0;i<count;i++){
+    for(var i=0;i<MAX_H;i++){
         var d=document.createElement('div');d.className='history-item';
-        if(i<nums.length){var num=nums[i];d.textContent=num;var c=numberColors[num];d.classList.add(c==='red'?'color-red':c==='black'?'color-black':'color-green');if(bp&&i===0)d.classList.add('ball-new');}
+        if(i<nums.length){
+            var num=nums[i];var c=numberColors[num];
+            d.classList.add(c==='red'?'color-red':c==='black'?'color-black':'color-green');
+            if(bp){var s=document.createElement('span');s.className='ball-circle';s.textContent=num;if(i===0)s.classList.add('ball-new');d.appendChild(s);}
+            else{d.textContent=num;}
+        }
         iW.appendChild(d);
     }
     if(data.history.length){
