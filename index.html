@@ -80,8 +80,7 @@
         .bar-d3{background:linear-gradient(90deg,#885500,#ffbb66);}
 
         /* CALIENTES Y FRIOS */
-        .hot-cold-row { width:100%; display:flex; flex-direction:row; gap:calc(var(--u)*6); flex-shrink:0; }
-        .hot-cold-box { flex:1; height:calc(var(--u)*46); border-radius:calc(var(--u)*10); display:flex; justify-content:space-around; align-items:center; padding:calc(var(--u)*4); position:relative; overflow:hidden; box-shadow:0 calc(var(--u)*4) calc(var(--u)*10) rgba(0,0,0,0.5); }
+        .hot-cold-box { width:100%; height:calc(var(--u)*46); border-radius:calc(var(--u)*10); display:flex; justify-content:space-around; align-items:center; padding:calc(var(--u)*4); position:relative; overflow:hidden; box-shadow:0 calc(var(--u)*4) calc(var(--u)*10) rgba(0,0,0,0.5); }
         .hot-box { background:linear-gradient(180deg,#990000,#ff1a1a); border:2px solid #ff4d4d; }
         .fire-layer { position:absolute; bottom:-10px; left:0; width:100%; height:120%; background:radial-gradient(circle at 50% 100%,rgba(255,150,0,0.6),transparent 60%); animation:flicker 0.15s infinite alternate; pointer-events:none; z-index:1; }
         .fire-layer::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:50%; background:linear-gradient(to top,rgba(255,200,0,0.5),transparent); filter:blur(5px); animation:flicker2 0.3s infinite alternate; }
@@ -214,6 +213,21 @@
                     </div>
                 </div>
 
+                <!-- CALIENTES -->
+                <div class="hot-cold-box hot-box">
+                    <div class="fire-layer"></div>
+                    <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-1">36</div></div>
+                    <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-2">35</div></div>
+                    <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-3">34</div></div>
+                </div>
+
+                <!-- FRIOS -->
+                <div class="hot-cold-box cold-box">
+                    <div class="snow-layer"></div>
+                    <div class="stat-number" id="cold-1">0</div>
+                    <div class="stat-number" id="cold-2">00</div>
+                    <div class="stat-number" id="cold-3">1</div>
+                </div>
             </div>
         </div>
 
@@ -229,20 +243,6 @@
     </div>
 
     <div class="bottom-section">
-        <div class="hot-cold-row">
-            <div class="hot-cold-box hot-box">
-                <div class="fire-layer"></div>
-                <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-1">36</div></div>
-                <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-2">35</div></div>
-                <div class="stat-number-hot"><span class="flame">&#x1F525;</span><div class="num-circle" id="hot-3">34</div></div>
-            </div>
-            <div class="hot-cold-box cold-box">
-                <div class="snow-layer"></div>
-                <div class="stat-number" id="cold-1">0</div>
-                <div class="stat-number" id="cold-2">00</div>
-                <div class="stat-number" id="cold-3">1</div>
-            </div>
-        </div>
         <div class="title-ruleta" id="titulo-ruleta">RULETA AMERICANA</div>
         <div class="limits-table-container">
             <table class="limits-table">
