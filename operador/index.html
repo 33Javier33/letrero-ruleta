@@ -824,6 +824,15 @@
             </div>
         </div>
 
+        <!-- ANIMACION DE BOLA -->
+        <div class="nombre-ruleta-section" style="margin-top:0;">
+            <h3>5. Animación Ruleta</h3>
+            <p style="font-size:12px;color:#777;margin-bottom:12px;">Activa para ver la bola girar y caer al número ganador en pantalla.</p>
+            <button id="btnBallAnim" class="btn-nombre">
+                🎱 Animación de Bola: <span id="ballAnimLabel">DESACTIVADA</span>
+            </button>
+        </div>
+
     </div>
 
     <!-- COLUMNA DERECHA: historial -->
@@ -1178,6 +1187,22 @@
             b.addEventListener('click', function() { setTema(this.dataset.theme); });
         });
         setTema(localStorage.getItem('rlt_theme') || 'azul');
+
+        // ===== ANIMACIÓN BOLA =====
+        var btnBall=document.getElementById('btnBallAnim');
+        var ballAnimLabel=document.getElementById('ballAnimLabel');
+        function updateBallBtn(on){
+            if(!btnBall||!ballAnimLabel)return;
+            ballAnimLabel.textContent=on?'ACTIVADA':'DESACTIVADA';
+            btnBall.classList.toggle('selected',on);
+        }
+        var ballOn=localStorage.getItem('rlt_ballspin')==='1';
+        updateBallBtn(ballOn);
+        if(btnBall)btnBall.addEventListener('click',function(){
+            ballOn=!ballOn;
+            localStorage.setItem('rlt_ballspin',ballOn?'1':'0');
+            updateBallBtn(ballOn);
+        });
 
         // Textura papel
         var chkTextura = document.getElementById('chkTextura');

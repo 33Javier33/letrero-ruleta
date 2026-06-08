@@ -50,6 +50,13 @@
         .current-number-display.num-red   { background-color:#cc0000!important; color:#fff!important; border-color:#ff6666; }
         .current-number-display.num-black { background-color:#111!important;    color:#fff!important; border-color:#aaa; }
         .current-number-display.num-green { background-color:#006600!important; color:#fff!important; border-color:#33ff33; }
+        @keyframes numPop {
+            0%   { transform:translate(-50%,-50%) scale(0.15); opacity:0; }
+            55%  { transform:translate(-50%,-50%) scale(1.28); opacity:1; }
+            75%  { transform:translate(-50%,-50%) scale(0.92); }
+            100% { transform:translate(-50%,-50%) scale(1); }
+        }
+        .num-reveal { animation:numPop 0.75s cubic-bezier(0.34,1.56,0.64,1) forwards !important; }
 
         /* ESTADISTICAS - TARJETA GIRATORIA */
         .stats-container { width:100%; display:flex; flex-direction:column; gap:calc(var(--u)*6); }
@@ -314,7 +321,95 @@ function drawWheel(canvas,angle,o){
 
 var wA=0;
 var mO={ob:72,or:68,no:65,ni:47,ii:43,hr:10,fs:7,aw:3.5,br:3.5,diamonds:true};
-function animW(){wA+=.008;drawWheel(document.getElementById('wheelCanvas'),wA,mO);requestAnimationFrame(animW);}
+// ---- BALL SPIN ANIMATION ----
+var ballAnim={
+    active:false, phase:'idle',
+    bAngle:0, bSpeed:0, bR:0, bDecay:0.987,
+    wTarget:0, timer:0, pendingData:null,
+    TARGET_ANGLE:-Math.PI/2   // ball settles at top of wheel
+};
+
+function drawBallOnCanvas(canvas){
+    if(ballAnim.phase==='idle')return;
+    var ctx=canvas.getContext('2d'),W=canvas.width,cx=W/2,cy=W/2;
+    var bx=cx+ballAnim.bR*Math.cos(ballAnim.bAngle);
+    var by=cy+ballAnim.bR*Math.sin(ballAnim.bAngle);
+    var br=mO.ob*0.065;
+    ctx.save();
+    ctx.beginPath();ctx.arc(bx+br*.4,by+br*.4,br*.9,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,0,0,0.32)';ctx.fill();
+    var g=ctx.createRadialGradient(bx-br*.35,by-br*.4,br*.05,bx,by,br);
+    g.addColorStop(0,'#ffffff');g.addColorStop(.45,'#e0e0e0');g.addColorStop(1,'#888');
+    ctx.beginPath();ctx.arc(bx,by,br,0,Math.PI*2);
+    ctx.fillStyle=g;ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=.5;ctx.stroke();
+    ctx.restore();
+}
+
+function tickBall(){
+    var slice=(2*Math.PI)/WHEEL_ORDER.length;
+    if(ballAnim.phase==='spin'){
+        var remaining=ballAnim.wTarget-wA;
+        if(remaining>3*Math.PI){wA+=0.055;}
+        else{wA+=Math.max(0.008,0.055*(remaining/(3*Math.PI)));}
+        ballAnim.bAngle-=ballAnim.bSpeed;
+        ballAnim.bSpeed*=ballAnim.bDecay;
+        ballAnim.timer++;
+        if(ballAnim.bSpeed<0.028||(ballAnim.wTarget-wA)<0.4){
+            wA=ballAnim.wTarget;
+            ballAnim.bSpeed=0;
+            ballAnim.phase='settle';
+            ballAnim.timer=0;
+        }
+    }else if(ballAnim.phase==='settle'){
+        var pocketR=(mO.no+mO.ni)/2;
+        ballAnim.bR+=(pocketR-ballAnim.bR)*0.07;
+        var diff=ballAnim.TARGET_ANGLE-ballAnim.bAngle;
+        while(diff>Math.PI)diff-=2*Math.PI;
+        while(diff<-Math.PI)diff+=2*Math.PI;
+        ballAnim.bAngle+=diff*0.09;
+        ballAnim.timer++;
+        if(ballAnim.timer>60&&Math.abs(pocketR-ballAnim.bR)<1.2){
+            ballAnim.phase='reveal';ballAnim.timer=0;
+        }
+    }else if(ballAnim.phase==='reveal'){
+        ballAnim.timer++;
+        if(ballAnim.timer===1&&ballAnim.pendingData){
+            updateScreen(ballAnim.pendingData);
+            if(elN){elN.classList.add('num-reveal');setTimeout(function(){if(elN)elN.classList.remove('num-reveal');},800);}
+            ballAnim.pendingData=null;
+        }
+        if(ballAnim.timer>100){ballAnim.phase='idle';ballAnim.active=false;}
+    }
+}
+
+function spinToNumber(data){
+    if(localStorage.getItem('rlt_ballspin')!=='1'||ballAnim.active||!data.history.length){updateScreen(data);return;}
+    var last=data.history[data.history.length-1];
+    var idx=WHEEL_ORDER.indexOf(last);
+    if(idx===-1){updateScreen(data);return;}
+    var slice=(2*Math.PI)/WHEEL_ORDER.length;
+    var raw=-Math.PI/2-idx*slice;
+    var wTarget=raw;
+    while(wTarget<wA+5*Math.PI*2)wTarget+=Math.PI*2;
+    ballAnim.active=true;
+    ballAnim.phase='spin';
+    ballAnim.bAngle=Math.PI/2;
+    ballAnim.bSpeed=0.19;
+    ballAnim.bR=mO.or*0.97;
+    ballAnim.wTarget=wTarget;
+    ballAnim.timer=0;
+    ballAnim.pendingData=data;
+}
+
+function animW(){
+    tickBall();
+    if(ballAnim.phase==='idle')wA+=.008;
+    var c=document.getElementById('wheelCanvas');
+    drawWheel(c,wA,mO);
+    drawBallOnCanvas(c);
+    requestAnimationFrame(animW);
+}
 
 var MAX_H=12,LS='ruleta_casino_data',lastD='';
 var elN,elB,h1,h2,h3,c1,c2,c3,elT,eMP,eMxP,eMD,eMxD,eMS,eMxS;
@@ -379,7 +474,7 @@ function updateScreen(data){
     eMS.textContent=lim.minSimples;eMxS.textContent=lim.maxSimples;
 }
 
-function checkStorage(){var r=localStorage.getItem(LS);if(r&&r!==lastD){lastD=r;try{updateScreen(JSON.parse(r));}catch(e){}}}
+function checkStorage(){var r=localStorage.getItem(LS);if(r&&r!==lastD){lastD=r;try{var d=JSON.parse(r);if(d.history&&d.history.length&&localStorage.getItem('rlt_ballspin')==='1'&&!ballAnim.active){spinToNumber(d);}else{updateScreen(d);}}catch(e){}}}
 window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();});
 
 window.onload=function(){
