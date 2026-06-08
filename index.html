@@ -335,12 +335,15 @@ var ballAnim={
     active:false, phase:'idle',
     bAngle:0, bSpeed:0, bR:0, bDecay:0.987,
     wTarget:0, timer:0, pendingData:null,
-    TARGET_ANGLE:-Math.PI/2   // ball settles at top of wheel
+    TARGET_ANGLE:-Math.PI/2,
+    restOffset:0
 };
 
 function drawBallOnCanvas(canvas){
     if(ballAnim.phase==='idle')return;
+    if(localStorage.getItem('rlt_ballspin')!=='1'){ballAnim.phase='idle';ballAnim.active=false;return;}
     var ctx=canvas.getContext('2d'),W=canvas.width,cx=W/2,cy=W/2;
+    if(ballAnim.phase==='rest'){ballAnim.bR=(mO.no+mO.ni)/2;ballAnim.bAngle=ballAnim.restOffset+wA;}
     var bx=cx+ballAnim.bR*Math.cos(ballAnim.bAngle);
     var by=cy+ballAnim.bR*Math.sin(ballAnim.bAngle);
     var br=mO.ob*0.065;
@@ -388,7 +391,7 @@ function tickBall(){
             if(elN){elN.classList.add('num-reveal');setTimeout(function(){if(elN)elN.classList.remove('num-reveal');},800);}
             ballAnim.pendingData=null;
         }
-        if(ballAnim.timer>100){ballAnim.phase='idle';ballAnim.active=false;}
+        if(ballAnim.timer>100){ballAnim.restOffset=ballAnim.TARGET_ANGLE-wA;ballAnim.phase='rest';ballAnim.active=false;}
     }
 }
 
@@ -413,7 +416,7 @@ function spinToNumber(data){
 
 function animW(){
     tickBall();
-    if(ballAnim.phase==='idle')wA+=.008;
+    if(ballAnim.phase==='idle'||ballAnim.phase==='rest')wA+=.008;
     var c=document.getElementById('wheelCanvas');
     drawWheel(c,wA,mO);
     drawBallOnCanvas(c);
