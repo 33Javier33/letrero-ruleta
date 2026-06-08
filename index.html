@@ -8,7 +8,7 @@
     <meta http-equiv="Expires" content="0">
     <title>Pantalla Ruleta Americana - Casino</title>
     <!-- Set --vh100 from window.innerHeight so 100vh-chrome browsers don't clip content -->
-    <script>(function(){function u(){var h=window.innerHeight;document.documentElement.style.setProperty('--vh100',h+'px');document.documentElement.style.setProperty('--vh',(h*.01)+'px');}u();window.addEventListener('resize',u);window.addEventListener('orientationchange',function(){setTimeout(u,150);});var T={negro:'linear-gradient(180deg,#0a0a14 0%,#1c1c38 100%)',rojo:'linear-gradient(180deg,#5c0000 0%,#aa0000 100%)',azul:'linear-gradient(180deg,#0022cc 0%,#0044ff 100%)',verde:'linear-gradient(180deg,#003300 0%,#005800 100%)',violeta:'linear-gradient(180deg,#1a0033 0%,#440088 100%)',dorado:'linear-gradient(180deg,#0f0800 0%,#2d1a00 100%)',teal:'linear-gradient(180deg,#002233 0%,#004455 100%)'};function applyT(k){var g=T[k]||T.azul;document.documentElement.style.setProperty('--bg',g);}var sv=localStorage.getItem('rlt_theme');if(sv)applyT(sv);function applyTex(v){document.documentElement.style.setProperty('--tex',v==='0'?'0':'0.12');}applyTex(localStorage.getItem('rlt_textura'));window.addEventListener('storage',function(e){if(e.key==='rlt_theme')applyT(e.newValue);if(e.key==='rlt_textura')applyTex(e.newValue);});}());</script>
+    <script>(function(){function u(){var h=window.innerHeight;document.documentElement.style.setProperty('--vh100',h+'px');document.documentElement.style.setProperty('--vh',(h*.01)+'px');}u();window.addEventListener('resize',u);window.addEventListener('orientationchange',function(){setTimeout(u,150);});var T={negro:'linear-gradient(180deg,#0a0a14 0%,#1c1c38 100%)',rojo:'linear-gradient(180deg,#5c0000 0%,#aa0000 100%)',azul:'linear-gradient(180deg,#0022cc 0%,#0044ff 100%)',verde:'linear-gradient(180deg,#003300 0%,#005800 100%)',violeta:'linear-gradient(180deg,#1a0033 0%,#440088 100%)',dorado:'linear-gradient(180deg,#0f0800 0%,#2d1a00 100%)',teal:'linear-gradient(180deg,#002233 0%,#004455 100%)'};function applyT(k){var g=T[k]||T.azul;document.documentElement.style.setProperty('--bg',g);}var sv=localStorage.getItem('rlt_theme');if(sv)applyT(sv);function applyTex(v){document.documentElement.style.setProperty('--tex',v==='0'?'0':'0.30');}applyTex(localStorage.getItem('rlt_textura'));window.addEventListener('storage',function(e){if(e.key==='rlt_theme')applyT(e.newValue);if(e.key==='rlt_textura')applyTex(e.newValue);});}());</script>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
         /* --s = container width (fits 9:16 into any screen) | --u = 1 design-px */
@@ -24,9 +24,9 @@
         }
         .screen-container::before {
             content:''; position:absolute; top:0; left:0; right:0; bottom:0;
-            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23p)'/%3E%3C/svg%3E");
-            background-size:200px 200px;
-            opacity:var(--tex,0.12); pointer-events:none; z-index:0; transition:opacity .4s;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.45' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23p)'/%3E%3C/svg%3E");
+            background-size:300px 300px;
+            opacity:var(--tex,0.30); pointer-events:none; z-index:0; transition:opacity .4s;
         }
 
         /* SECCION SUPERIOR */
