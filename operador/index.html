@@ -305,7 +305,10 @@
            TEMAS DE FONDO
            ========================================= */
         .tema-section { background:#222; padding:18px; border-radius:10px; border:1px solid #444; }
-        .tema-section h3 { margin-bottom:14px; color:#4da6ff; border-bottom:1px solid #444; padding-bottom:10px; font-size:15px; }
+        .tema-section h3 { margin-bottom:14px; color:#4da6ff; border-bottom:1px solid #444; padding-bottom:10px; font-size:15px; display:flex; align-items:center; justify-content:space-between; }
+        .textura-toggle { display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:12px; color:#aaa; }
+        .textura-toggle input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:#4da6ff; }
+        .textura-toggle label { cursor:pointer; }
         .tema-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
         .tema-swatch { border:2px solid #555; border-radius:8px; padding:10px 6px 8px; cursor:pointer; color:#fff; font-size:11px; font-weight:bold; text-shadow:0 1px 3px rgba(0,0,0,0.9); min-height:64px; display:flex; align-items:flex-end; justify-content:center; transition:border-color .2s,transform .1s; -webkit-tap-highlight-color:transparent; }
         .tema-swatch:active { transform:scale(0.94); }
@@ -792,6 +795,10 @@
         <!-- TEMA DE FONDO -->
         <div class="tema-section">
             <h3>4. Tema de Fondo</h3>
+            <div class="textura-toggle">
+                <input type="checkbox" id="chkTextura" checked>
+                <label for="chkTextura">Textura papel arrugado</label>
+            </div>
             <div class="tema-grid">
                 <button class="tema-swatch" data-theme="negro" style="background:linear-gradient(135deg,#0a0a14,#1c1c38)">
                     <span class="tema-principal">★ Principal</span><span class="tema-badge">Mesa Negro</span>
@@ -1171,6 +1178,18 @@
             b.addEventListener('click', function() { setTema(this.dataset.theme); });
         });
         setTema(localStorage.getItem('rlt_theme') || 'azul');
+
+        // Textura papel
+        var chkTextura = document.getElementById('chkTextura');
+        function setTextura(on) {
+            localStorage.setItem('rlt_textura', on ? '1' : '0');
+            if (chkTextura) chkTextura.checked = on;
+        }
+        if (chkTextura) {
+            var savedTex = localStorage.getItem('rlt_textura');
+            chkTextura.checked = savedTex !== '0';
+            chkTextura.addEventListener('change', function() { setTextura(this.checked); });
+        }
         var savedUrl = localStorage.getItem('ruleta_pantalla_url') || '';
         var defaultUrl = window.location.origin + '/';
         document.getElementById('inputPantallaUrl').value = savedUrl || defaultUrl;

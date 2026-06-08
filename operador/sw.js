@@ -1,4 +1,4 @@
-const CACHE = 'operador-ruleta-v7';
+const CACHE = 'operador-ruleta-v8';
 const FILES = [
     '/operador/',
     '/operador/index.html',
