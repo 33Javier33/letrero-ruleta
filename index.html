@@ -337,8 +337,8 @@ function calcStats(h){
     var t=h.length,v=pC+iC;
     var sorted=Object.keys(counts).sort(function(a,b){return counts[b]-counts[a];});
     return{pctRed:Math.round(rC/t*100),pctBlack:Math.round(bC/t*100),pctGreen:Math.round(gC/t*100),
-        pctPar:v?Math.round(pC/v*100):0,pctImpar:v?Math.round(iC/v*100):0,
-        pctMenor:v?Math.round(menC/v*100):0,pctMayor:v?Math.round(mayC/v*100):0,
+        pctPar:t?Math.round(pC/t*100):0,pctImpar:t?Math.round(iC/t*100):0,
+        pctMenor:t?Math.round(menC/t*100):0,pctMayor:t?Math.round(mayC/t*100):0,
         pctD1:v?Math.round(d1/v*100):0,pctD2:v?Math.round(d2/v*100):0,pctD3:v?Math.round(d3/v*100):0,
         hot:sorted.slice(0,3),cold:sorted.slice().reverse().slice(0,3)};
 }
