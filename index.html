@@ -147,7 +147,7 @@
         .color-green { color:#33ff33; justify-content:center; }
 
         /* PIZARRA THEMES */
-        .history-board.pizarra-azul_noche .history-items-wrapper { --piz:1; }
+        .pizarra-azul_noche { --pizarra-bg:#00091a !important; --pizarra-border:#1a4a8a !important; }
         .pizarra-rojo_vino  { --pizarra-bg:#140005 !important; }
         .pizarra-verde_noche { --pizarra-bg:#001408 !important; }
         .pizarra-morado     { --pizarra-bg:#0d0010 !important; }
@@ -169,11 +169,22 @@
         .ball-new { animation:ballEntry .65s cubic-bezier(0.34,1.56,0.64,1) forwards; }
 
         /* LIMITS CARD THEMES */
-        .lim-dorado  { --lim-bg:linear-gradient(135deg,rgba(110,70,0,.92),rgba(200,140,0,.72)) !important; --lim-border:#ffd700 !important; }
-        .lim-rojo    { --lim-bg:linear-gradient(135deg,rgba(110,0,0,.92),rgba(200,0,0,.72)) !important; --lim-border:#ff6666 !important; }
-        .lim-negro   { --lim-bg:linear-gradient(135deg,rgba(15,15,15,.95),rgba(50,50,50,.8)) !important; --lim-border:#888 !important; }
-        .lim-verde   { --lim-bg:linear-gradient(135deg,rgba(0,60,0,.92),rgba(0,150,0,.72)) !important; --lim-border:#55ee55 !important; }
-        .lim-violeta { --lim-bg:linear-gradient(135deg,rgba(50,0,80,.92),rgba(110,0,200,.72)) !important; --lim-border:#cc88ff !important; }
+        .lim-dorado  { --lim-bg:linear-gradient(135deg,#fff3cc,#ffe082) !important; --lim-border:#d4a000 !important; }
+        .lim-rojo    { --lim-bg:linear-gradient(135deg,#ffe0e0,#ffb3b3) !important; --lim-border:#cc2200 !important; }
+        .lim-negro   { --lim-bg:linear-gradient(135deg,#e8e8e8,#d0d0d0) !important; --lim-border:#555 !important; }
+        .lim-verde   { --lim-bg:linear-gradient(135deg,#d6f5d6,#a8e6a8) !important; --lim-border:#1a7a1a !important; }
+        .lim-violeta { --lim-bg:linear-gradient(135deg,#ecdeff,#d4b0ff) !important; --lim-border:#7722bb !important; }
+        /* text color overrides for light limit themes */
+        .lim-dorado .limits-table th, .lim-dorado .limits-table td, .lim-dorado .casino-name,
+        .lim-rojo   .limits-table th, .lim-rojo   .limits-table td, .lim-rojo   .casino-name,
+        .lim-negro  .limits-table th, .lim-negro  .limits-table td, .lim-negro  .casino-name,
+        .lim-verde  .limits-table th, .lim-verde  .limits-table td, .lim-verde  .casino-name,
+        .lim-violeta .limits-table th,.lim-violeta .limits-table td,.lim-violeta .casino-name { color:#111 !important; text-shadow:none !important; }
+        .lim-dorado  .row-label { color:#6b3a00 !important; }
+        .lim-rojo    .row-label { color:#8b0000 !important; }
+        .lim-negro   .row-label { color:#222 !important; }
+        .lim-verde   .row-label { color:#1a4a1a !important; }
+        .lim-violeta .row-label { color:#4a0088 !important; }
 
         /* IMAGEN RULETA AL PIE DE LA PIZARRA */
         .ruleta-pie {
@@ -564,7 +575,7 @@ window.onload=function(){
     // Apply saved limits theme
     (function(){var k=localStorage.getItem('rlt_lim_theme');if(k&&k!=='azul'){var c=document.querySelector('.limits-table-container');if(c)c.classList.add('lim-'+k);}})();
     // Logo pulse every 9s
-    setInterval(function(){var lg=document.getElementById('logoImg');if(lg){lg.classList.add('logo-pulse');setTimeout(function(){lg.classList.remove('logo-pulse');},1400);}},9000);
+    setInterval(function(){var lg=document.getElementById('tableLogoImg');if(lg){lg.classList.add('logo-pulse');setTimeout(function(){lg.classList.remove('logo-pulse');},1400);}},9000);
     // Title shine every 14s
     setInterval(function(){var tt=document.getElementById('titulo-ruleta');if(tt){tt.classList.add('title-shine');setTimeout(function(){tt.classList.remove('title-shine');},2800);}},14000);
     var cp=0;
