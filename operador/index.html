@@ -113,6 +113,29 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
+        .kb-input-big {
+            width: 100%;
+            background: #000;
+            border: 3px solid #555;
+            border-radius: 12px;
+            padding: 20px 10px;
+            font-size: 96px;
+            font-weight: bold;
+            text-align: center;
+            color: #fff;
+            letter-spacing: 12px;
+            margin-bottom: 16px;
+            display: block;
+            box-sizing: border-box;
+            caret-color: transparent;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+        }
+        .kb-input-big:focus { outline: none; border-color: #4da6ff; }
+        .kb-input-big.valid-red   { border-color: #ff3333; color: #ff5555; background: #1a0000; }
+        .kb-input-big.valid-black { border-color: #aaaaaa; color: #ffffff; background: #111111; }
+        .kb-input-big.valid-green { border-color: #33ff33; color: #33ff33; background: #001a00; }
+        .kb-input-big.invalid     { border-color: #ff6600; color: #ff6600; }
+
         .kb-input {
             flex: 1;
             background: #000;
@@ -688,38 +711,9 @@
                 <button class="help-btn" onclick="openHelp('numpad')" title="Ayuda: ingreso de números">?</button>
             </h3>
 
-            <div class="display-label">Número a ingresar</div>
-            <div class="number-display-wrapper">
-                <div class="number-display" id="numDisplay">—</div>
-            </div>
-
-            <!-- Input nativo para teclado físico -->
-            <div class="kb-input-row">
-                <span class="kb-input-label">⌨ Teclado físico:</span>
-                <input type="text" id="kbInput" class="kb-input"
-                       inputmode="numeric" maxlength="2"
-                       placeholder="—" autocomplete="off" spellcheck="false">
-            </div>
-
-            <!-- Teclado: 4 filas -->
-            <div class="numpad">
-                <!-- Fila 1: 1 2 3 -->
-                <button class="numpad-key" onclick="window.numpadPress('1')">1</button>
-                <button class="numpad-key" onclick="window.numpadPress('2')">2</button>
-                <button class="numpad-key" onclick="window.numpadPress('3')">3</button>
-                <!-- Fila 2: 4 5 6 -->
-                <button class="numpad-key" onclick="window.numpadPress('4')">4</button>
-                <button class="numpad-key" onclick="window.numpadPress('5')">5</button>
-                <button class="numpad-key" onclick="window.numpadPress('6')">6</button>
-                <!-- Fila 3: 7 8 9 -->
-                <button class="numpad-key" onclick="window.numpadPress('7')">7</button>
-                <button class="numpad-key" onclick="window.numpadPress('8')">8</button>
-                <button class="numpad-key" onclick="window.numpadPress('9')">9</button>
-                <!-- Fila 4: 00  0  ⌫ -->
-                <button class="numpad-key key-double-zero" onclick="window.numpadPress('00')">00</button>
-                <button class="numpad-key" onclick="window.numpadPress('0')">0</button>
-                <button class="numpad-key key-del" onclick="window.numpadDel()">⌫</button>
-            </div>
+            <input type="text" id="kbInput" class="kb-input-big"
+                   inputmode="numeric" maxlength="2"
+                   placeholder="—" autocomplete="off" spellcheck="false" autofocus>
 
             <button class="btn-confirm" id="btnConfirm" disabled onclick="window.numpadConfirm()">
                 ✔ CONFIRMAR NÚMERO
@@ -891,25 +885,21 @@
 
     function updateDisplay() {
         var kbIn = document.getElementById('kbInput');
+        if (!kbIn) return;
+        var typing = document.activeElement === kbIn;
         if (numpadBuffer === '') {
-            numDisplay.textContent = '—';
-            numDisplay.className = 'number-display';
+            if (!typing) kbIn.value = '';
+            kbIn.className = 'kb-input-big';
             btnConfirm.disabled = true;
-            if (kbIn && document.activeElement !== kbIn) { kbIn.value = ''; kbIn.className = 'kb-input'; }
             return;
         }
-
-        numDisplay.textContent = numpadBuffer;
-
+        if (!typing) kbIn.value = numpadBuffer;
         if (numberColors.hasOwnProperty(numpadBuffer)) {
-            var c = numberColors[numpadBuffer];
-            numDisplay.className = 'number-display valid-' + c;
+            kbIn.className = 'kb-input-big valid-' + numberColors[numpadBuffer];
             btnConfirm.disabled = false;
-            if (kbIn && document.activeElement !== kbIn) { kbIn.value = numpadBuffer; kbIn.className = 'kb-input kb-valid-' + c; }
         } else {
-            numDisplay.className = 'number-display invalid';
+            kbIn.className = 'kb-input-big invalid';
             btnConfirm.disabled = true;
-            if (kbIn && document.activeElement !== kbIn) { kbIn.value = numpadBuffer; kbIn.className = 'kb-input kb-invalid'; }
         }
     }
 
@@ -957,10 +947,13 @@
         saveLocal();
         renderAdminHistory();
         // Feedback visual en display antes de limpiar
-        numDisplay.textContent = '✔ ' + val;
+        var kbInC = document.getElementById('kbInput');
+        if (kbInC) { kbInC.value = '✔ ' + val; kbInC.className = 'kb-input-big valid-' + numberColors[val]; }
         setTimeout(function() {
             numpadBuffer = '';
             updateDisplay();
+            var kbIn2 = document.getElementById('kbInput');
+            if (kbIn2) kbIn2.focus();
         }, 600);
         showToast('Número ' + val + ' ingresado', 'success');
     };
