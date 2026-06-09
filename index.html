@@ -8,7 +8,12 @@
     <meta http-equiv="Expires" content="0">
     <title>Pantalla Ruleta Americana - Casino</title>
     <!-- Set --vh100 from window.innerHeight so 100vh-chrome browsers don't clip content -->
-    <script>(function(){function u(){var h=window.innerHeight;document.documentElement.style.setProperty('--vh100',h+'px');document.documentElement.style.setProperty('--vh',(h*.01)+'px');}u();window.addEventListener('resize',u);window.addEventListener('orientationchange',function(){setTimeout(u,150);});var T={negro:'linear-gradient(180deg,#0a0a14 0%,#1c1c38 100%)',rojo:'linear-gradient(180deg,#5c0000 0%,#aa0000 100%)',azul:'linear-gradient(180deg,#0022cc 0%,#0044ff 100%)',verde:'linear-gradient(180deg,#003300 0%,#005800 100%)',violeta:'linear-gradient(180deg,#1a0033 0%,#440088 100%)',dorado:'linear-gradient(180deg,#0f0800 0%,#2d1a00 100%)',teal:'linear-gradient(180deg,#002233 0%,#004455 100%)'};function applyT(k){var g=T[k]||T.azul;document.documentElement.style.setProperty('--bg',g);}var sv=localStorage.getItem('rlt_theme');if(sv)applyT(sv);function applyTex(v){document.documentElement.style.setProperty('--tex',v==='0'?'0':'0.30');}applyTex(localStorage.getItem('rlt_textura'));window.addEventListener('storage',function(e){if(e.key==='rlt_theme')applyT(e.newValue);if(e.key==='rlt_textura')applyTex(e.newValue);});}());</script>
+    <script>(function(){function u(){var h=window.innerHeight;document.documentElement.style.setProperty('--vh100',h+'px');document.documentElement.style.setProperty('--vh',(h*.01)+'px');}u();window.addEventListener('resize',u);window.addEventListener('orientationchange',function(){setTimeout(u,150);});var T={negro:'linear-gradient(180deg,#0a0a14 0%,#1c1c38 100%)',rojo:'linear-gradient(180deg,#5c0000 0%,#aa0000 100%)',azul:'linear-gradient(180deg,#0022cc 0%,#0044ff 100%)',verde:'linear-gradient(180deg,#003300 0%,#005800 100%)',violeta:'linear-gradient(180deg,#1a0033 0%,#440088 100%)',dorado:'linear-gradient(180deg,#0f0800 0%,#2d1a00 100%)',teal:'linear-gradient(180deg,#002233 0%,#004455 100%)'};function applyT(k){var g=T[k]||T.azul;document.documentElement.style.setProperty('--bg',g);}var sv=localStorage.getItem('rlt_theme');if(sv)applyT(sv);function applyTex(v){document.documentElement.style.setProperty('--tex',v==='0'?'0':'0.30');}applyTex(localStorage.getItem('rlt_textura'));window.addEventListener('storage',function(e){
+    if(e.key==='rlt_theme')applyT(e.newValue);
+    if(e.key==='rlt_textura')applyTex(e.newValue);
+    if(e.key==='rlt_pizarra_theme'){var b=document.getElementById('history-board');if(b){b.className=b.className.replace(/\bpizarra-\S+/g,'').trim();var pk=e.newValue;if(pk&&pk!=='negro')b.classList.add('pizarra-'+pk);}}
+    if(e.key==='rlt_lim_theme'){var lc=document.querySelector('.limits-table-container');if(lc){lc.className=lc.className.replace(/\blim-\S+/g,'').trim();var lk=e.newValue;if(lk&&lk!=='azul')lc.classList.add('lim-'+lk);}}
+});}());</script>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
         /* --s = container width (fits 9:16 into any screen) | --u = 1 design-px */
@@ -50,6 +55,25 @@
         .current-number-display.num-red   { background-color:#cc0000!important; color:#fff!important; border-color:#ff6666; }
         .current-number-display.num-black { background-color:#111!important;    color:#fff!important; border-color:#aaa; }
         .current-number-display.num-green { background-color:#006600!important; color:#fff!important; border-color:#33ff33; }
+        /* LOGO PULSE ANIMATION */
+        @keyframes logoPulse {
+            0%   { transform:scale(1) rotate(0deg); }
+            25%  { transform:scale(1.13) rotate(7deg); }
+            55%  { transform:scale(1.08) rotate(-4deg); }
+            80%  { transform:scale(1.1) rotate(3deg); }
+            100% { transform:scale(1) rotate(0deg); }
+        }
+        .logo-pulse { animation:logoPulse 1.4s ease-in-out !important; transform-origin:center center; }
+
+        /* TITLE SHINE ANIMATION */
+        @keyframes titleShine {
+            0%   { text-shadow:2px 4px 8px rgba(0,0,0,0.6),0 0 20px rgba(255,255,255,0.3); filter:brightness(1); }
+            35%  { text-shadow:0 0 calc(var(--u)*16) rgba(255,255,255,1),0 0 calc(var(--u)*32) rgba(120,210,255,0.9),0 0 calc(var(--u)*50) rgba(0,160,255,0.7); filter:brightness(1.5); }
+            65%  { text-shadow:0 0 calc(var(--u)*10) rgba(255,255,255,0.6),0 0 calc(var(--u)*20) rgba(120,210,255,0.5); filter:brightness(1.2); }
+            100% { text-shadow:2px 4px 8px rgba(0,0,0,0.6),0 0 20px rgba(255,255,255,0.3); filter:brightness(1); }
+        }
+        .title-shine { animation:titleShine 2.8s ease-in-out !important; }
+
         @keyframes numPop {
             0%   { transform:translate(-50%,-50%) scale(0.15); opacity:0; }
             55%  { transform:translate(-50%,-50%) scale(1.28); opacity:1; }
@@ -112,7 +136,7 @@
         /* COLUMNA DERECHA - PIZARRA CON IMAGEN AL PIE */
         .right-column { width:calc(var(--u)*185); display:flex; flex-direction:column; height:100%; }
         .history-board {
-            flex:1; background:#000; border:calc(var(--u)*6) solid #e6b800; border-radius:calc(var(--u)*5);
+            flex:1; background:var(--pizarra-bg,#000); border:calc(var(--u)*6) solid var(--pizarra-border,#e6b800); border-radius:calc(var(--u)*5);
             display:flex; flex-direction:column; align-items:center;
             padding:calc(var(--u)*6) 0 0; overflow:hidden;
         }
@@ -121,6 +145,18 @@
         .color-red   { color:#ff0000; justify-content:flex-end; padding-right:calc(var(--u)*8); }
         .color-black { color:#ffd700; justify-content:flex-start; padding-left:calc(var(--u)*8); }
         .color-green { color:#33ff33; justify-content:center; }
+
+        /* PIZARRA THEMES */
+        .history-board.pizarra-azul_noche .history-items-wrapper { --piz:1; }
+        .pizarra-rojo_vino  { --pizarra-bg:#140005 !important; }
+        .pizarra-verde_noche { --pizarra-bg:#001408 !important; }
+        .pizarra-morado     { --pizarra-bg:#0d0010 !important; }
+        .pizarra-beige      { --pizarra-bg:#f0e8d5 !important; --pizarra-border:#c0a060 !important; }
+        .pizarra-humo       { --pizarra-bg:#e0e0e0 !important; --pizarra-border:#999 !important; }
+        .history-board.pizarra-beige .color-red, .history-board.pizarra-humo .color-red   { color:#aa0000; }
+        .history-board.pizarra-beige .color-black, .history-board.pizarra-humo .color-black { color:#333; }
+        .history-board.pizarra-beige .color-green, .history-board.pizarra-humo .color-green { color:#006600; }
+        .history-board.pizarra-beige .history-item, .history-board.pizarra-humo .history-item { font-size:calc(var(--u)*34); }
 
         /* BOLAS MODE PIZARRA */
         .history-board.ball-mode { background:#1c1c3a; }
@@ -131,6 +167,13 @@
         .color-green .ball-circle { background:radial-gradient(circle at 35% 30%,#44dd44,#004400); }
         @keyframes ballEntry { 0%{transform:scale(0) rotate(-180deg);opacity:0;} 55%{transform:scale(1.2) rotate(15deg);opacity:1;} 80%{transform:scale(0.92) rotate(-3deg);} 100%{transform:scale(1) rotate(0);} }
         .ball-new { animation:ballEntry .65s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
+        /* LIMITS CARD THEMES */
+        .lim-dorado  { --lim-bg:linear-gradient(135deg,rgba(110,70,0,.92),rgba(200,140,0,.72)) !important; --lim-border:#ffd700 !important; }
+        .lim-rojo    { --lim-bg:linear-gradient(135deg,rgba(110,0,0,.92),rgba(200,0,0,.72)) !important; --lim-border:#ff6666 !important; }
+        .lim-negro   { --lim-bg:linear-gradient(135deg,rgba(15,15,15,.95),rgba(50,50,50,.8)) !important; --lim-border:#888 !important; }
+        .lim-verde   { --lim-bg:linear-gradient(135deg,rgba(0,60,0,.92),rgba(0,150,0,.72)) !important; --lim-border:#55ee55 !important; }
+        .lim-violeta { --lim-bg:linear-gradient(135deg,rgba(50,0,80,.92),rgba(110,0,200,.72)) !important; --lim-border:#cc88ff !important; }
 
         /* IMAGEN RULETA AL PIE DE LA PIZARRA */
         .ruleta-pie {
@@ -151,7 +194,7 @@
         .bottom-section { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:calc(var(--u)*6); padding:calc(var(--u)*5) calc(var(--u)*15) calc(var(--u)*6); position:relative; z-index:1; }
         .title-card { width:100%; flex-shrink:0; background:linear-gradient(135deg,rgba(0,80,180,.85),rgba(0,140,255,.65)); border-radius:calc(var(--u)*12); border:2px solid #66ccff; padding:calc(var(--u)*6) calc(var(--u)*8); box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; }
         .title-ruleta { color:white; font-size:calc(var(--u)*28); font-weight:bold; text-shadow:2px 4px 8px rgba(0,0,0,0.6),0 0 20px rgba(255,255,255,0.3); letter-spacing:calc(var(--u)*1); text-align:center; width:100%; }
-        .limits-table-container { flex:1; width:100%; background:linear-gradient(135deg,rgba(0,150,255,.9),rgba(0,200,255,.6)); border-radius:calc(var(--u)*12); border:2px solid #66ccff; padding:calc(var(--u)*8); box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,0.3); display:flex; flex-direction:column; }
+        .limits-table-container { flex:1; width:100%; background:var(--lim-bg,linear-gradient(135deg,rgba(0,150,255,.9),rgba(0,200,255,.6))); border-radius:calc(var(--u)*12); border:2px solid var(--lim-border,#66ccff); padding:calc(var(--u)*8); box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,0.3); display:flex; flex-direction:column; }
         .limits-table-wrapper { flex:1; overflow:hidden; }
         .limits-table { width:100%; height:100%; border-collapse:collapse; color:#003366; font-weight:bold; }
         .limits-table thead tr { height:28%; }
@@ -516,6 +559,14 @@ window.onload=function(){
     window.addEventListener('storage',function(e){if(e.key==='ruleta_nombre'&&elT)elT.textContent=e.newValue;});
     checkStorage();setInterval(checkStorage,300);
     animW();
+    // Apply saved pizarra theme
+    (function(){var k=localStorage.getItem('rlt_pizarra_theme');if(k&&k!=='negro'){var b=document.getElementById('history-board');if(b)b.classList.add('pizarra-'+k);}})();
+    // Apply saved limits theme
+    (function(){var k=localStorage.getItem('rlt_lim_theme');if(k&&k!=='azul'){var c=document.querySelector('.limits-table-container');if(c)c.classList.add('lim-'+k);}})();
+    // Logo pulse every 9s
+    setInterval(function(){var lg=document.getElementById('logoImg');if(lg){lg.classList.add('logo-pulse');setTimeout(function(){lg.classList.remove('logo-pulse');},1400);}},9000);
+    // Title shine every 14s
+    setInterval(function(){var tt=document.getElementById('titulo-ruleta');if(tt){tt.classList.add('title-shine');setTimeout(function(){tt.classList.remove('title-shine');},2800);}},14000);
     var cp=0;
     function goPanel(i){
         var p=document.getElementById('panel-'+cp),d=document.getElementById('dot-'+cp);
