@@ -124,7 +124,7 @@
 
         /* BOLAS MODE PIZARRA */
         .history-board.ball-mode { background:#1c1c3a; }
-        .ball-circle { display:inline-flex; align-items:center; justify-content:center; width:calc(var(--u)*36); height:calc(var(--u)*36); border-radius:50%; font-size:calc(var(--u)*20); font-weight:bold; color:#fff; box-shadow:inset -2px -3px 6px rgba(0,0,0,0.5),inset 1px 2px 4px rgba(255,255,255,0.2),0 2px 5px rgba(0,0,0,0.5); }
+        .ball-circle { display:inline-flex; align-items:center; justify-content:center; width:calc(var(--u)*40); height:calc(var(--u)*40); border-radius:50%; font-size:calc(var(--u)*22); font-weight:bold; color:#fff; box-shadow:inset -2px -3px 6px rgba(0,0,0,0.5),inset 1px 2px 4px rgba(255,255,255,0.2),0 2px 5px rgba(0,0,0,0.5); }
         .color-red .ball-circle   { background:radial-gradient(circle at 35% 30%,#ff5555,#8b0000); }
         .color-black .ball-circle { background:radial-gradient(circle at 35% 30%,#666,#111); }
         .color-green .ball-circle { background:radial-gradient(circle at 35% 30%,#44dd44,#004400); }
@@ -457,7 +457,8 @@ function updateScreen(data){
     var nums=data.history.slice().reverse().slice(0,MAX_H);
     var bp=localStorage.getItem('rlt_ballpizarra')==='1';
     var brd=document.getElementById('history-board');if(brd)brd.classList.toggle('ball-mode',bp);
-    for(var i=0;i<MAX_H;i++){
+    var bpCount=bp?6:MAX_H;
+    for(var i=0;i<bpCount;i++){
         var d=document.createElement('div');d.className='history-item';
         if(i<nums.length){
             var num=nums[i];var c=numberColors[num];
