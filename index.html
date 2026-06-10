@@ -118,20 +118,23 @@
         .bar-d3{background:linear-gradient(90deg,#885500,#ffbb66);}
 
         /* CALIENTES Y FRIOS */
-        .hot-cold-box { width:100%; height:calc(var(--u)*42); border-radius:calc(var(--u)*10); display:flex; justify-content:space-around; align-items:center; padding:calc(var(--u)*3); position:relative; overflow:hidden; box-shadow:0 calc(var(--u)*4) calc(var(--u)*10) rgba(0,0,0,0.5); }
-        .hot-box { background:linear-gradient(180deg,#990000,#ff1a1a); border:2px solid #ff4d4d; }
-        .fire-layer { position:absolute; bottom:-10px; left:0; width:100%; height:120%; background:radial-gradient(circle at 50% 100%,rgba(255,150,0,0.6),transparent 60%); animation:flicker 0.15s infinite alternate; pointer-events:none; z-index:1; }
-        .fire-layer::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:50%; background:linear-gradient(to top,rgba(255,200,0,0.5),transparent); filter:blur(5px); animation:flicker2 0.3s infinite alternate; }
-        @keyframes flicker{0%{opacity:.7;transform:scaleY(1)}100%{opacity:1;transform:scaleY(1.1)}}
-        @keyframes flicker2{0%{opacity:.5;transform:translateY(0)}100%{opacity:.9;transform:translateY(-5px)}}
-        .cold-box { background:linear-gradient(180deg,#0044cc,#0088ff); border:2px solid #66b3ff; }
-        .snow-layer { position:absolute; top:-50px; left:0; width:100%; height:150%; background-image:radial-gradient(white 2px,transparent 2px),radial-gradient(rgba(255,255,255,.8) 1px,transparent 1px),radial-gradient(rgba(255,255,255,.5) 2px,transparent 2px); background-size:30px 30px,20px 20px,40px 40px; background-position:0 0,10px 10px,20px 20px; animation:snow 4s linear infinite; pointer-events:none; z-index:1; }
-        @keyframes snow{0%{transform:translateY(0)}100%{transform:translateY(30px)}}
-        .stat-number-hot { display:flex; flex-direction:column; align-items:center; z-index:2; gap:1px; }
-        .flame { font-size:calc(var(--u)*8); animation:flameF 0.6s ease-in-out infinite alternate; filter:drop-shadow(0 0 calc(var(--u)*4) #ff6600); }
-        @keyframes flameF{0%{transform:translateY(0) scale(1)}100%{transform:translateY(-3px) scale(1.15)}}
-        .num-circle { width:calc(var(--u)*30); height:calc(var(--u)*30); background:#fff; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:calc(var(--u)*12); font-weight:bold; color:#000; box-shadow:0 0 calc(var(--u)*8) rgba(255,100,0,0.6); border:calc(var(--u)*2) solid #ff6600; }
-        .stat-number { width:calc(var(--u)*30); height:calc(var(--u)*30); background:#fff; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:calc(var(--u)*12); font-weight:bold; color:#000; z-index:2; }
+        .hot-cold-box { width:100%; height:calc(var(--u)*48); border-radius:calc(var(--u)*10); display:flex; justify-content:space-around; align-items:center; padding:calc(var(--u)*3); position:relative; overflow:hidden; box-shadow:0 calc(var(--u)*4) calc(var(--u)*10) rgba(0,0,0,0.5); }
+        .hot-box { background:linear-gradient(180deg,#6a0000,#cc1500,#ff3300); border:calc(var(--u)*2) solid #ff6600; box-shadow:0 0 calc(var(--u)*14) rgba(255,80,0,0.7),inset 0 0 calc(var(--u)*10) rgba(255,200,0,0.2); }
+        .fire-layer { position:absolute; bottom:0; left:0; width:100%; height:100%; background:radial-gradient(ellipse at 20% 100%,rgba(255,160,0,0.55),transparent 55%),radial-gradient(ellipse at 50% 100%,rgba(255,220,0,0.65),transparent 60%),radial-gradient(ellipse at 80% 100%,rgba(255,120,0,0.55),transparent 55%); animation:flicker 0.18s infinite alternate; pointer-events:none; z-index:1; }
+        .fire-layer::after { content:''; position:absolute; bottom:0; left:5%; width:90%; height:55%; background:linear-gradient(to top,rgba(255,200,0,0.45),rgba(255,80,0,0.2),transparent); filter:blur(calc(var(--u)*4)); animation:flicker2 0.28s infinite alternate; }
+        @keyframes flicker{0%{opacity:.75;transform:scaleY(1)}100%{opacity:1;transform:scaleY(1.12)}}
+        @keyframes flicker2{0%{opacity:.5;transform:translateY(0)}100%{opacity:.95;transform:translateY(calc(var(--u)*-4))}}
+        .cold-box { background:linear-gradient(180deg,#001a66,#003399,#0055cc); border:calc(var(--u)*2) solid #55aaff; box-shadow:0 0 calc(var(--u)*14) rgba(0,120,255,0.6),inset 0 0 calc(var(--u)*10) rgba(180,230,255,0.15); }
+        .snow-layer { position:absolute; top:0; left:0; width:100%; height:100%; background-image:radial-gradient(circle,rgba(255,255,255,.95) 3px,transparent 3px),radial-gradient(circle,rgba(220,240,255,.85) 2px,transparent 2px),radial-gradient(circle,rgba(255,255,255,.7) 2px,transparent 2px); background-size:38px 38px,24px 24px,50px 50px; background-position:0 0,12px 12px,25px 6px; animation:snow 5s linear infinite; pointer-events:none; z-index:1; }
+        @keyframes snow{0%{transform:translateY(0)}100%{transform:translateY(38px)}}
+        .stat-number-hot { display:flex; flex-direction:column; align-items:center; z-index:2; gap:calc(var(--u)*1); }
+        .stat-number-cold { display:flex; flex-direction:column; align-items:center; z-index:2; gap:calc(var(--u)*1); }
+        .flame { font-size:calc(var(--u)*16); line-height:1; animation:flameF 0.55s ease-in-out infinite alternate; filter:drop-shadow(0 0 calc(var(--u)*5) #ff8800) drop-shadow(0 0 calc(var(--u)*8) #ff4400); }
+        @keyframes flameF{0%{transform:translateY(0) scale(1) rotate(-4deg)}100%{transform:translateY(calc(var(--u)*-3)) scale(1.18) rotate(4deg)}}
+        .snowflake { font-size:calc(var(--u)*15); line-height:1; color:#c8eeff; animation:snowF 1.6s ease-in-out infinite alternate; filter:drop-shadow(0 0 calc(var(--u)*4) rgba(180,230,255,1)) drop-shadow(0 0 calc(var(--u)*6) rgba(100,180,255,0.7)); }
+        @keyframes snowF{0%{transform:rotate(-15deg) scale(1)}100%{transform:rotate(15deg) scale(1.12)}}
+        .num-circle { width:calc(var(--u)*32); height:calc(var(--u)*32); background:#fff; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:calc(var(--u)*13); font-weight:bold; color:#000; box-shadow:0 0 calc(var(--u)*8) rgba(255,100,0,0.8); border:calc(var(--u)*2) solid #ff7700; }
+        .stat-number { width:calc(var(--u)*32); height:calc(var(--u)*32); background:#e8f4ff; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:calc(var(--u)*13); font-weight:bold; color:#001a66; z-index:2; box-shadow:0 0 calc(var(--u)*7) rgba(100,180,255,0.8); border:calc(var(--u)*2) solid #66aaff; }
 
         /* COLUMNA DERECHA - PIZARRA CON IMAGEN AL PIE */
         .right-column { width:calc(var(--u)*185); display:flex; flex-direction:column; height:100%; }
@@ -165,8 +168,15 @@
         .color-red .ball-circle   { background:radial-gradient(circle at 35% 30%,#ff5555,#8b0000); }
         .color-black .ball-circle { background:radial-gradient(circle at 35% 30%,#666,#111); }
         .color-green .ball-circle { background:radial-gradient(circle at 35% 30%,#44dd44,#004400); }
-        @keyframes ballEntry { 0%{transform:scale(0) rotate(-180deg);opacity:0;} 55%{transform:scale(1.2) rotate(15deg);opacity:1;} 80%{transform:scale(0.92) rotate(-3deg);} 100%{transform:scale(1) rotate(0);} }
-        .ball-new { animation:ballEntry .65s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+        @keyframes ballEntry {
+            0%   { transform:scale(0.1) rotate(0deg);    opacity:0;    filter:blur(6px); }
+            22%  { transform:scale(1.15) rotate(360deg); opacity:0.35; filter:blur(4px); }
+            52%  { transform:scale(1.22) rotate(660deg); opacity:0.8;  filter:blur(1px); }
+            72%  { transform:scale(1.18) rotate(706deg); opacity:1;    filter:blur(0); }
+            86%  { transform:scale(0.94) rotate(716deg); }
+            100% { transform:scale(1)   rotate(720deg);  opacity:1;    filter:blur(0); }
+        }
+        .ball-new { animation:ballEntry 1.15s ease-out forwards; }
         @keyframes ballGlow {
             0%,100% { box-shadow:inset -2px -3px 6px rgba(0,0,0,0.5),inset 1px 2px 4px rgba(255,255,255,0.2),0 2px 5px rgba(0,0,0,0.5); }
             50%     { box-shadow:inset -2px -3px 6px rgba(0,0,0,0.3),inset 1px 2px 8px rgba(255,255,255,0.7),0 0 calc(var(--u)*12) rgba(255,215,0,1),0 0 calc(var(--u)*26) rgba(255,160,0,0.7),0 0 calc(var(--u)*44) rgba(255,80,0,0.25); }
@@ -317,9 +327,9 @@
                 <!-- FRIOS -->
                 <div class="hot-cold-box cold-box">
                     <div class="snow-layer"></div>
-                    <div class="stat-number" id="cold-1">0</div>
-                    <div class="stat-number" id="cold-2">00</div>
-                    <div class="stat-number" id="cold-3">1</div>
+                    <div class="stat-number-cold"><span class="snowflake">❄</span><div class="stat-number" id="cold-1">0</div></div>
+                    <div class="stat-number-cold"><span class="snowflake">❄</span><div class="stat-number" id="cold-2">00</div></div>
+                    <div class="stat-number-cold"><span class="snowflake">❄</span><div class="stat-number" id="cold-3">1</div></div>
                 </div>
             </div>
         </div>
@@ -585,7 +595,7 @@ window.onload=function(){
     setInterval(function(){var lg=document.getElementById('tableLogoImg');if(lg){lg.classList.add('logo-pulse');setTimeout(function(){lg.classList.remove('logo-pulse');},1400);}},9000);
     // Title shine every 14s
     setInterval(function(){var tt=document.getElementById('titulo-ruleta');if(tt){tt.classList.add('title-shine');setTimeout(function(){tt.classList.remove('title-shine');},2800);}},14000);
-    // Ball glow every 30s
+    // Ball glow every 20s
     setInterval(function(){
         if(localStorage.getItem('rlt_fx_glow')!=='1'||localStorage.getItem('rlt_ballpizarra')!=='1')return;
         var bc=document.querySelector('#history-items .ball-circle');
@@ -593,7 +603,7 @@ window.onload=function(){
         bc.classList.remove('ball-glow-anim');void bc.offsetWidth;
         bc.classList.add('ball-glow-anim');
         setTimeout(function(){bc.classList.remove('ball-glow-anim');},2500);
-    },30000);
+    },20000);
     // Ball pulse every 8s
     setInterval(function(){
         if(localStorage.getItem('rlt_fx_pulse')!=='1'||localStorage.getItem('rlt_ballpizarra')!=='1')return;
