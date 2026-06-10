@@ -19,10 +19,10 @@
         body { background-color: #111; color: white; padding: 15px; }
 
         .dashboard-container {
-            max-width: 960px;
+            max-width: 600px;
             margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 15px;
         }
 
@@ -32,7 +32,6 @@
         .op-dreams-logo { position:absolute; top:12px; right:16px; width:80px; height:auto; opacity:0.85; }
         @media (max-width:480px) { .op-dreams-logo { width:56px; top:8px; right:10px; } }
         .header {
-            grid-column: 1 / -1;
             background: #222;
             padding: 15px 20px;
             border-radius: 10px;
@@ -406,15 +405,7 @@
         .toast.success { border-color: #33ff33; color: #33ff33; }
         .toast.error   { border-color: #ff4444; color: #ff6666; }
 
-        /* En portrait estrecho → una sola columna */
-        @media (orientation: portrait) and (max-width: 600px) {
-            .dashboard-container { grid-template-columns: 1fr; }
-        }
-
-        /* En landscape siempre mostramos 2 columnas */
-        @media (orientation: landscape) {
-            .dashboard-container { grid-template-columns: 1fr 1fr; }
-        }
+        /* dashboard siempre flex column — no hay media queries de grid */
 
         /* Landscape compacto (phones / tablets pequeños) */
         @media (orientation: landscape) and (max-height: 520px) {
@@ -663,6 +654,17 @@
         .help-chip.black { background: #2a2a2a; color: #fff; border: 1px solid #555; }
         .help-chip.green { background: #003a00; color: #44ff44; }
         .help-chip.blue  { background: #00224a; color: #4da6ff; border: 1px solid #4da6ff; }
+
+        /* SETTINGS MODAL */
+        .settings-modal { position:fixed; top:0; left:0; right:0; bottom:0; background:#111; z-index:500; display:none; flex-direction:column; }
+        .settings-modal.open { display:flex; }
+        .settings-modal-header { background:#1a2a44; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid #4da6ff; flex-shrink:0; }
+        .settings-modal-header span { color:#4da6ff; font-size:17px; font-weight:bold; }
+        .settings-modal-close { background:#2a2a2a; border:1px solid #555; border-radius:8px; color:#fff; font-size:22px; width:44px; height:44px; cursor:pointer; display:flex; align-items:center; justify-content:center; -webkit-tap-highlight-color:transparent; }
+        .settings-modal-close:active { opacity:0.7; transform:scale(0.93); }
+        .settings-modal-body { flex:1; overflow-y:auto; padding:15px; display:flex; flex-direction:column; gap:12px; -webkit-overflow-scrolling:touch; }
+        .btn-open-config { width:100%; padding:18px; background:linear-gradient(135deg,#0a1a36,#0f2a56); border:2px solid #4da6ff; border-radius:10px; color:#4da6ff; font-size:18px; font-weight:bold; cursor:pointer; letter-spacing:0.5px; -webkit-tap-highlight-color:transparent; transition:opacity 0.15s,transform 0.1s; }
+        .btn-open-config:active { opacity:0.8; transform:scale(0.98); }
     </style>
 </head>
 <body>
@@ -689,52 +691,76 @@
             <button class="help-btn" onclick="openHelp('pantalla')" title="Ayuda: cómo usar la segunda pantalla" style="width:36px;height:auto;font-size:15px;">?</button>
         </div>
         <button class="btn-ayuda-general" onclick="openHelp('general')">📚 Ver guía de uso completa del panel</button>
+    </div>
 
-        <div class="url-pantalla-wrap">
-            <label class="url-pantalla-label">🔗 URL de la pantalla de la mesa</label>
-            <div style="display:flex;gap:8px;">
+    <!-- INGRESO DE NÚMERO -->
+    <div class="admin-section">
+        <h3 style="display:flex;align-items:center;justify-content:space-between;">
+            1. Ingreso de Número
+            <button class="help-btn" onclick="openHelp('numpad')" title="Ayuda: ingreso de números">?</button>
+        </h3>
+
+        <input type="text" id="kbInput" class="kb-input-big"
+               inputmode="numeric" maxlength="2"
+               placeholder="—" autocomplete="off" spellcheck="false" autofocus>
+
+        <button class="btn-confirm" id="btnConfirm" disabled onclick="window.numpadConfirm()">
+            ✔ CONFIRMAR NÚMERO
+        </button>
+
+        <div class="btn-row">
+            <button class="btn btn-danger" id="btnDeleteLast">⬅ Borrar Último</button>
+            <button class="btn btn-warning" id="btnClearAll">🗑 Limpiar Todo</button>
+        </div>
+    </div>
+
+    <!-- BOTÓN ABRIR CONFIGURACIÓN -->
+    <button class="btn-open-config" onclick="openSettings()">⚙️ Configuración de la Mesa</button>
+
+    <!-- HISTORIAL -->
+    <div class="admin-section">
+        <h3 style="display:flex;align-items:center;justify-content:space-between;">
+            2. Gestión de Historial
+            <button class="help-btn" onclick="openHelp('historial')" title="Ayuda: gestión del historial">?</button>
+        </h3>
+        <p style="font-size:12px; color:#777; margin-bottom:10px;">
+            Último número en la parte superior. Toca "Borrar" para eliminar uno individual.
+        </p>
+        <div id="adminHistoryList" class="admin-history-list"></div>
+    </div>
+
+</div>
+
+<!-- MODAL DE CONFIGURACIÓN -->
+<div id="settingsModal" class="settings-modal">
+    <div class="settings-modal-header">
+        <span>⚙️ Configuración de la Mesa</span>
+        <button class="settings-modal-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="settings-modal-body">
+
+        <!-- URL PANTALLA -->
+        <div class="nombre-ruleta-section">
+            <h3>🔗 URL Pantalla de la Mesa
+                <button class="help-btn" onclick="openHelp('pantalla')" title="Ayuda: segunda pantalla" style="margin-left:8px;">?</button>
+            </h3>
+            <div style="display:flex;gap:8px;margin-top:10px;">
                 <input type="url" id="inputPantallaUrl" class="url-pantalla-input"
                        placeholder="https://letrero-ruleta.vercel.app/"
                        inputmode="url" autocomplete="url" spellcheck="false">
                 <button class="url-save-btn" onclick="guardarUrlPantalla()" title="Guardar URL">💾</button>
             </div>
         </div>
-    </div>
 
-    <!-- COLUMNA IZQUIERDA: teclado + límites -->
-    <div style="display:flex; flex-direction:column; gap:15px;">
-
-        <!-- TECLADO NUMÉRICO -->
-        <div class="admin-section">
-            <h3 style="display:flex;align-items:center;justify-content:space-between;">
-                1. Ingreso de Número
-                <button class="help-btn" onclick="openHelp('numpad')" title="Ayuda: ingreso de números">?</button>
-            </h3>
-
-            <input type="text" id="kbInput" class="kb-input-big"
-                   inputmode="numeric" maxlength="2"
-                   placeholder="—" autocomplete="off" spellcheck="false" autofocus>
-
-            <button class="btn-confirm" id="btnConfirm" disabled onclick="window.numpadConfirm()">
-                ✔ CONFIRMAR NÚMERO
-            </button>
-
-            <div class="btn-row">
-                <button class="btn btn-danger" id="btnDeleteLast">⬅ Borrar Último</button>
-                <button class="btn btn-warning" id="btnClearAll">🗑 Limpiar Todo</button>
-            </div>
-        </div>
-
-        <!-- LÍMITES (acordeón) -->
+        <!-- LÍMITES -->
         <div class="admin-section">
             <div class="limits-header" id="toggleLimitsBtn">
-                2. Configuración de Límites
+                3. Configuración de Límites
                 <div style="display:flex;align-items:center;gap:8px;">
                     <button class="help-btn" onclick="event.stopPropagation();openHelp('limites')" title="Ayuda: límites de apuesta">?</button>
                     <span id="toggleIcon">▼</span>
                 </div>
             </div>
-
             <div class="limits-content" id="limitsContent">
                 <div class="input-section-title">Plenos</div>
                 <div class="input-group">
@@ -745,7 +771,6 @@
                     <label>Máximo:</label>
                     <input type="text" inputmode="numeric" id="inputMaxPleno">
                 </div>
-
                 <div class="input-section-title">Chanzas Dobles</div>
                 <div class="input-group">
                     <label>Mínimo:</label>
@@ -755,7 +780,6 @@
                     <label>Máximo:</label>
                     <input type="text" inputmode="numeric" id="inputMaxDobles">
                 </div>
-
                 <div class="input-section-title">Chanzas Simples</div>
                 <div class="input-group">
                     <label>Mínimo:</label>
@@ -765,30 +789,25 @@
                     <label>Máximo:</label>
                     <input type="text" inputmode="numeric" id="inputMaxSimples">
                 </div>
-
                 <button class="btn-save-limits" id="btnUpdateLimits">💾 Guardar Límites en Pantalla</button>
             </div>
         </div>
 
         <!-- NOMBRE DE LA RULETA -->
-        <div class="nombre-ruleta-section" style="margin-top:0;">
+        <div class="nombre-ruleta-section">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">
-                3. Nombre de la Ruleta en Pantalla
+                4. Nombre de la Ruleta en Pantalla
                 <button class="help-btn" onclick="openHelp('nombre')" title="Ayuda: tipos de ruleta">?</button>
             </h3>
             <div class="nombre-btn-group">
-                <button class="btn-nombre" id="btnNombreAmericana">
-                    🎡 RULETA AMERICANA
-                </button>
-                <button class="btn-nombre" id="btnNombreFrancesa">
-                    🎰 RULETA FRANCESA
-                </button>
+                <button class="btn-nombre" id="btnNombreAmericana">🎡 RULETA AMERICANA</button>
+                <button class="btn-nombre" id="btnNombreFrancesa">🎰 RULETA FRANCESA</button>
             </div>
         </div>
 
         <!-- TEMA DE FONDO -->
         <div class="tema-section">
-            <h3 style="display:flex;align-items:center;justify-content:space-between;">4. Tema de Fondo
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">5. Tema de Fondo
                 <button class="help-btn" onclick="openHelp('tema')" title="Ayuda: temas y textura">?</button>
             </h3>
             <div class="textura-toggle">
@@ -820,9 +839,9 @@
             </div>
         </div>
 
-        <!-- ANIMACION DE BOLA -->
-        <div class="nombre-ruleta-section" style="margin-top:0;">
-            <h3 style="display:flex;align-items:center;justify-content:space-between;">5. Animación Ruleta
+        <!-- ANIMACIÓN DE BOLA -->
+        <div class="nombre-ruleta-section">
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">6. Animación Ruleta
                 <button class="help-btn" onclick="openHelp('ballspin')" title="Ayuda: animación de la bolita">?</button>
             </h3>
             <p style="font-size:12px;color:#777;margin-bottom:12px;">Activa para ver la bola girar y caer al número ganador en pantalla.</p>
@@ -832,8 +851,8 @@
         </div>
 
         <!-- PIZARRA EN BOLAS -->
-        <div class="nombre-ruleta-section" style="margin-top:0;">
-            <h3 style="display:flex;align-items:center;justify-content:space-between;">6. Pizarra en Bolas
+        <div class="nombre-ruleta-section">
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">7. Pizarra en Bolas
                 <button class="help-btn" onclick="openHelp('ballpizarra')" title="Ayuda: historial en bolas">?</button>
             </h3>
             <p style="font-size:12px;color:#777;margin-bottom:12px;">Muestra el historial como bolas de colores con animación de entrada al llegar un número nuevo.</p>
@@ -842,9 +861,9 @@
             </button>
         </div>
 
-        <!-- TEMA PIZARRA -->
-        <div class="nombre-ruleta-section" style="margin-top:0;">
-            <h3>7. Color de la Pizarra</h3>
+        <!-- COLOR PIZARRA -->
+        <div class="nombre-ruleta-section">
+            <h3>8. Color de la Pizarra</h3>
             <div class="tema-grid" style="grid-template-columns:repeat(3,1fr);">
                 <button class="tema-swatch piz-swatch" data-piz="negro"       style="background:#000;border-color:#e6b800;">
                     <span class="tema-badge">Negro</span>
@@ -867,9 +886,9 @@
             </div>
         </div>
 
-        <!-- TEMA TARJETA LÍMITES -->
-        <div class="nombre-ruleta-section" style="margin-top:0;">
-            <h3>8. Color Tarjeta Límites</h3>
+        <!-- COLOR TARJETA LÍMITES -->
+        <div class="nombre-ruleta-section">
+            <h3>9. Color Tarjeta Límites</h3>
             <div class="tema-grid" style="grid-template-columns:repeat(3,1fr);">
                 <button class="tema-swatch lim-swatch" data-lim="azul"    style="background:linear-gradient(135deg,#0096ff,#00c8ff);border-color:#66ccff;">
                     <span class="tema-badge">Azul</span>
@@ -893,8 +912,8 @@
         </div>
 
         <!-- EFECTOS DE BOLAS -->
-        <div class="nombre-ruleta-section" style="margin-top:0;">
-            <h3>9. Efectos de Bolas</h3>
+        <div class="nombre-ruleta-section">
+            <h3>10. Efectos de Bolas</h3>
             <p style="font-size:12px;color:#777;margin-bottom:12px;">Activos solo cuando "Pizarra en Bolas" está encendida.</p>
             <button id="btnFxEntry" class="btn-nombre" style="margin-bottom:8px;">
                 ✨ Animación entrada: <span id="fxEntryLabel">ACTIVADA</span>
@@ -908,19 +927,6 @@
         </div>
 
     </div>
-
-    <!-- COLUMNA DERECHA: historial -->
-    <div class="admin-section" style="height:100%;">
-        <h3 style="display:flex;align-items:center;justify-content:space-between;">
-            3. Gestión de Historial
-            <button class="help-btn" onclick="openHelp('historial')" title="Ayuda: gestión del historial">?</button>
-        </h3>
-        <p style="font-size:12px; color:#777; margin-bottom:10px;">
-            Último número en la parte superior. Toca "Borrar" para eliminar uno individual.
-        </p>
-        <div id="adminHistoryList" class="admin-history-list"></div>
-    </div>
-
 </div>
 
 <script>
@@ -1348,11 +1354,16 @@
             if (e.target === this) closeHelp();
         });
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') { closeHelp(); return; }
+            if (e.key === 'Escape') {
+                if (document.getElementById('settingsModal').classList.contains('open')) { closeSettings(); return; }
+                closeHelp(); return;
+            }
             // Skip numpad shortcuts when typing in any input/textarea
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
             // Skip when help modal is open
             if (document.getElementById('helpOverlay').classList.contains('open')) return;
+            // Skip when settings modal is open
+            if (document.getElementById('settingsModal').classList.contains('open')) return;
             if (e.key >= '0' && e.key <= '9') {
                 e.preventDefault();
                 window.numpadPress(e.key);
@@ -1639,6 +1650,15 @@
                 '</ul></div>'
         }
     };
+
+    function openSettings() {
+        document.getElementById('settingsModal').classList.add('open');
+    }
+    function closeSettings() {
+        document.getElementById('settingsModal').classList.remove('open');
+        var inp = document.getElementById('kbInput');
+        if(inp) setTimeout(function(){ inp.focus(); }, 80);
+    }
 
     function openHelp(key) {
         var h = HELP[key];
