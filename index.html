@@ -160,8 +160,8 @@
 
         /* BOLAS MODE PIZARRA */
         .history-board.ball-mode { background:var(--pizarra-bg,#1c1c3a); }
-        .ball-mode .history-item { flex:none; height:calc(var(--u)*44); }
-        .ball-circle { display:inline-flex; align-items:center; justify-content:center; width:calc(var(--u)*38); height:calc(var(--u)*38); border-radius:50%; font-size:calc(var(--u)*20); font-weight:bold; color:#fff; box-shadow:inset -2px -3px 6px rgba(0,0,0,0.5),inset 1px 2px 4px rgba(255,255,255,0.2),0 2px 5px rgba(0,0,0,0.5); }
+        .ball-mode .history-item { flex:1; min-height:0; }
+        .ball-circle { display:inline-flex; align-items:center; justify-content:center; width:calc(var(--u)*52); height:calc(var(--u)*52); border-radius:50%; font-size:calc(var(--u)*26); font-weight:bold; color:#fff; box-shadow:inset -2px -3px 6px rgba(0,0,0,0.5),inset 1px 2px 4px rgba(255,255,255,0.2),0 2px 5px rgba(0,0,0,0.5); }
         .color-red .ball-circle   { background:radial-gradient(circle at 35% 30%,#ff5555,#8b0000); }
         .color-black .ball-circle { background:radial-gradient(circle at 35% 30%,#666,#111); }
         .color-green .ball-circle { background:radial-gradient(circle at 35% 30%,#44dd44,#004400); }
@@ -519,7 +519,7 @@ function updateScreen(data){
     var nums=data.history.slice().reverse().slice(0,MAX_H);
     var bp=localStorage.getItem('rlt_ballpizarra')==='1';
     var brd=document.getElementById('history-board');if(brd)brd.classList.toggle('ball-mode',bp);
-    var bpCount=bp?12:MAX_H;
+    var bpCount=bp?10:MAX_H;
     for(var i=0;i<bpCount;i++){
         var d=document.createElement('div');d.className='history-item';
         if(i<nums.length){
