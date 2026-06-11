@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Panel de Control - Ruleta</title>
-    <link rel="manifest" href="./manifest.json">
+    <link rel="manifest" href="/operador/manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
     <link rel="icon" type="image/svg+xml" href="./icon.svg">
-    <link rel="apple-touch-icon" href="./icon.svg">
+    <link rel="apple-touch-icon" href="./icon-192.png">
     <meta name="theme-color" content="#4da6ff">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,13 +19,18 @@
         body { background-color: #111; color: white; padding: 15px; }
 
         .dashboard-container {
-            max-width: 960px;
+            max-width: 820px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
 
+
+        /* LOGO DREAMS EN HEADER */
+        .header { position:relative; }
+        .op-dreams-logo { position:absolute; top:12px; right:16px; width:80px; height:auto; opacity:0.85; }
+        @media (max-width:480px) { .op-dreams-logo { width:56px; top:8px; right:10px; } }
         .header {
             grid-column: 1 / -1;
             background: #222;
@@ -93,6 +99,61 @@
             text-align: center;
             margin-bottom: 2px;
         }
+
+        /* Input nativo para teclado físico */
+        .kb-input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .kb-input-label {
+            font-size: 12px;
+            color: #666;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .kb-input-big {
+            width: 100%;
+            background: #000;
+            border: 3px solid #555;
+            border-radius: 12px;
+            padding: 20px 10px;
+            font-size: 96px;
+            font-weight: bold;
+            text-align: center;
+            color: #fff;
+            letter-spacing: 12px;
+            margin-bottom: 16px;
+            display: block;
+            box-sizing: border-box;
+            caret-color: transparent;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+        }
+        .kb-input-big:focus { outline: none; border-color: #4da6ff; }
+        .kb-input-big.valid-red   { border-color: #ff3333; color: #ff5555; background: #1a0000; }
+        .kb-input-big.valid-black { border-color: #aaaaaa; color: #ffffff; background: #111111; }
+        .kb-input-big.valid-green { border-color: #33ff33; color: #33ff33; background: #001a00; }
+        .kb-input-big.invalid     { border-color: #ff6600; color: #ff6600; }
+
+        .kb-input {
+            flex: 1;
+            background: #000;
+            border: 2px solid #555;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            color: #fff;
+            letter-spacing: 4px;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+        }
+        .kb-input:focus { outline: none; border-color: #4da6ff; }
+        .kb-input.kb-valid-red   { border-color: #ff3333; color: #ff5555; background: #1a0000; }
+        .kb-input.kb-valid-black { border-color: #aaaaaa; color: #ffffff; background: #111111; }
+        .kb-input.kb-valid-green { border-color: #33ff33; color: #33ff33; background: #001a00; }
+        .kb-input.kb-invalid     { border-color: #ff6600; color: #ff6600; }
 
         /* Teclado numérico */
         .numpad {
@@ -264,6 +325,21 @@
         }
 
         /* =========================================
+           TEMAS DE FONDO
+           ========================================= */
+        .tema-section { background:#222; padding:18px; border-radius:10px; border:1px solid #444; }
+        .tema-section h3 { margin-bottom:14px; color:#4da6ff; border-bottom:1px solid #444; padding-bottom:10px; font-size:15px; display:flex; align-items:center; justify-content:space-between; }
+        .textura-toggle { display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:12px; color:#aaa; }
+        .textura-toggle input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:#4da6ff; }
+        .textura-toggle label { cursor:pointer; }
+        .tema-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+        .tema-swatch { border:2px solid #555; border-radius:8px; padding:10px 6px 8px; cursor:pointer; color:#fff; font-size:11px; font-weight:bold; text-shadow:0 1px 3px rgba(0,0,0,0.9); min-height:64px; display:flex; align-items:flex-end; justify-content:center; transition:border-color .2s,transform .1s; -webkit-tap-highlight-color:transparent; }
+        .tema-swatch:active { transform:scale(0.94); }
+        .tema-swatch.tema-active { border-color:#4da6ff; border-width:3px; box-shadow:0 0 12px rgba(77,166,255,0.45); }
+        .tema-badge { display:inline-block; background:rgba(0,0,0,0.5); border-radius:4px; padding:2px 6px; text-align:center; }
+        .tema-principal { font-size:9px; color:#ffcc00; display:block; text-align:center; margin-bottom:2px; letter-spacing:0.5px; }
+
+        /* =========================================
            HISTORIAL
            ========================================= */
         .admin-history-list {
@@ -308,6 +384,60 @@
         }
         .btn-delete-item:active { background: #aa0000; }
 
+        .btn-edit-item {
+            background: #003a6a;
+            color: white;
+            border: 1px solid #0066cc;
+            border-radius: 5px;
+            padding: 7px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            -webkit-tap-highlight-color: transparent;
+            margin-right: 5px;
+        }
+        .btn-edit-item:active { background: #0055aa; }
+
+        .history-edit-input {
+            background: #000;
+            border: 2px solid #4da6ff;
+            border-radius: 7px;
+            color: #fff;
+            font-size: 26px;
+            font-weight: bold;
+            text-align: center;
+            width: 80px;
+            padding: 3px 6px;
+            caret-color: #4da6ff;
+        }
+        .history-edit-input:focus { outline: none; }
+        .history-edit-input.edit-invalid { border-color: #ff4444; color: #ff6666; }
+        .btn-save-edit {
+            background: #004a00;
+            color: white;
+            border: 1px solid #00aa00;
+            border-radius: 5px;
+            padding: 8px 13px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            margin-right: 4px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-save-edit:active { background: #00aa00; }
+        .btn-cancel-edit {
+            background: #2a2a2a;
+            color: #aaa;
+            border: 1px solid #555;
+            border-radius: 5px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-cancel-edit:active { background: #444; }
+
         /* =========================================
            TOAST
            ========================================= */
@@ -330,9 +460,40 @@
         .toast.success { border-color: #33ff33; color: #33ff33; }
         .toast.error   { border-color: #ff4444; color: #ff6666; }
 
-        /* Responsive: en pantallas pequeñas, una sola columna */
-        @media (max-width: 600px) {
+        /* En pantallas muy estrechas las columnas se apilan */
+        @media (max-width: 480px) {
             .dashboard-container { grid-template-columns: 1fr; }
+        }
+
+        /* Landscape compacto (phones / tablets pequeños) */
+        @media (orientation: landscape) and (max-height: 520px) {
+            body { padding: 8px; }
+            .dashboard-container { gap: 8px; }
+    
+        /* LOGO DREAMS EN HEADER */
+        .header { position:relative; }
+        .op-dreams-logo { position:absolute; top:12px; right:16px; width:80px; height:auto; opacity:0.85; }
+        @media (max-width:480px) { .op-dreams-logo { width:56px; top:8px; right:10px; } }
+        .header { padding: 8px 14px; }
+            .header h1 { font-size: 16px; margin-bottom: 0; }
+            .header p  { font-size: 11px; }
+            .btn-pantalla { padding: 9px 12px; font-size: 13px; margin-top: 8px; }
+            .btn-ayuda-general { padding: 6px; font-size: 12px; margin-top: 5px; }
+            .url-pantalla-wrap { margin-top: 7px; }
+            .admin-section { padding: 10px; }
+            .admin-section h3 { margin-bottom: 8px; padding-bottom: 7px; font-size: 14px; }
+            .number-display { font-size: 26px; min-height: 48px; padding: 6px; }
+            .number-display-wrapper { margin-bottom: 8px; }
+            .display-label { font-size: 10px; }
+            .numpad { gap: 5px; margin-bottom: 7px; }
+            .numpad-key { padding: 10px 6px; font-size: 18px; }
+            .btn-confirm { padding: 11px; font-size: 16px; margin-bottom: 6px; }
+            .btn { padding: 9px 6px; font-size: 12px; }
+            .btn-row { gap: 5px; }
+            .admin-history-list { max-height: 200px; }
+            .nombre-ruleta-section { padding: 10px; }
+            .nombre-ruleta-section h3 { margin-bottom: 8px; padding-bottom: 7px; font-size: 14px; }
+            .btn-nombre { padding: 11px; font-size: 15px; }
         }
 
         /* =========================================
@@ -388,6 +549,186 @@
             flex-shrink: 0;
         }
         #btnInstalar:active { opacity: 0.8; }
+
+        /* =========================================
+           BOTÓN ? DE AYUDA CONTEXTUAL
+           ========================================= */
+        .help-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background: transparent;
+            border: 1.5px solid #4da6ff;
+            border-radius: 50%;
+            color: #4da6ff;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            flex-shrink: 0;
+            vertical-align: middle;
+            line-height: 1;
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .help-btn:hover { background: #4da6ff; color: #000; }
+        .help-btn:active { transform: scale(0.9); }
+
+        .btn-ayuda-general {
+            width: 100%;
+            margin-top: 8px;
+            padding: 9px;
+            background: transparent;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #777;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* =========================================
+           URL DE LA PANTALLA DE MESA
+           ========================================= */
+        .url-pantalla-wrap {
+            margin-top: 10px;
+            text-align: left;
+        }
+        .url-pantalla-label {
+            display: block;
+            font-size: 11px;
+            color: #555;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .url-pantalla-input {
+            flex: 1;
+            padding: 9px 12px;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #888;
+            font-size: 13px;
+            min-width: 0;
+        }
+        .url-pantalla-input:focus { outline: none; border-color: #4da6ff; color: #fff; }
+        .url-save-btn {
+            padding: 9px 14px;
+            background: #0d2b0d;
+            border: 1px solid #2a5a2a;
+            border-radius: 8px;
+            color: #44cc44;
+            font-size: 16px;
+            cursor: pointer;
+            flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .url-save-btn:active { opacity: 0.7; }
+        .btn-ayuda-general:hover { border-color: #4da6ff; color: #4da6ff; }
+
+        /* =========================================
+           MODAL DE AYUDA
+           ========================================= */
+        .help-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.82);
+            z-index: 5000;
+            padding: 16px;
+            overflow-y: auto;
+        }
+        .help-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+
+        .help-modal {
+            background: #1a1a1a;
+            border: 1px solid #4da6ff;
+            border-radius: 14px;
+            padding: 22px 20px 24px;
+            max-width: 560px;
+            width: 100%;
+            margin: auto;
+            position: relative;
+        }
+        .help-modal-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: #4da6ff;
+            margin-bottom: 16px;
+            padding-right: 36px;
+            line-height: 1.3;
+        }
+        .help-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: #333;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            color: #aaa;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .help-close:hover { background: #555; color: white; }
+
+        .help-block {
+            background: #242424;
+            border-radius: 8px;
+            padding: 13px 15px;
+            margin-bottom: 10px;
+            border-left: 3px solid #4da6ff;
+        }
+        .help-block.warn    { border-left-color: #ff9944; }
+        .help-block.success { border-left-color: #33cc44; }
+
+        .help-block-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 7px;
+        }
+        .help-block p  { font-size: 13px; color: #bbb; line-height: 1.65; margin: 0; }
+        .help-block ul,
+        .help-block ol { margin: 6px 0 0 16px; font-size: 13px; color: #bbb; line-height: 1.8; }
+        .help-block li { margin-bottom: 2px; }
+
+        .help-chip {
+            display: inline-block;
+            padding: 1px 9px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 1px 2px;
+        }
+        .help-chip.red   { background: #5a0000; color: #ff7070; }
+        .help-chip.black { background: #2a2a2a; color: #fff; border: 1px solid #555; }
+        .help-chip.green { background: #003a00; color: #44ff44; }
+        .help-chip.blue  { background: #00224a; color: #4da6ff; border: 1px solid #4da6ff; }
+
+        /* SETTINGS MODAL */
+        .settings-modal { position:fixed; top:0; left:0; right:0; bottom:0; background:#111; z-index:500; display:none; flex-direction:column; }
+        .settings-modal.open { display:flex; }
+        .settings-modal-header { background:#1a2a44; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid #4da6ff; flex-shrink:0; }
+        .settings-modal-header span { color:#4da6ff; font-size:17px; font-weight:bold; }
+        .settings-modal-close { background:#2a2a2a; border:1px solid #555; border-radius:8px; color:#fff; font-size:22px; width:44px; height:44px; cursor:pointer; display:flex; align-items:center; justify-content:center; -webkit-tap-highlight-color:transparent; }
+        .settings-modal-close:active { opacity:0.7; transform:scale(0.93); }
+        .settings-modal-body { flex:1; overflow-y:auto; padding:15px; display:grid; grid-template-columns:1fr 1fr; gap:12px; align-content:start; -webkit-overflow-scrolling:touch; }
+        .cfg-full { grid-column:1/-1; }
+        @media(max-width:520px){.settings-modal-body{grid-template-columns:1fr;}}
+        .btn-open-config { grid-column:1/-1; width:100%; padding:18px; background:linear-gradient(135deg,#0a1a36,#0f2a56); border:2px solid #4da6ff; border-radius:10px; color:#4da6ff; font-size:18px; font-weight:bold; cursor:pointer; letter-spacing:0.5px; -webkit-tap-highlight-color:transparent; transition:opacity 0.15s,transform 0.1s; }
+        .btn-open-config:active { opacity:0.8; transform:scale(0.98); }
+        .btn-spin-toggle { width:100%; padding:14px 18px; background:#1a1a1a; border:2px solid #555; border-radius:10px; color:#aaa; font-size:16px; font-weight:bold; cursor:pointer; letter-spacing:0.5px; -webkit-tap-highlight-color:transparent; transition:all 0.15s; text-align:center; }
+        .btn-spin-toggle.active { background:linear-gradient(135deg,#0a280a,#0f420f); border-color:#33cc33; color:#33ff33; }
+        .btn-spin-toggle:active { opacity:0.8; transform:scale(0.98); }
+        .toggle-row { grid-column:1/-1; display:flex; align-items:stretch; gap:8px; }
     </style>
 </head>
 <body>
@@ -404,121 +745,297 @@
 
     <!-- ENCABEZADO -->
     <div class="header">
-        <h1>⚙️ Panel de Operador — Ruleta Americana</h1>
+        <img src="/dreams-logo.png" class="op-dreams-logo" alt="Dreams">
+        <h1 id="panelTitle">⚙️ Panel de Operador — Ruleta Americana</h1>
         <p>Casino Puerto Varas · Los cambios se reflejan instantáneamente en la pantalla de la mesa</p>
-        <button class="btn-pantalla" onclick="abrirPantalla()">
-            📺 Abrir Pantalla de la Mesa en Nueva Ventana
-        </button>
-    </div>
-
-    <!-- COLUMNA IZQUIERDA: teclado + límites -->
-    <div style="display:flex; flex-direction:column; gap:15px;">
-
-        <!-- TECLADO NUMÉRICO -->
-        <div class="admin-section">
-            <h3>1. Ingreso de Número</h3>
-
-            <div class="display-label">Número a ingresar</div>
-            <div class="number-display-wrapper">
-                <div class="number-display" id="numDisplay">—</div>
-            </div>
-
-            <!-- Teclado: 4 filas -->
-            <div class="numpad">
-                <!-- Fila 1: 1 2 3 -->
-                <button class="numpad-key" onclick="window.numpadPress('1')">1</button>
-                <button class="numpad-key" onclick="window.numpadPress('2')">2</button>
-                <button class="numpad-key" onclick="window.numpadPress('3')">3</button>
-                <!-- Fila 2: 4 5 6 -->
-                <button class="numpad-key" onclick="window.numpadPress('4')">4</button>
-                <button class="numpad-key" onclick="window.numpadPress('5')">5</button>
-                <button class="numpad-key" onclick="window.numpadPress('6')">6</button>
-                <!-- Fila 3: 7 8 9 -->
-                <button class="numpad-key" onclick="window.numpadPress('7')">7</button>
-                <button class="numpad-key" onclick="window.numpadPress('8')">8</button>
-                <button class="numpad-key" onclick="window.numpadPress('9')">9</button>
-                <!-- Fila 4: 00  0  ⌫ -->
-                <button class="numpad-key key-double-zero" onclick="window.numpadPress('00')">00</button>
-                <button class="numpad-key" onclick="window.numpadPress('0')">0</button>
-                <button class="numpad-key key-del" onclick="window.numpadDel()">⌫</button>
-            </div>
-
-            <button class="btn-confirm" id="btnConfirm" disabled onclick="window.numpadConfirm()">
-                ✔ CONFIRMAR NÚMERO
+        <div style="display:flex;gap:8px;align-items:stretch;margin-top:12px;">
+            <button class="btn-pantalla" style="flex:1;margin-top:0;" onclick="abrirPantalla()">
+                📺 Abrir Pantalla de la Mesa en Nueva Ventana
             </button>
-
-            <div class="btn-row">
-                <button class="btn btn-danger" id="btnDeleteLast">⬅ Borrar Último</button>
-                <button class="btn btn-warning" id="btnClearAll">🗑 Limpiar Todo</button>
-            </div>
+            <button class="help-btn" onclick="openHelp('pantalla')" title="Ayuda: cómo usar la segunda pantalla" style="width:36px;height:auto;font-size:15px;">?</button>
         </div>
-
-        <!-- LÍMITES (acordeón) -->
-        <div class="admin-section">
-            <div class="limits-header" id="toggleLimitsBtn">
-                2. Configuración de Límites
-                <span id="toggleIcon">▼</span>
-            </div>
-
-            <div class="limits-content" id="limitsContent">
-                <div class="input-section-title">Plenos</div>
-                <div class="input-group">
-                    <label>Mínimo:</label>
-                    <input type="text" id="inputMinPleno">
-                </div>
-                <div class="input-group">
-                    <label>Máximo:</label>
-                    <input type="text" id="inputMaxPleno">
-                </div>
-
-                <div class="input-section-title">Chanzas Dobles</div>
-                <div class="input-group">
-                    <label>Mínimo:</label>
-                    <input type="text" id="inputMinDobles">
-                </div>
-                <div class="input-group">
-                    <label>Máximo:</label>
-                    <input type="text" id="inputMaxDobles">
-                </div>
-
-                <div class="input-section-title">Chanzas Simples</div>
-                <div class="input-group">
-                    <label>Mínimo:</label>
-                    <input type="text" id="inputMinSimples">
-                </div>
-                <div class="input-group">
-                    <label>Máximo:</label>
-                    <input type="text" id="inputMaxSimples">
-                </div>
-
-                <button class="btn-save-limits" id="btnUpdateLimits">💾 Guardar Límites en Pantalla</button>
-            </div>
-        </div>
-
-        <!-- NOMBRE DE LA RULETA -->
-        <div class="nombre-ruleta-section" style="margin-top:0;">
-            <h3>3. Nombre de la Ruleta en Pantalla</h3>
-            <div class="nombre-btn-group">
-                <button class="btn-nombre" id="btnNombreAmericana">
-                    🎡 RULETA AMERICANA
-                </button>
-                <button class="btn-nombre" id="btnNombreFrancesa">
-                    🎰 RULETA FRANCESA
-                </button>
-            </div>
-        </div>
-
+        <button class="btn-ayuda-general" onclick="openHelp('general')">📚 Ver guía de uso completa del panel</button>
     </div>
 
-    <!-- COLUMNA DERECHA: historial -->
-    <div class="admin-section" style="height:100%;">
-        <h3>3. Gestión de Historial</h3>
+    <!-- INGRESO DE NÚMERO -->
+    <div class="admin-section">
+        <h3 style="display:flex;align-items:center;justify-content:space-between;">
+            1. Ingreso de Número
+            <button class="help-btn" onclick="openHelp('numpad')" title="Ayuda: ingreso de números">?</button>
+        </h3>
+
+        <input type="text" id="kbInput" class="kb-input-big"
+               inputmode="numeric" maxlength="2"
+               placeholder="—" autocomplete="off" spellcheck="false" autofocus>
+
+        <button class="btn-confirm" id="btnConfirm" disabled onclick="window.numpadConfirm()">
+            ✔ CONFIRMAR NÚMERO
+        </button>
+
+        <div class="btn-row">
+            <button class="btn btn-danger" id="btnDeleteLast">⬅ Borrar Último</button>
+            <button class="btn btn-warning" id="btnClearAll">🗑 Limpiar Todo</button>
+        </div>
+    </div>
+
+    <!-- HISTORIAL -->
+    <div class="admin-section">
+        <h3 style="display:flex;align-items:center;justify-content:space-between;">
+            2. Gestión de Historial
+            <button class="help-btn" onclick="openHelp('historial')" title="Ayuda: gestión del historial">?</button>
+        </h3>
         <p style="font-size:12px; color:#777; margin-bottom:10px;">
             Último número en la parte superior. Toca "Borrar" para eliminar uno individual.
         </p>
         <div id="adminHistoryList" class="admin-history-list"></div>
     </div>
 
+    <!-- BOTÓN ABRIR CONFIGURACIÓN (ocupa las dos columnas) -->
+    <button class="btn-open-config" onclick="openSettings()">⚙️ Configuración de la Mesa</button>
+
+    <!-- TOGGLE RÁPIDO GIRO DE BOLA -->
+    <div class="toggle-row">
+        <button id="btnSpinToggle" class="btn-spin-toggle" style="flex:1;" onclick="window.toggleBallSpin()">
+            🌀 Giro de bola al entrar: <span id="spinToggleLabel">ACTIVADO</span>
+        </button>
+        <button class="help-btn" onclick="openHelp('ballspin')" title="Ayuda: giro de bola" style="width:40px;flex-shrink:0;font-size:16px;">?</button>
+    </div>
+
+    <!-- TOGGLE PANTALLA DEMO -->
+    <div class="toggle-row">
+        <button id="btnDemoToggle" class="btn-spin-toggle" style="flex:1;" onclick="window.toggleDemo()">
+            🎬 Pantalla Demo: <span id="demoToggleLabel">DESACTIVADA</span>
+        </button>
+        <button class="help-btn" onclick="openHelp('demo')" title="Ayuda: pantalla demo" style="width:40px;flex-shrink:0;font-size:16px;">?</button>
+    </div>
+
+    <!-- TOGGLE TUTORIAL DE JUGADAS (requiere Demo activo) -->
+    <div class="toggle-row">
+        <button id="btnTutorialToggle" class="btn-spin-toggle" style="flex:1;" onclick="window.toggleDemoTutorial()">
+            📚 Tutorial de jugadas: <span id="tutorialToggleLabel">DESACTIVADO</span>
+        </button>
+    </div>
+
+</div>
+
+<!-- MODAL DE CONFIGURACIÓN -->
+<div id="settingsModal" class="settings-modal">
+    <div class="settings-modal-header">
+        <span>⚙️ Configuración de la Mesa</span>
+        <button class="settings-modal-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="settings-modal-body">
+
+        <!-- URL PANTALLA — ancho completo -->
+        <div class="nombre-ruleta-section cfg-full">
+            <h3>🔗 URL Pantalla de la Mesa
+                <button class="help-btn" onclick="openHelp('pantalla')" title="Ayuda: segunda pantalla" style="margin-left:8px;">?</button>
+            </h3>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <input type="url" id="inputPantallaUrl" class="url-pantalla-input"
+                       placeholder="https://letrero-ruleta.vercel.app/"
+                       inputmode="url" autocomplete="url" spellcheck="false">
+                <button class="url-save-btn" onclick="guardarUrlPantalla()" title="Guardar URL">💾</button>
+            </div>
+        </div>
+
+        <!-- LÍMITES — ancho completo -->
+        <div class="admin-section cfg-full">
+            <div class="limits-header" id="toggleLimitsBtn">
+                3. Configuración de Límites
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <button class="help-btn" onclick="event.stopPropagation();openHelp('limites')" title="Ayuda: límites de apuesta">?</button>
+                    <span id="toggleIcon">▼</span>
+                </div>
+            </div>
+            <div class="limits-content" id="limitsContent">
+                <div class="input-section-title">Plenos</div>
+                <div class="input-group"><label>Mínimo:</label><input type="text" inputmode="numeric" id="inputMinPleno"></div>
+                <div class="input-group"><label>Máximo:</label><input type="text" inputmode="numeric" id="inputMaxPleno"></div>
+                <div class="input-section-title">Chanzas Dobles</div>
+                <div class="input-group"><label>Mínimo:</label><input type="text" inputmode="numeric" id="inputMinDobles"></div>
+                <div class="input-group"><label>Máximo:</label><input type="text" inputmode="numeric" id="inputMaxDobles"></div>
+                <div class="input-section-title">Chanzas Simples</div>
+                <div class="input-group"><label>Mínimo:</label><input type="text" inputmode="numeric" id="inputMinSimples"></div>
+                <div class="input-group"><label>Máximo:</label><input type="text" inputmode="numeric" id="inputMaxSimples"></div>
+                <button class="btn-save-limits" id="btnUpdateLimits">💾 Guardar Límites en Pantalla</button>
+            </div>
+        </div>
+
+        <!-- NOMBRE RULETA — columna izquierda -->
+        <div class="nombre-ruleta-section">
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">
+                4. Nombre de la Ruleta
+                <button class="help-btn" onclick="openHelp('nombre')" title="Ayuda: tipos de ruleta">?</button>
+            </h3>
+            <div class="nombre-btn-group">
+                <button class="btn-nombre" id="btnNombreAmericana">🎡 AMERICANA</button>
+                <button class="btn-nombre" id="btnNombreFrancesa">🎰 FRANCESA</button>
+            </div>
+        </div>
+
+        <!-- ANIMACIÓN DE BOLA — columna derecha -->
+        <div class="nombre-ruleta-section">
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">6. Animación Ruleta
+                <button class="help-btn" onclick="openHelp('ballspin')" title="Ayuda: animación de la bolita">?</button>
+            </h3>
+            <p style="font-size:12px;color:#777;margin-bottom:12px;">Bola girando y cayendo al número ganador.</p>
+            <button id="btnBallAnim" class="btn-nombre">
+                🎱 Bola: <span id="ballAnimLabel">DESACTIVADA</span>
+            </button>
+        </div>
+
+        <!-- PIZARRA EN BOLAS — columna izquierda -->
+        <div class="nombre-ruleta-section">
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">7. Pizarra en Bolas
+                <button class="help-btn" onclick="openHelp('ballpizarra')" title="Ayuda: historial en bolas">?</button>
+            </h3>
+            <p style="font-size:12px;color:#777;margin-bottom:12px;">Historial como bolas de colores animadas.</p>
+            <button id="btnBallPizarra" class="btn-nombre">
+                🔴 Bolas: <span id="ballPizarraLabel">DESACTIVADA</span>
+            </button>
+        </div>
+
+        <!-- EFECTOS DE BOLAS — columna derecha -->
+        <div class="nombre-ruleta-section">
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">10. Efectos de Bolas
+                <button class="help-btn" onclick="openHelp('efectos')" title="Ayuda: efectos de bolas">?</button>
+            </h3>
+            <p style="font-size:12px;color:#777;margin-bottom:8px;">Solo con Pizarra en Bolas activa.</p>
+            <button id="btnFxEntry" class="btn-nombre" style="margin-bottom:8px;">
+                ✨ Entrada: <span id="fxEntryLabel">ACTIVADA</span>
+            </button>
+            <button id="btnFxGlow" class="btn-nombre" style="margin-bottom:8px;">
+                💫 Brillo 30s: <span id="fxGlowLabel">DESACTIVADA</span>
+            </button>
+            <button id="btnFxPulse" class="btn-nombre">
+                🔵 Pulso 8s: <span id="fxPulseLabel">DESACTIVADA</span>
+            </button>
+        </div>
+
+        <!-- TEMA DE FONDO — ancho completo -->
+        <div class="tema-section cfg-full">
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">5. Tema de Fondo
+                <button class="help-btn" onclick="openHelp('tema')" title="Ayuda: temas y textura">?</button>
+            </h3>
+            <div class="textura-toggle">
+                <input type="checkbox" id="chkTextura" checked>
+                <label for="chkTextura">Textura papel arrugado</label>
+            </div>
+            <div class="tema-grid">
+                <button class="tema-swatch" data-theme="negro" style="background:linear-gradient(135deg,#0a0a14,#1c1c38)">
+                    <span class="tema-principal">★ Principal</span><span class="tema-badge">Mesa Negro</span>
+                </button>
+                <button class="tema-swatch" data-theme="rojo" style="background:linear-gradient(135deg,#5c0000,#aa0000)">
+                    <span class="tema-principal">★ Principal</span><span class="tema-badge">Mesa Rojo</span>
+                </button>
+                <button class="tema-swatch" data-theme="azul" style="background:linear-gradient(135deg,#0022cc,#0044ff)">
+                    <span class="tema-badge">Azul</span>
+                </button>
+                <button class="tema-swatch" data-theme="verde" style="background:linear-gradient(135deg,#003300,#005800)">
+                    <span class="tema-badge">Verde Casino</span>
+                </button>
+                <button class="tema-swatch" data-theme="violeta" style="background:linear-gradient(135deg,#1a0033,#440088)">
+                    <span class="tema-badge">Violeta</span>
+                </button>
+                <button class="tema-swatch" data-theme="dorado" style="background:linear-gradient(135deg,#0f0800,#2d1a00)">
+                    <span class="tema-badge">Dorado</span>
+                </button>
+                <button class="tema-swatch" data-theme="teal" style="background:linear-gradient(135deg,#002233,#004455)">
+                    <span class="tema-badge">Teal</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- COLOR PIZARRA — columna izquierda -->
+        <div class="nombre-ruleta-section">
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">8. Color Pizarra
+                <button class="help-btn" onclick="openHelp('pizarra')" title="Ayuda: color de la pizarra">?</button>
+            </h3>
+            <div class="tema-grid" style="grid-template-columns:repeat(3,1fr);">
+                <button class="tema-swatch piz-swatch" data-piz="negro"       style="background:#000;border-color:#e6b800;"><span class="tema-badge">Negro</span></button>
+                <button class="tema-swatch piz-swatch" data-piz="azul_noche"  style="background:#00091a;border-color:#1a5fff;"><span class="tema-badge">Azul Noche</span></button>
+                <button class="tema-swatch piz-swatch" data-piz="rojo_vino"   style="background:#140005;border-color:#880022;"><span class="tema-badge">Rojo Vino</span></button>
+                <button class="tema-swatch piz-swatch" data-piz="verde_noche" style="background:#001408;border-color:#226622;"><span class="tema-badge">Verde Noche</span></button>
+                <button class="tema-swatch piz-swatch" data-piz="beige"       style="background:#f0e8d5;border-color:#c0a060;"><span class="tema-badge" style="color:#333;">Beige</span></button>
+                <button class="tema-swatch piz-swatch" data-piz="humo"        style="background:#e0e0e0;border-color:#999;"><span class="tema-badge" style="color:#333;">Humo</span></button>
+            </div>
+        </div>
+
+        <!-- COLOR TARJETA LÍMITES — columna derecha -->
+        <div class="nombre-ruleta-section">
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">9. Color Límites
+                <button class="help-btn" onclick="openHelp('limtheme')" title="Ayuda: color tarjeta límites">?</button>
+            </h3>
+            <div class="tema-grid" style="grid-template-columns:repeat(3,1fr);">
+                <button class="tema-swatch lim-swatch" data-lim="azul"    style="background:linear-gradient(135deg,#0096ff,#00c8ff);border-color:#66ccff;"><span class="tema-badge">Azul</span></button>
+                <button class="tema-swatch lim-swatch" data-lim="dorado"  style="background:linear-gradient(135deg,#6e4600,#c88c00);border-color:#ffd700;"><span class="tema-badge">Dorado</span></button>
+                <button class="tema-swatch lim-swatch" data-lim="rojo"    style="background:linear-gradient(135deg,#6e0000,#c80000);border-color:#ff6666;"><span class="tema-badge">Rojo</span></button>
+                <button class="tema-swatch lim-swatch" data-lim="negro"   style="background:linear-gradient(135deg,#0f0f0f,#323232);border-color:#888;"><span class="tema-badge">Negro</span></button>
+                <button class="tema-swatch lim-swatch" data-lim="verde"   style="background:linear-gradient(135deg,#003c00,#009600);border-color:#55ee55;"><span class="tema-badge">Verde</span></button>
+                <button class="tema-swatch lim-swatch" data-lim="violeta" style="background:linear-gradient(135deg,#320050,#6e00c8);border-color:#cc88ff;"><span class="tema-badge">Violeta</span></button>
+            </div>
+        </div>
+
+        <!-- CALIENTES Y FRÍOS — ancho completo -->
+        <div class="nombre-ruleta-section cfg-full">
+            <h3 style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                11. Números Calientes y Fríos
+                <button class="help-btn" onclick="openHelp('hotcold')" title="Ayuda: números calientes y fríos">?</button>
+            </h3>
+            <!-- Color toggle -->
+            <button id="btnHotColdColors" class="btn-nombre" style="margin-bottom:16px;">
+                🎨 Color del número: <span id="hotColdColorsLabel">DESACTIVADO</span>
+            </button>
+
+            <!-- Grid de efectos calientes / fríos -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+
+                <!-- EFECTOS CALIENTES -->
+                <div>
+                    <p style="color:#ff7033;font-size:12px;font-weight:bold;margin-bottom:8px;letter-spacing:.5px;">🔥 EFECTO CALIENTES</p>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                        <button class="tema-swatch hcfx-hot-btn" data-hcfx-hot="none"  style="background:#1a0800;min-height:52px;">
+                            <span class="tema-badge">Sin efecto</span>
+                        </button>
+                        <button class="tema-swatch hcfx-hot-btn" data-hcfx-hot="flame" style="background:linear-gradient(160deg,#200400,#6a1800);min-height:52px;">
+                            <span class="tema-badge">🔥 Llamas</span>
+                        </button>
+                        <button class="tema-swatch hcfx-hot-btn" data-hcfx-hot="ring"  style="background:linear-gradient(160deg,#280600,#7a2200);min-height:52px;">
+                            <span class="tema-badge">⭕ Anillo</span>
+                        </button>
+                        <button class="tema-swatch hcfx-hot-btn" data-hcfx-hot="ember" style="background:linear-gradient(160deg,#1c0400,#581000);min-height:52px;">
+                            <span class="tema-badge">✨ Brasas</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- EFECTOS FRÍOS -->
+                <div>
+                    <p style="color:#66ccff;font-size:12px;font-weight:bold;margin-bottom:8px;letter-spacing:.5px;">❄️ EFECTO FRÍOS</p>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                        <button class="tema-swatch hcfx-cold-btn" data-hcfx-cold="none"  style="background:#000a14;min-height:52px;">
+                            <span class="tema-badge">Sin efecto</span>
+                        </button>
+                        <button class="tema-swatch hcfx-cold-btn" data-hcfx-cold="snow"  style="background:linear-gradient(160deg,#000c1e,#001830);min-height:52px;">
+                            <span class="tema-badge">❄ Nieve</span>
+                        </button>
+                        <button class="tema-swatch hcfx-cold-btn" data-hcfx-cold="frost" style="background:linear-gradient(160deg,#000e22,#001c3a);min-height:52px;">
+                            <span class="tema-badge">🧊 Escarcha</span>
+                        </button>
+                        <button class="tema-swatch hcfx-cold-btn" data-hcfx-cold="burst" style="background:linear-gradient(160deg,#000a1a,#001428);min-height:52px;">
+                            <span class="tema-badge">💎 Cristal</span>
+                        </button>
+                        <button class="tema-swatch hcfx-cold-btn" data-hcfx-cold="mist"  style="background:linear-gradient(160deg,#00080f,#000e1e);min-height:52px;grid-column:1/-1;">
+                            <span class="tema-badge">🌫 Vaho frío</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <script>
@@ -547,21 +1064,21 @@
     var btnConfirm   = document.getElementById('btnConfirm');
 
     function updateDisplay() {
+        var kbIn = document.getElementById('kbInput');
+        if (!kbIn) return;
+        var typing = document.activeElement === kbIn;
         if (numpadBuffer === '') {
-            numDisplay.textContent = '—';
-            numDisplay.className = 'number-display';
+            if (!typing) kbIn.value = '';
+            kbIn.className = 'kb-input-big';
             btnConfirm.disabled = true;
             return;
         }
-
-        numDisplay.textContent = numpadBuffer;
-
+        if (!typing) kbIn.value = numpadBuffer;
         if (numberColors.hasOwnProperty(numpadBuffer)) {
-            var c = numberColors[numpadBuffer];
-            numDisplay.className = 'number-display valid-' + c;
+            kbIn.className = 'kb-input-big valid-' + numberColors[numpadBuffer];
             btnConfirm.disabled = false;
         } else {
-            numDisplay.className = 'number-display invalid';
+            kbIn.className = 'kb-input-big invalid';
             btnConfirm.disabled = true;
         }
     }
@@ -577,11 +1094,14 @@
         // Máximo 2 dígitos
         if (numpadBuffer.length >= 2) return;
 
-        // Evitar "00" vía teclas individuales (solo via botón especial)
-        // Evitar leading zeros: si ya hay un '0', no agregar más dígitos → sería inválido de 1-36
+        // Pressing 0 again while buffer is '0' produces '00'
+        if (numpadBuffer === '0' && key === '0') {
+            numpadBuffer = '00';
+            updateDisplay();
+            return;
+        }
+        // "0X" where X > 0 is invalid in roulette — replace with the new digit
         if (numpadBuffer === '0' && key !== '') {
-            // "0X" donde X > 0 es inválido en ruleta, limpiar y empezar con el nuevo dígito
-            // Excepción: solo "0" es válido por sí solo, así que reemplazar
             numpadBuffer = key;
             updateDisplay();
             return;
@@ -603,14 +1123,17 @@
             showToast('Número inválido: ' + val, 'error');
             return;
         }
+        try { if (demoOn) { demoOn = false; localStorage.setItem('rlt_demo', '0'); updateDemoBtn(false); } } catch(e) {}
         appData.history.push(val);
         saveLocal();
         renderAdminHistory();
-        // Feedback visual en display antes de limpiar
-        numDisplay.textContent = '✔ ' + val;
+        var kbInC = document.getElementById('kbInput');
+        if (kbInC) { kbInC.value = '✔ ' + val; kbInC.className = 'kb-input-big valid-' + numberColors[val]; }
         setTimeout(function() {
             numpadBuffer = '';
             updateDisplay();
+            var kbIn2 = document.getElementById('kbInput');
+            if (kbIn2) kbIn2.focus();
         }, 600);
         showToast('Número ' + val + ' ingresado', 'success');
     };
@@ -663,12 +1186,13 @@
     }
 
     function fillLimitsInputs() {
-        document.getElementById('inputMinPleno').value   = appData.limits.minPleno   || '';
-        document.getElementById('inputMaxPleno').value   = appData.limits.maxPleno   || '';
-        document.getElementById('inputMinDobles').value  = appData.limits.minDobles  || '';
-        document.getElementById('inputMaxDobles').value  = appData.limits.maxDobles  || '';
-        document.getElementById('inputMinSimples').value = appData.limits.minSimples || '';
-        document.getElementById('inputMaxSimples').value = appData.limits.maxSimples || '';
+        var l = appData.limits;
+        document.getElementById('inputMinPleno').value   = formatCLP(l.minPleno)   || '';
+        document.getElementById('inputMaxPleno').value   = formatCLP(l.maxPleno)   || '';
+        document.getElementById('inputMinDobles').value  = formatCLP(l.minDobles)  || '';
+        document.getElementById('inputMaxDobles').value  = formatCLP(l.maxDobles)  || '';
+        document.getElementById('inputMinSimples').value = formatCLP(l.minSimples) || '';
+        document.getElementById('inputMaxSimples').value = formatCLP(l.maxSimples) || '';
     }
 
     /* =========================================
@@ -689,9 +1213,13 @@
             var colorText = colorClass === 'red' ? 'Rojo' : (colorClass === 'black' ? 'Negro' : 'Verde');
             var itemDiv = document.createElement('div');
             itemDiv.className = 'admin-history-item c-' + colorClass;
+            itemDiv.dataset.index = i;
             itemDiv.innerHTML =
                 '<span>N&ordm; ' + num + ' <small style="color:#888;font-weight:normal;margin-left:8px;">(' + colorText + ')</small></span>' +
-                '<button class="btn-delete-item" onclick="window.deleteIndividualNumber(' + i + ')">Borrar</button>';
+                '<div style="display:flex;gap:0;">' +
+                '<button class="btn-edit-item" onclick="window.editHistoryItem(' + i + ')">✏️ Editar</button>' +
+                '<button class="btn-delete-item" onclick="window.deleteIndividualNumber(' + i + ')">Borrar</button>' +
+                '</div>';
             list.appendChild(itemDiv);
         }
     }
@@ -706,6 +1234,53 @@
         appData.history.splice(index, 1);
         saveLocal();
         renderAdminHistory();
+    };
+
+    window.editHistoryItem = function(index) {
+        var list = document.getElementById('adminHistoryList');
+        var item = list.querySelector('[data-index="' + index + '"]');
+        if (!item) return;
+        var currentNum = appData.history[index];
+        var colorClass = numberColors[currentNum] || 'black';
+        item.className = 'admin-history-item c-' + colorClass + ' editing';
+        item.innerHTML =
+            '<input class="history-edit-input" id="editInput_' + index + '" type="text" inputmode="numeric" maxlength="2" value="' + currentNum + '" autocomplete="off">' +
+            '<div style="display:flex;gap:4px;">' +
+            '<button class="btn-save-edit" onclick="window.saveEditHistoryItem(' + index + ')">✓ Guardar</button>' +
+            '<button class="btn-cancel-edit" onclick="renderAdminHistory()">✕</button>' +
+            '</div>';
+        var inp = document.getElementById('editInput_' + index);
+        if (inp) {
+            inp.focus(); inp.select();
+            inp.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault(); window.saveEditHistoryItem(index); }
+                if (e.key === 'Escape') { e.preventDefault(); renderAdminHistory(); }
+            });
+            inp.addEventListener('input', function() {
+                var v = inp.value.trim();
+                var valid = v in numberColors;
+                inp.classList.toggle('edit-invalid', v.length > 0 && !valid);
+                var colorC = valid ? numberColors[v] : colorClass;
+                item.className = 'admin-history-item c-' + colorC + ' editing';
+            });
+        }
+    };
+
+    window.saveEditHistoryItem = function(index) {
+        var inp = document.getElementById('editInput_' + index);
+        if (!inp) return;
+        var val = inp.value.trim();
+        if (!(val in numberColors)) {
+            inp.classList.add('edit-invalid');
+            inp.focus();
+            showToast('Número inválido — ingresa 0 a 36 ó 00', 'error');
+            return;
+        }
+        var oldNum = appData.history[index];
+        appData.history[index] = val;
+        saveLocal();
+        renderAdminHistory();
+        showToast('Nº ' + oldNum + ' → ' + val, '');
     };
 
     document.getElementById('btnDeleteLast').addEventListener('click', function() {
@@ -746,6 +1321,48 @@
     });
 
     /* =========================================
+       FORMATO MONEDA CHILENA ($1.000.000)
+       ========================================= */
+    function formatCLP(raw) {
+        var digits = String(raw == null ? '' : raw).replace(/[^\d]/g, '');
+        if (!digits) return '';
+        var num = parseInt(digits, 10);
+        if (isNaN(num)) return '';
+        return '$' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    function setupLimitInputs() {
+        var ids = [
+            'inputMinPleno', 'inputMaxPleno',
+            'inputMinDobles', 'inputMaxDobles',
+            'inputMinSimples', 'inputMaxSimples'
+        ];
+        ids.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+
+            el.addEventListener('focus', function() { this.select(); });
+
+            el.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    var digits = this.value.replace(/[^\d]/g, '').slice(0, -1);
+                    this.value = formatCLP(digits);
+                    var len = this.value.length;
+                    this.setSelectionRange(len, len);
+                }
+            });
+
+            el.addEventListener('input', function() {
+                var digits = this.value.replace(/[^\d]/g, '');
+                this.value = formatCLP(digits);
+                var len = this.value.length;
+                this.setSelectionRange(len, len);
+            });
+        });
+    }
+
+    /* =========================================
        INICIALIZACIÓN
        ========================================= */
     function actualizarBotonesNombre(nombre) {
@@ -753,6 +1370,11 @@
         var btnF = document.getElementById('btnNombreFrancesa');
         if (btnA) btnA.classList.toggle('selected', nombre === 'RULETA AMERICANA');
         if (btnF) btnF.classList.toggle('selected', nombre === 'RULETA FRANCESA');
+        var titulo = document.getElementById('panelTitle');
+        if (titulo) {
+            var display = nombre === 'RULETA FRANCESA' ? 'Ruleta Francesa' : 'Ruleta Americana';
+            titulo.textContent = '⚙️ Panel de Operador — ' + display;
+        }
     }
 
     function setNombreRuleta(nombre) {
@@ -762,6 +1384,29 @@
     }
 
     window.onload = function() {
+        setupLimitInputs();
+
+        // Wire native keyboard input
+        var kbInput = document.getElementById('kbInput');
+        if (kbInput) {
+            kbInput.addEventListener('input', function() {
+                var val = this.value.replace(/[^0-9]/g, '').slice(0, 2);
+                // "00" only when both chars are 0
+                this.value = val;
+                numpadBuffer = val;
+                updateDisplay();
+            });
+            kbInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (!btnConfirm.disabled) {
+                        window.numpadConfirm();
+                        this.value = '';
+                    }
+                }
+            });
+        }
+
         loadData();
         var nombreActual = localStorage.getItem('ruleta_nombre') || 'RULETA AMERICANA';
         actualizarBotonesNombre(nombreActual);
@@ -769,6 +1414,175 @@
         var btnF = document.getElementById('btnNombreFrancesa');
         if (btnA) btnA.addEventListener('click', function() { setNombreRuleta('RULETA AMERICANA'); });
         if (btnF) btnF.addEventListener('click', function() { setNombreRuleta('RULETA FRANCESA'); });
+
+        // ===== TEMAS DE FONDO =====
+        function setTema(key) {
+            localStorage.setItem('rlt_theme', key);
+            document.querySelectorAll('.tema-swatch[data-theme]').forEach(function(b) {
+                b.classList.toggle('tema-active', b.dataset.theme === key);
+            });
+        }
+        document.querySelectorAll('.tema-swatch[data-theme]').forEach(function(b) {
+            b.addEventListener('click', function() { setTema(this.dataset.theme); });
+        });
+        setTema(localStorage.getItem('rlt_theme') || 'azul');
+
+        // ===== ANIMACIÓN BOLA =====
+        var btnBall=document.getElementById('btnBallAnim');
+        var ballAnimLabel=document.getElementById('ballAnimLabel');
+        function updateBallBtn(on){
+            if(!btnBall||!ballAnimLabel)return;
+            ballAnimLabel.textContent=on?'ACTIVADA':'DESACTIVADA';
+            btnBall.classList.toggle('selected',on);
+        }
+        var ballOn=localStorage.getItem('rlt_ballspin')==='1';
+        updateBallBtn(ballOn);
+        if(btnBall)btnBall.addEventListener('click',function(){
+            ballOn=!ballOn;
+            localStorage.setItem('rlt_ballspin',ballOn?'1':'0');
+            updateBallBtn(ballOn);
+        });
+
+        var btnBP=document.getElementById('btnBallPizarra');
+        var bpLabel=document.getElementById('ballPizarraLabel');
+        function updateBPBtn(on){if(!btnBP||!bpLabel)return;bpLabel.textContent=on?'ACTIVADA':'DESACTIVADA';btnBP.classList.toggle('selected',on);}
+        var bpOn=localStorage.getItem('rlt_ballpizarra')==='1';
+        updateBPBtn(bpOn);
+        if(btnBP)btnBP.addEventListener('click',function(){bpOn=!bpOn;localStorage.setItem('rlt_ballpizarra',bpOn?'1':'0');updateBPBtn(bpOn);});
+
+        // Tema Pizarra
+        var pizActive = localStorage.getItem('rlt_pizarra_theme') || 'negro';
+        document.querySelectorAll('.piz-swatch').forEach(function(b){
+            b.classList.toggle('tema-active', b.dataset.piz === pizActive);
+            b.addEventListener('click', function(){
+                pizActive = this.dataset.piz;
+                localStorage.setItem('rlt_pizarra_theme', pizActive);
+                document.querySelectorAll('.piz-swatch').forEach(function(x){ x.classList.toggle('tema-active', x.dataset.piz === pizActive); });
+            });
+        });
+
+        // Tema Límites
+        var limActive = localStorage.getItem('rlt_lim_theme') || 'azul';
+        document.querySelectorAll('.lim-swatch').forEach(function(b){
+            b.classList.toggle('tema-active', b.dataset.lim === limActive);
+            b.addEventListener('click', function(){
+                limActive = this.dataset.lim;
+                localStorage.setItem('rlt_lim_theme', limActive);
+                document.querySelectorAll('.lim-swatch').forEach(function(x){ x.classList.toggle('tema-active', x.dataset.lim === limActive); });
+            });
+        });
+
+        // ===== EFECTOS DE BOLAS =====
+        var btnFxEntry=document.getElementById('btnFxEntry'),fxEntryLabel=document.getElementById('fxEntryLabel');
+        function updateFxEntry(on){
+            if(!btnFxEntry||!fxEntryLabel)return;
+            fxEntryLabel.textContent=on?'ACTIVADA':'DESACTIVADA';
+            btnFxEntry.classList.toggle('selected',on);
+            // sync quick-access toggle
+            var st=document.getElementById('btnSpinToggle'),sl=document.getElementById('spinToggleLabel');
+            if(st){st.classList.toggle('active',on);}
+            if(sl){sl.textContent=on?'ACTIVADO':'DESACTIVADO';}
+        }
+        var fxEntryOn=localStorage.getItem('rlt_fx_entry')!=='0';
+        updateFxEntry(fxEntryOn);
+        if(btnFxEntry)btnFxEntry.addEventListener('click',function(){fxEntryOn=!fxEntryOn;localStorage.setItem('rlt_fx_entry',fxEntryOn?'1':'0');updateFxEntry(fxEntryOn);});
+
+        window.toggleBallSpin = function(){
+            fxEntryOn=!fxEntryOn;
+            localStorage.setItem('rlt_fx_entry',fxEntryOn?'1':'0');
+            updateFxEntry(fxEntryOn);
+            showToast('Giro de bola: '+(fxEntryOn?'ACTIVADO':'DESACTIVADO'),'');
+        };
+
+        var btnFxGlow=document.getElementById('btnFxGlow'),fxGlowLabel=document.getElementById('fxGlowLabel');
+        function updateFxGlow(on){if(!btnFxGlow||!fxGlowLabel)return;fxGlowLabel.textContent=on?'ACTIVADA':'DESACTIVADA';btnFxGlow.classList.toggle('selected',on);}
+        var fxGlowOn=localStorage.getItem('rlt_fx_glow')==='1';
+        updateFxGlow(fxGlowOn);
+        if(btnFxGlow)btnFxGlow.addEventListener('click',function(){fxGlowOn=!fxGlowOn;localStorage.setItem('rlt_fx_glow',fxGlowOn?'1':'0');updateFxGlow(fxGlowOn);});
+
+        var btnFxPulse=document.getElementById('btnFxPulse'),fxPulseLabel=document.getElementById('fxPulseLabel');
+        function updateFxPulse(on){if(!btnFxPulse||!fxPulseLabel)return;fxPulseLabel.textContent=on?'ACTIVADA':'DESACTIVADA';btnFxPulse.classList.toggle('selected',on);}
+        var fxPulseOn=localStorage.getItem('rlt_fx_pulse')==='1';
+        updateFxPulse(fxPulseOn);
+        if(btnFxPulse)btnFxPulse.addEventListener('click',function(){fxPulseOn=!fxPulseOn;localStorage.setItem('rlt_fx_pulse',fxPulseOn?'1':'0');updateFxPulse(fxPulseOn);});
+
+        // Hot/Cold colors
+        var btnHCC=document.getElementById('btnHotColdColors'),hccLabel=document.getElementById('hotColdColorsLabel');
+        var hotColdColorsOn=localStorage.getItem('rlt_hotcold_colors')==='1';
+        function updateHotColdColors(on){if(!btnHCC||!hccLabel)return;hccLabel.textContent=on?'ACTIVADO':'DESACTIVADO';btnHCC.classList.toggle('selected',on);}
+        updateHotColdColors(hotColdColorsOn);
+        if(btnHCC)btnHCC.addEventListener('click',function(){hotColdColorsOn=!hotColdColorsOn;localStorage.setItem('rlt_hotcold_colors',hotColdColorsOn?'1':'0');updateHotColdColors(hotColdColorsOn);showToast('Color calientes/fríos: '+(hotColdColorsOn?'ACTIVADO':'DESACTIVADO'),'');});
+
+        // Hot effects picker
+        var hotFxBtns=document.querySelectorAll('.hcfx-hot-btn');
+        var curHotFx=localStorage.getItem('rlt_hc_hot_fx')||'none';
+        function updateHotFxBtns(v){hotFxBtns.forEach(function(b){b.classList.toggle('selected',b.dataset.hcfxHot===v);});}
+        updateHotFxBtns(curHotFx);
+        hotFxBtns.forEach(function(btn){btn.addEventListener('click',function(){curHotFx=this.dataset.hcfxHot;localStorage.setItem('rlt_hc_hot_fx',curHotFx);updateHotFxBtns(curHotFx);var names={none:'Desactivado',flame:'Llamas',ring:'Anillo de fuego',ember:'Brasas'};showToast('Efecto calientes: '+(names[curHotFx]||curHotFx),'');});});
+
+        // Cold effects picker
+        var coldFxBtns=document.querySelectorAll('.hcfx-cold-btn');
+        var curColdFx=localStorage.getItem('rlt_hc_cold_fx')||'none';
+        function updateColdFxBtns(v){coldFxBtns.forEach(function(b){b.classList.toggle('selected',b.dataset.hcfxCold===v);});}
+        updateColdFxBtns(curColdFx);
+        coldFxBtns.forEach(function(btn){btn.addEventListener('click',function(){curColdFx=this.dataset.hcfxCold;localStorage.setItem('rlt_hc_cold_fx',curColdFx);updateColdFxBtns(curColdFx);var names={none:'Desactivado',snow:'Nieve',frost:'Escarcha',burst:'Cristal de hielo',mist:'Vaho frío'};showToast('Efecto fríos: '+(names[curColdFx]||curColdFx),'');});});
+
+        // Demo toggle
+        var demoOn=localStorage.getItem('rlt_demo')==='1';
+        function updateDemoBtn(on){var b=document.getElementById('btnDemoToggle'),l=document.getElementById('demoToggleLabel');if(!b||!l)return;l.textContent=on?'ACTIVA':'DESACTIVADA';b.classList.toggle('active',on);}
+        window.toggleDemo=function(){demoOn=!demoOn;localStorage.setItem('rlt_demo',demoOn?'1':'0');updateDemoBtn(demoOn);showToast('Pantalla Demo: '+(demoOn?'ACTIVA':'DESACTIVADA'),'');};
+        updateDemoBtn(demoOn);
+
+        // Tutorial de jugadas
+        var tutorialOn=localStorage.getItem('rlt_demo_tutorial')==='1';
+        function updateTutorialBtn(on){var b=document.getElementById('btnTutorialToggle'),l=document.getElementById('tutorialToggleLabel');if(!b||!l)return;l.textContent=on?'ACTIVO':'DESACTIVADO';b.classList.toggle('active',on);}
+        window.toggleDemoTutorial=function(){tutorialOn=!tutorialOn;localStorage.setItem('rlt_demo_tutorial',tutorialOn?'1':'0');updateTutorialBtn(tutorialOn);showToast('Tutorial de jugadas: '+(tutorialOn?'ACTIVO':'DESACTIVADO'),'');};
+        updateTutorialBtn(tutorialOn);
+
+        // Textura papel
+        var chkTextura = document.getElementById('chkTextura');
+        function setTextura(on) {
+            localStorage.setItem('rlt_textura', on ? '1' : '0');
+            if (chkTextura) chkTextura.checked = on;
+        }
+        if (chkTextura) {
+            var savedTex = localStorage.getItem('rlt_textura');
+            chkTextura.checked = savedTex !== '0';
+            chkTextura.addEventListener('change', function() { setTextura(this.checked); });
+        }
+        var savedUrl = localStorage.getItem('ruleta_pantalla_url') || '';
+        var defaultUrl = window.location.origin + '/';
+        document.getElementById('inputPantallaUrl').value = savedUrl || defaultUrl;
+        document.getElementById('inputPantallaUrl').placeholder = defaultUrl;
+        document.getElementById('inputPantallaUrl').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') guardarUrlPantalla();
+        });
+        document.getElementById('helpCloseBtn').addEventListener('click', closeHelp);
+        document.getElementById('helpOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeHelp();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (document.getElementById('settingsModal').classList.contains('open')) { closeSettings(); return; }
+                closeHelp(); return;
+            }
+            // Skip numpad shortcuts when typing in any input/textarea
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            // Skip when help modal is open
+            if (document.getElementById('helpOverlay').classList.contains('open')) return;
+            // Skip when settings modal is open
+            if (document.getElementById('settingsModal').classList.contains('open')) return;
+            if (e.key >= '0' && e.key <= '9') {
+                e.preventDefault();
+                window.numpadPress(e.key);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (!btnConfirm.disabled) window.numpadConfirm();
+            } else if (e.key === 'Backspace' || e.key === 'Delete') {
+                e.preventDefault();
+                window.numpadDel();
+            }
+        });
         document.getElementById('btnInstalar').addEventListener('click', function() {
             if (!deferredInstall) return;
             deferredInstall.prompt();
@@ -782,15 +1596,464 @@
     };
 
     /* =========================================
+       AYUDA CONTEXTUAL — CONTENIDO
+       ========================================= */
+    var HELP = {
+        numpad: {
+            title: '1. Ingreso de Número',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🎯 Cómo ingresar el número ganador</div>' +
+                '<p>Usa el teclado numérico para digitar el número que salió en la ruleta. El resultado aparece en el display grande del panel.</p>' +
+                '<ul>' +
+                '<li>Números válidos: <strong>0</strong>, <strong>00</strong> y del <strong>1 al 36</strong></li>' +
+                '<li>El display cambia de color al instante:<br>' +
+                '<span class="help-chip red">● ROJO</span> ' +
+                '<span class="help-chip black">● NEGRO</span> ' +
+                '<span class="help-chip green">● VERDE (0 y 00)</span></li>' +
+                '<li>Si el número no es válido (ej: 37 o 99), el display se pone <strong style="color:#ff6600">naranja</strong> y CONFIRMAR queda bloqueado</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">✔ Botón CONFIRMAR NÚMERO</div>' +
+                '<p>Se activa solo cuando el número es válido. Al presionarlo:</p>' +
+                '<ul>' +
+                '<li>El número queda registrado en el historial de la sesión</li>' +
+                '<li>Aparece <strong>automáticamente</strong> en la pantalla de la mesa</li>' +
+                '<li>El display se limpia listo para el siguiente ingreso</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">⬅ Borrar Último</div>' +
+                '<p>Elimina el <strong>último número confirmado</strong> del historial en caso de error de ingreso. Pide confirmación. Los números anteriores quedan intactos.</p></div>' +
+
+                '<div class="help-block warn"><div class="help-block-title">🗑 Limpiar Todo</div>' +
+                '<p>Borra <strong>todos los números</strong> del historial y la pantalla queda en blanco. Úsalo solo al iniciar una nueva sesión o cambiar de mesa.</p>' +
+                '<p style="margin-top:8px;color:#ff9944;"><strong>⚠ Esta acción no se puede deshacer.</strong></p></div>'
+        },
+
+        limites: {
+            title: '2. Configuración de Límites de Apuesta',
+            body:
+                '<div class="help-block success"><div class="help-block-title">💰 ¿Para qué sirven los límites?</div>' +
+                '<p>Son los montos mínimos y máximos de apuesta que se muestran en la <strong>pantalla de la mesa</strong>, para que los jugadores vean las reglas antes de apostar.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🎯 Plenos — Apuesta directa a un número</div>' +
+                '<p>El jugador apuesta a que saldrá <strong>un único número</strong> (ej: solo el 17). Paga <strong>35 a 1</strong>. Es la apuesta de mayor riesgo, por eso tiene los límites más bajos.</p>' +
+                '<p style="margin-top:6px;color:#888;">Ej. típico: Mín <strong>$1.000</strong> — Máx <strong>$20.000</strong></p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🔲 Chanzas Dobles — Apuestas combinadas</div>' +
+                '<p>Cubren entre 2 y 6 números a la vez:</p>' +
+                '<ul>' +
+                '<li><strong>Caballo</strong>: 2 números — paga 17 a 1</li>' +
+                '<li><strong>Calle</strong>: 3 números — paga 11 a 1</li>' +
+                '<li><strong>Cuadro</strong>: 4 números — paga 8 a 1</li>' +
+                '<li><strong>Seisena</strong>: 6 números — paga 5 a 1</li>' +
+                '</ul>' +
+                '<p style="margin-top:6px;color:#888;">Ej. típico: Mín <strong>$10.000</strong> — Máx <strong>$350.000</strong></p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🔴 Chanzas Simples — Mitad de la mesa</div>' +
+                '<p>Apuestas que cubren la mitad del tablero:</p>' +
+                '<ul>' +
+                '<li><span class="help-chip red">ROJO</span> / <span class="help-chip black">NEGRO</span> — paga 1 a 1</li>' +
+                '<li>Par / Impar — paga 1 a 1</li>' +
+                '<li>1–18 / 19–36 — paga 1 a 1</li>' +
+                '<li>Docenas y Columnas — paga 2 a 1</li>' +
+                '</ul>' +
+                '<p style="margin-top:6px;color:#888;">Ej. típico: Mín <strong>$20.000</strong> — Máx <strong>$700.000</strong></p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">💾 Cómo guardar los límites</div>' +
+                '<ol>' +
+                '<li>Expande la sección haciendo clic en el título "2. Configuración de Límites"</li>' +
+                '<li>Escribe los montos — el sistema agrega <strong>$</strong> y los puntos automáticamente</li>' +
+                '<li>Presiona <strong>"💾 Guardar Límites en Pantalla"</strong></li>' +
+                '</ol>' +
+                '<p style="margin-top:8px;">Los cambios se reflejan al instante en la pantalla de la mesa y se guardan para la próxima sesión.</p></div>'
+        },
+
+        nombre: {
+            title: '3. Nombre de la Ruleta en Pantalla',
+            body:
+                '<div class="help-block"><div class="help-block-title">🎡 Ruleta Americana</div>' +
+                '<p>Tiene <strong>38 casillas</strong>: números del 1 al 36, más el <strong>0</strong> y el <strong>00</strong> (ambos de color verde).</p>' +
+                '<ul>' +
+                '<li>Estándar en la mayoría de casinos de Chile</li>' +
+                '<li>Ventaja de la casa: <strong>5,26%</strong></li>' +
+                '<li>Dos casillas verdes (0 y 00) favorecen más a la casa</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🎰 Ruleta Francesa</div>' +
+                '<p>En esta mesa tiene <strong>38 casillas</strong>: números del 1 al 36, más el <strong>0</strong> y el <strong>00</strong> (igual que la Americana). La diferencia es solo el <strong>nombre</strong> que se muestra en pantalla.</p>' +
+                '<ul>' +
+                '<li>Mismas reglas de juego que la Americana</li>' +
+                '<li>Ventaja de la casa: <strong>5,26%</strong></li>' +
+                '</ul></div>' +
+
+                '<div class="help-block success"><div class="help-block-title">🔄 Qué cambia al seleccionar</div>' +
+                '<ul>' +
+                '<li>El nombre que aparece en la <strong>pantalla de la mesa</strong></li>' +
+                '<li>El título de este <strong>panel del operador</strong></li>' +
+                '<li>Se guarda automáticamente — se recuerda al abrir el panel de nuevo</li>' +
+                '</ul>' +
+                '<p style="margin-top:8px;">El cambio es <strong>instantáneo</strong>, no es necesario recargar nada.</p></div>'
+        },
+
+        historial: {
+            title: '4. Gestión del Historial',
+            body:
+                '<div class="help-block success"><div class="help-block-title">📋 ¿Qué muestra el historial?</div>' +
+                '<p>La lista completa de todos los números ingresados en la sesión actual. El número más reciente aparece <strong>arriba</strong>. Este mismo historial es lo que la pantalla de la mesa muestra a los jugadores como "últimos resultados".</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🗑 Borrar un número individual</div>' +
+                '<p>Cada número tiene un botón <strong>"Borrar"</strong> que lo elimina del historial.</p>' +
+                '<ul>' +
+                '<li>Úsalo si ingresaste el número equivocado</li>' +
+                '<li>El sistema pedirá confirmación antes de borrar</li>' +
+                '<li>La pantalla de la mesa se actualiza automáticamente</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block warn"><div class="help-block-title">⚠️ Cuándo limpiar el historial completo</div>' +
+                '<p>El botón <strong>"🗑 Limpiar Todo"</strong> (en la sección del teclado) elimina <strong>todos</strong> los números de la sesión y la pantalla queda en blanco.</p>' +
+                '<ul>' +
+                '<li>Úsalo al iniciar una nueva sesión de juego</li>' +
+                '<li>Úsalo al cambiar de turno o de mesa</li>' +
+                '<li style="color:#ff9944;"><strong>Esta acción NO se puede deshacer</strong></li>' +
+                '</ul></div>'
+        },
+
+        pantalla: {
+            title: '📺 Pantalla de la Mesa',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🖥️ Configurar dos monitores</div>' +
+                '<p>Presiona <strong>"📺 Abrir Pantalla de la Mesa"</strong> para abrir el letrero en una nueva ventana del navegador.</p>' +
+                '<ol>' +
+                '<li>Se abre una nueva ventana del navegador con la pantalla de la mesa</li>' +
+                '<li>Arrastra esa ventana al <strong>segundo monitor</strong> (el de los jugadores)</li>' +
+                '<li>Presiona <strong>F11</strong> en esa ventana para modo pantalla completa</li>' +
+                '<li>Este panel queda en el monitor del croupier/operador</li>' +
+                '</ol></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🔄 Sincronización automática</div>' +
+                '<p>Todo lo que hagas en este panel se refleja <strong>al instante</strong> en la pantalla de la mesa:</p>' +
+                '<ul>' +
+                '<li>Números ingresados y confirmados</li>' +
+                '<li>Cambios en los límites de apuesta</li>' +
+                '<li>Cambio de nombre (Americana / Francesa)</li>' +
+                '</ul>' +
+                '<p style="margin-top:8px;color:#888;">No es necesario recargar la pantalla de la mesa. Ambas ventanas comparten los datos en tiempo real.</p></div>' +
+
+                '<div class="help-block warn"><div class="help-block-title">⚠️ Ventanas emergentes bloqueadas</div>' +
+                '<p>Si el botón no abre la ventana, el navegador está bloqueando las ventanas emergentes:</p>' +
+                '<ol>' +
+                '<li>Busca el ícono de bloqueo (🚫) en la barra de direcciones del navegador</li>' +
+                '<li>Haz clic en él y selecciona <strong>"Permitir siempre"</strong> para este sitio</li>' +
+                '<li>Intenta abrir la pantalla nuevamente</li>' +
+                '</ol></div>'
+        },
+
+        tema: {
+            title: '4. Tema de Fondo',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🎨 Colores de fondo</div>' +
+                '<p>Cambia el color de fondo de la pantalla de la mesa. El cambio es <strong>instantáneo</strong> y se guarda automáticamente — no hay que recargar nada.</p>' +
+                '<ul>' +
+                '<li><strong>Mesa Negro ★</strong> — Fondo negro profundo. Principal para mesas con tapete negro.</li>' +
+                '<li><strong>Mesa Rojo ★</strong> — Rojo oscuro. Principal para mesas con tapete rojo.</li>' +
+                '<li>Los otros 5 temas (Azul, Verde, Violeta, Dorado, Teal) son alternativos decorativos.</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">📄 Textura papel arrugado</div>' +
+                '<p>La casilla "Textura papel arrugado" agrega una capa de textura sutil sobre el tema seleccionado. Aporta profundidad visual sin afectar la legibilidad de los datos.</p>' +
+                '<ul>' +
+                '<li>Se aplica encima de cualquier tema de color</li>' +
+                '<li>El cambio es instantáneo en la pantalla de la mesa</li>' +
+                '<li>Se puede activar o desactivar en cualquier momento</li>' +
+                '</ul></div>'
+        },
+
+        ballspin: {
+            title: '5. Animación Ruleta',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🎱 ¿Qué hace la animación?</div>' +
+                '<p>Cuando está <strong>ACTIVADA</strong>, al confirmar un número la ruleta en pantalla muestra una bolita blanca que:</p>' +
+                '<ol>' +
+                '<li>Gira rápido en el borde exterior de la ruleta</li>' +
+                '<li>Desacelera junto con la ruleta hasta llegar al número ganador</li>' +
+                '<li>Cae hacia el interior y se posiciona en el slot del número</li>' +
+                '<li>Se desplaza hacia la ranura exterior dejando ver el número</li>' +
+                '<li>Queda descansando en la ranura y rueda con la ruleta mientras gira lento</li>' +
+                '</ol></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🔄 Comportamiento</div>' +
+                '<ul>' +
+                '<li>El número nuevo aparece en pantalla cuando la bolita llega al slot</li>' +
+                '<li>La bolita permanece visible sobre el número hasta el próximo giro</li>' +
+                '<li>Al llegar un nuevo número, la bolita sale disparada y comienza un nuevo giro</li>' +
+                '<li>Si se <strong>DESACTIVA</strong>, el número aparece directamente sin animación</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block warn"><div class="help-block-title">⏱ Tiempo de la animación</div>' +
+                '<p>La animación dura aproximadamente <strong>3–5 segundos</strong>. Durante ese tiempo la pantalla muestra el número anterior mientras la bolita gira. El número nuevo aparece cuando la bolita llega al slot.</p>' +
+                '<p style="margin-top:8px;color:#ff9944;">Si el ritmo de juego es muy rápido, se puede desactivar la animación para que el número aparezca de inmediato.</p></div>'
+        },
+
+        ballpizarra: {
+            title: '6. Pizarra en Bolas',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🔴 Modo bolas en el historial</div>' +
+                '<p>Cuando está <strong>ACTIVADA</strong>, los números de la pizarra (columna derecha de la pantalla) se muestran como <strong>bolas de colores</strong> en lugar de texto plano. Se mantiene la misma distribución:</p>' +
+                '<ul>' +
+                '<li><span style="color:#ff5555;">●</span> <strong>Bola roja</strong> → número rojo, alineada a la derecha</li>' +
+                '<li><span style="color:#aaa;">●</span> <strong>Bola gris</strong> → número negro, alineada a la izquierda</li>' +
+                '<li><span style="color:#44dd44;">●</span> <strong>Bola verde</strong> → 0 o 00, centrada</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">✨ Animación de entrada</div>' +
+                '<p>Cada vez que se confirma un número nuevo, la bola más reciente aparece con una animación de giro + escala que llama la atención del jugador hacia el último resultado.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🎨 Apariencia en pantalla</div>' +
+                '<p>Al activar el modo bolas el fondo de la pizarra cambia a azul oscuro para que los colores de las bolas resalten mejor.</p>' +
+                '<p style="margin-top:8px;">Se puede combinar con cualquier tema de fondo y con la animación de ruleta al mismo tiempo.</p></div>'
+        },
+
+        pizarra: {
+            title: '8. Color de la Pizarra',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🎨 ¿Qué es la pizarra?</div>' +
+                '<p>La <strong>pizarra</strong> es la columna derecha de la pantalla de la mesa donde aparecen los últimos números ingresados. Este ajuste cambia el color de fondo y el borde de esa área.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🖌️ Opciones disponibles</div>' +
+                '<ul>' +
+                '<li><strong>Negro</strong> — Fondo negro, borde dorado. Opción clásica.</li>' +
+                '<li><strong>Azul Noche</strong> — Fondo azul oscuro, borde azul claro.</li>' +
+                '<li><strong>Rojo Vino</strong> — Fondo vino tinto, borde rosado.</li>' +
+                '<li><strong>Verde Noche</strong> — Fondo verde oscuro, borde verde claro.</li>' +
+                '<li><strong>Beige</strong> — Fondo claro crema, borde dorado. Para ambientes con buena luz.</li>' +
+                '<li><strong>Humo</strong> — Fondo gris claro, borde gris. Minimalista.</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">💡 Consejo</div>' +
+                '<p>Se recomienda usar colores oscuros (Negro, Azul Noche, Rojo Vino) cuando la pantalla de la mesa se ve a distancia, ya que los números resaltan más sobre fondos oscuros.</p>' +
+                '<p style="margin-top:8px;">El cambio es <strong>instantáneo</strong> en la pantalla de la mesa.</p></div>'
+        },
+
+        limtheme: {
+            title: '9. Color Tarjeta Límites',
+            body:
+                '<div class="help-block success"><div class="help-block-title">💳 ¿Qué es la tarjeta de límites?</div>' +
+                '<p>Es la sección en la parte inferior derecha de la pantalla de la mesa que muestra los montos mínimos y máximos de apuesta (Plenos, Chanzas Dobles y Chanzas Simples). Este ajuste cambia su color de fondo.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🖌️ Opciones disponibles</div>' +
+                '<ul>' +
+                '<li><strong>Azul</strong> — Degradado azul brillante. Opción por defecto.</li>' +
+                '<li><strong>Dorado</strong> — Degradado café/dorado. Lujoso.</li>' +
+                '<li><strong>Rojo</strong> — Degradado rojo oscuro a rojo brillante.</li>' +
+                '<li><strong>Negro</strong> — Degradado negro a gris oscuro. Elegante.</li>' +
+                '<li><strong>Verde</strong> — Degradado verde oscuro a verde brillante.</li>' +
+                '<li><strong>Violeta</strong> — Degradado violeta oscuro a violeta brillante.</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">💡 Consejo</div>' +
+                '<p>Combina el color de la tarjeta con el tema de fondo para una presentación coherente. El cambio es <strong>instantáneo</strong> en la pantalla de la mesa.</p></div>'
+        },
+
+        efectos: {
+            title: '10. Efectos de Bolas',
+            body:
+                '<div class="help-block warn"><div class="help-block-title">⚠️ Requisito previo</div>' +
+                '<p>Todos los efectos de esta sección solo funcionan cuando <strong>"Pizarra en Bolas"</strong> está activada (sección 6). Si la pizarra está en modo texto normal, estos efectos no tienen impacto.</p></div>' +
+
+                '<div class="help-block success"><div class="help-block-title">✨ Animación de entrada</div>' +
+                '<p>Cuando está <strong>ACTIVADA</strong>, cada vez que se confirma un número nuevo, la bola más reciente aparece con una animación de giro + escala (2 vueltas completas con efecto blur) que llama la atención del jugador hacia el resultado.</p>' +
+                '<p style="margin-top:8px;">Cuando está <strong>DESACTIVADA</strong>, la bola aparece directamente sin animación.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">💫 Brillo cada 30s</div>' +
+                '<p>La bola más reciente de la pizarra emite un destello dorado brillante cada <strong>30 segundos</strong> automáticamente. Mantiene la atención de los jugadores en el último resultado.</p>' +
+                '<p style="margin-top:6px;color:#888;">Duración del brillo: ~2.5 segundos.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🔵 Pulso cada 8s</div>' +
+                '<p>La bola más reciente de la pizarra hace un efecto de pulsación (escala) cada <strong>8 segundos</strong>. Más sutil que el brillo, ideal para mantener movimiento constante en la pantalla.</p>' +
+                '<p style="margin-top:6px;color:#888;">Duración del pulso: ~0.7 segundos.</p></div>'
+        },
+
+        hotcold: {
+            title: '11. Números Calientes y Fríos',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🔥❄️ ¿Qué son los números calientes y fríos?</div>' +
+                '<p>Son estadísticas calculadas automáticamente sobre los últimos resultados de la sesión:</p>' +
+                '<ul>' +
+                '<li><span style="color:#ff5500;">🔥 <strong>Calientes</strong></span> — Los 3 números que han salido con mayor frecuencia. Se muestran con llamas animadas.</li>' +
+                '<li><span style="color:#55aaff;">❄️ <strong>Fríos</strong></span> — Los 3 números que han salido con menor frecuencia (o nunca). Se muestran con copos de nieve.</li>' +
+                '</ul>' +
+                '<p style="margin-top:8px;">Se actualizan automáticamente cada vez que se ingresa un número.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🎱 Estilo de bola 3D</div>' +
+                '<p>Cada número se muestra como una <strong>bola esférica 3D</strong> con gradiente radial y efecto de luz:</p>' +
+                '<ul>' +
+                '<li>Los <strong>calientes</strong> tienen bola roja con resplandor naranja</li>' +
+                '<li>Los <strong>fríos</strong> tienen bola azul con resplandor celeste</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🎨 Color del número (opción)</div>' +
+                '<p>Cuando está <strong>ACTIVADO</strong>, cada bola muestra el color real del número en la ruleta en lugar del color fijo caliente/frío:</p>' +
+                '<ul>' +
+                '<li><span class="help-chip red">● ROJO</span> → bola roja brillante</li>' +
+                '<li><span class="help-chip black">● NEGRO</span> → bola negra/gris oscuro</li>' +
+                '<li><span class="help-chip green">● VERDE</span> → bola verde (solo el 0 y 00)</li>' +
+                '</ul>' +
+                '<p style="margin-top:8px;">Cuando está <strong>DESACTIVADO</strong>, todos los calientes son bola roja y todos los fríos bola azul, independiente del color del número.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">💓 Pulso escalonado automático</div>' +
+                '<p>Las bolas calientes y frías pulsan automáticamente en secuencia, una cada 8 segundos:</p>' +
+                '<ul>' +
+                '<li>Segundo 8 → pulsa la bola N°1 (caliente y fría)</li>' +
+                '<li>Segundo 16 → pulsa la bola N°2</li>' +
+                '<li>Segundo 24 → pulsa la bola N°3</li>' +
+                '<li>Segundo 32 → reinicia el ciclo con la N°1</li>' +
+                '</ul>' +
+                '<p style="margin-top:8px;">Esta animación es siempre activa, no requiere configuración.</p></div>'
+        },
+
+        demo: {
+            title: '🎬 Pantalla Demo',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🎬 ¿Para qué sirve la pantalla demo?</div>' +
+                '<p>Muestra una <strong>simulación automática</strong> en la pantalla de la mesa cuando la mesa aún no ha comenzado a operar. Ideal para:</p>' +
+                '<ul>' +
+                '<li>Antes de abrir la mesa al inicio del turno</li>' +
+                '<li>Durante los descansos entre sesiones</li>' +
+                '<li>Para mostrar el sistema a supervisores o clientes</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🔄 Ciclo de la demo</div>' +
+                '<p>La demo corre en un ciclo continuo y automático:</p>' +
+                '<ol>' +
+                '<li><strong>Pantalla de presentación</strong> (4 seg) — Logo del casino, nombre de la ruleta y "MESA EN PREPARACIÓN"</li>' +
+                '<li><strong>Simulación de juego</strong> — La ruleta gira y se ingresan números aleatorios uno a uno con todos los efectos activos hasta llenar la pizarra</li>' +
+                '<li><strong>Pausa</strong> (2.5 seg) — Con la pizarra llena</li>' +
+                '<li>Regresa al paso 1 y se repite</li>' +
+                '</ol></div>' +
+
+                '<div class="help-block success"><div class="help-block-title">⚡ Desactivación automática</div>' +
+                '<p>Cuando la demo está activa y el operador <strong>ingresa un número real</strong>, la demo se detiene <strong>instantáneamente</strong> y la pantalla pasa a mostrar el número real como en operación normal. No es necesario apagarla manualmente antes de empezar a jugar.</p></div>' +
+
+                '<div class="help-block warn"><div class="help-block-title">⚠️ Importante</div>' +
+                '<p>Los números generados en la demo son <strong>aleatorios y no se guardan</strong> en el historial real. Al ingresar el primer número real, la pantalla muestra solo datos reales.</p></div>'
+        },
+
+        general: {
+            title: '📚 Guía de Uso — Panel del Operador',
+            body:
+                '<div class="help-block success"><div class="help-block-title">📌 Flujo de trabajo de una sesión</div>' +
+                '<ol>' +
+                '<li>Abre la pantalla de la mesa en el segundo monitor (<strong>📺 Abrir Pantalla</strong>)</li>' +
+                '<li>Selecciona el tipo de ruleta: <strong>Americana</strong> o <strong>Francesa</strong></li>' +
+                '<li>Configura los <strong>límites de apuesta</strong> de la mesa y guárdalos</li>' +
+                '<li>Con cada tirada, ingresa el número ganador y presiona <strong>✔ CONFIRMAR</strong></li>' +
+                '<li>El historial y la pantalla de la mesa se actualizan automáticamente</li>' +
+                '<li>Al finalizar la sesión, usa <strong>🗑 Limpiar Todo</strong> si corresponde</li>' +
+                '</ol></div>' +
+
+                '<div class="help-block"><div class="help-block-title">1️⃣ Ingreso de Número <span class="help-chip blue">?</span></div>' +
+                '<p>Teclado para ingresar el resultado de la ruleta. Acepta 0, 00 y 1–36. El display cambia de color: ' +
+                '<span class="help-chip red">ROJO</span> <span class="help-chip black">NEGRO</span> <span class="help-chip green">VERDE</span>. ' +
+                'Requiere presionar <strong>CONFIRMAR</strong> para registrar.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">2️⃣ Límites de Apuesta <span class="help-chip blue">?</span></div>' +
+                '<p>Define los montos por tipo: <strong>Plenos</strong> (un número, paga 35:1), <strong>Chanzas Dobles</strong> (2–6 números, paga 5:1–17:1) y <strong>Chanzas Simples</strong> (mitad de mesa, paga 1:1–2:1). Presionar <strong>Guardar</strong> actualiza la pantalla.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">3️⃣ Nombre de la Ruleta <span class="help-chip blue">?</span></div>' +
+                '<p>Cambia entre <strong>Americana</strong> y <strong>Francesa</strong> — en esta mesa ambas tienen 38 casillas (0 y 00). El cambio actualiza el nombre en la pantalla de la mesa y el título de este panel instantáneamente.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">4️⃣ Historial <span class="help-chip blue">?</span></div>' +
+                '<p>Lista de todos los números de la sesión (el más reciente arriba). Se pueden borrar números individuales (en caso de error) o limpiar toda la pizarra. Siempre pide confirmación antes de borrar.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">4️⃣ Tema de Fondo <span class="help-chip blue">?</span></div>' +
+                '<p>7 temas de color para el fondo de la pantalla (<strong>Mesa Negro</strong> y <strong>Mesa Rojo</strong> son los principales). También activa/desactiva la textura de papel arrugado. Los cambios son instantáneos.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">5️⃣ Animación Ruleta <span class="help-chip blue">?</span></div>' +
+                '<p>Activa una bolita blanca animada en la ruleta giratoria que gira, desacelera y se posa sobre el número ganador, quedando visible en la ranura exterior mientras la ruleta sigue girando lento.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">6️⃣ Pizarra en Bolas <span class="help-chip blue">?</span></div>' +
+                '<p>Convierte el historial de números de texto plano a <strong>bolas de colores</strong> con efecto 3D y animación de entrada. Cada bola mantiene la posición izquierda/centro/derecha según su color.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">8️⃣ Color de la Pizarra <span class="help-chip blue">?</span></div>' +
+                '<p>Cambia el color de fondo y borde de la pizarra (columna de historial). 6 opciones: Negro, Azul Noche, Rojo Vino, Verde Noche, Beige, Humo. Cambio instantáneo.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">9️⃣ Color Tarjeta Límites <span class="help-chip blue">?</span></div>' +
+                '<p>Cambia el color de fondo de la tarjeta de mínimos y máximos en la pantalla. 6 colores disponibles: Azul, Dorado, Rojo, Negro, Verde, Violeta.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🔟 Efectos de Bolas <span class="help-chip blue">?</span></div>' +
+                '<p>Requiere "Pizarra en Bolas" activa. Tres efectos independientes: <strong>Animación entrada</strong> (giro al aparecer), <strong>Brillo</strong> (destello dorado cada 30s), <strong>Pulso</strong> (pulsación cada 8s).</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">1️⃣1️⃣ Números Calientes y Fríos <span class="help-chip blue">?</span></div>' +
+                '<p>Muestra los 3 números más frecuentes (🔥) y los 3 menos frecuentes (❄️) con bolas 3D que pulsan automáticamente en secuencia cada 8s. Opción para mostrar el color real del número en la ruleta.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🎬 Pantalla Demo <span class="help-chip blue">?</span></div>' +
+                '<p>Activa una simulación automática con números aleatorios y animaciones para mostrar cuando la mesa aún no opera. <strong>Se apaga automáticamente</strong> al ingresar el primer número real.</p></div>' +
+
+                '<div class="help-block" style="border-left-color:#f1c40f;"><div class="help-block-title">💡 Consejos prácticos</div>' +
+                '<ul>' +
+                '<li>Toca <span class="help-chip blue">?</span> en cualquier sección para ver ayuda específica</li>' +
+                '<li>Activa la <strong>Pantalla Demo</strong> mientras esperas jugadores — se apaga sola al primer número</li>' +
+                '<li>Si la pantalla de la mesa no se actualiza, presiona <strong>F5</strong> en esa ventana</li>' +
+                '<li>Los datos se guardan en el navegador y no se pierden al cerrar la pestaña</li>' +
+                '<li>Para instalar este panel como app, busca el banner <strong>"📲 Instalar App"</strong></li>' +
+                '</ul></div>'
+        }
+    };
+
+    function openSettings() {
+        document.getElementById('settingsModal').classList.add('open');
+    }
+    function closeSettings() {
+        document.getElementById('settingsModal').classList.remove('open');
+        var inp = document.getElementById('kbInput');
+        if(inp) setTimeout(function(){ inp.focus(); }, 80);
+    }
+
+    function openHelp(key) {
+        var h = HELP[key];
+        if (!h) return;
+        document.getElementById('helpModalTitle').textContent = h.title;
+        document.getElementById('helpModalBody').innerHTML = h.body;
+        document.getElementById('helpOverlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeHelp() {
+        document.getElementById('helpOverlay').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    /* =========================================
        ABRIR PANTALLA DE MESA EN NUEVA VENTANA
        ========================================= */
+    function getUrlPantalla() {
+        var saved = localStorage.getItem('ruleta_pantalla_url') || '';
+        return saved || (window.location.origin + '/');
+    }
+
     function abrirPantalla() {
-        var pantalla = window.open('../', 'pantalla-ruleta-mesa');
-        if (!pantalla) {
-            showToast('⚠️ Activa ventanas emergentes en tu navegador', 'error');
-        } else {
-            showToast('Pantalla de mesa abierta', 'success');
+        var url = getUrlPantalla();
+        /* Usar ancla con target="_blank" para forzar apertura en el
+           navegador del sistema, no dentro de la PWA instalada */
+        var a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noreferrer noopener';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('Abriendo pantalla de mesa...', 'success');
+    }
+
+    function guardarUrlPantalla() {
+        var url = document.getElementById('inputPantallaUrl').value.trim();
+        if (!url) {
+            localStorage.removeItem('ruleta_pantalla_url');
+            showToast('URL restablecida al valor automático', 'success');
+            return;
         }
+        localStorage.setItem('ruleta_pantalla_url', url);
+        showToast('URL guardada ✔', 'success');
     }
 
     /* =========================================
@@ -816,6 +2079,15 @@
         showToast('✔ App instalada correctamente', 'success');
     });
 </script>
+<!-- ========== MODAL DE AYUDA ========== -->
+<div class="help-overlay" id="helpOverlay">
+    <div class="help-modal">
+        <button class="help-close" id="helpCloseBtn">✕</button>
+        <div class="help-modal-title" id="helpModalTitle"></div>
+        <div id="helpModalBody"></div>
+    </div>
+</div>
+
     <!-- Marca desarrollador -->
     <div style="
         position: fixed;
