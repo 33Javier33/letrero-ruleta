@@ -723,9 +723,10 @@
         .settings-modal-body { flex:1; overflow-y:auto; padding:15px; display:flex; flex-direction:column; gap:12px; -webkit-overflow-scrolling:touch; }
         .btn-open-config { grid-column:1/-1; width:100%; padding:18px; background:linear-gradient(135deg,#0a1a36,#0f2a56); border:2px solid #4da6ff; border-radius:10px; color:#4da6ff; font-size:18px; font-weight:bold; cursor:pointer; letter-spacing:0.5px; -webkit-tap-highlight-color:transparent; transition:opacity 0.15s,transform 0.1s; }
         .btn-open-config:active { opacity:0.8; transform:scale(0.98); }
-        .btn-spin-toggle { grid-column:1/-1; width:100%; padding:14px 18px; background:#1a1a1a; border:2px solid #555; border-radius:10px; color:#aaa; font-size:16px; font-weight:bold; cursor:pointer; letter-spacing:0.5px; -webkit-tap-highlight-color:transparent; transition:all 0.15s; text-align:center; }
+        .btn-spin-toggle { width:100%; padding:14px 18px; background:#1a1a1a; border:2px solid #555; border-radius:10px; color:#aaa; font-size:16px; font-weight:bold; cursor:pointer; letter-spacing:0.5px; -webkit-tap-highlight-color:transparent; transition:all 0.15s; text-align:center; }
         .btn-spin-toggle.active { background:linear-gradient(135deg,#0a280a,#0f420f); border-color:#33cc33; color:#33ff33; }
         .btn-spin-toggle:active { opacity:0.8; transform:scale(0.98); }
+        .toggle-row { grid-column:1/-1; display:flex; align-items:stretch; gap:8px; }
     </style>
 </head>
 <body>
@@ -790,15 +791,21 @@
     <!-- BOTÓN ABRIR CONFIGURACIÓN (ocupa las dos columnas) -->
     <button class="btn-open-config" onclick="openSettings()">⚙️ Configuración de la Mesa</button>
 
-    <!-- TOGGLE RÁPIDO GIRO DE BOLA (ocupa las dos columnas) -->
-    <button id="btnSpinToggle" class="btn-spin-toggle" onclick="window.toggleBallSpin()">
-        🌀 Giro de bola al entrar: <span id="spinToggleLabel">ACTIVADO</span>
-    </button>
+    <!-- TOGGLE RÁPIDO GIRO DE BOLA -->
+    <div class="toggle-row">
+        <button id="btnSpinToggle" class="btn-spin-toggle" style="flex:1;" onclick="window.toggleBallSpin()">
+            🌀 Giro de bola al entrar: <span id="spinToggleLabel">ACTIVADO</span>
+        </button>
+        <button class="help-btn" onclick="openHelp('ballspin')" title="Ayuda: giro de bola" style="width:40px;flex-shrink:0;font-size:16px;">?</button>
+    </div>
 
-    <!-- TOGGLE PANTALLA DEMO (ocupa las dos columnas) -->
-    <button id="btnDemoToggle" class="btn-spin-toggle" onclick="window.toggleDemo()">
-        🎬 Pantalla Demo: <span id="demoToggleLabel">DESACTIVADA</span>
-    </button>
+    <!-- TOGGLE PANTALLA DEMO -->
+    <div class="toggle-row">
+        <button id="btnDemoToggle" class="btn-spin-toggle" style="flex:1;" onclick="window.toggleDemo()">
+            🎬 Pantalla Demo: <span id="demoToggleLabel">DESACTIVADA</span>
+        </button>
+        <button class="help-btn" onclick="openHelp('demo')" title="Ayuda: pantalla demo" style="width:40px;flex-shrink:0;font-size:16px;">?</button>
+    </div>
 
 </div>
 
@@ -934,7 +941,7 @@
 
         <!-- COLOR PIZARRA -->
         <div class="nombre-ruleta-section">
-            <h3>8. Color de la Pizarra</h3>
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">8. Color de la Pizarra <button class="help-btn" onclick="openHelp('pizarra')" title="Ayuda: color de la pizarra">?</button></h3>
             <div class="tema-grid" style="grid-template-columns:repeat(3,1fr);">
                 <button class="tema-swatch piz-swatch" data-piz="negro"       style="background:#000;border-color:#e6b800;">
                     <span class="tema-badge">Negro</span>
@@ -959,7 +966,7 @@
 
         <!-- COLOR TARJETA LÍMITES -->
         <div class="nombre-ruleta-section">
-            <h3>9. Color Tarjeta Límites</h3>
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">9. Color Tarjeta Límites <button class="help-btn" onclick="openHelp('limtheme')" title="Ayuda: color tarjeta límites">?</button></h3>
             <div class="tema-grid" style="grid-template-columns:repeat(3,1fr);">
                 <button class="tema-swatch lim-swatch" data-lim="azul"    style="background:linear-gradient(135deg,#0096ff,#00c8ff);border-color:#66ccff;">
                     <span class="tema-badge">Azul</span>
@@ -984,7 +991,7 @@
 
         <!-- EFECTOS DE BOLAS -->
         <div class="nombre-ruleta-section">
-            <h3>10. Efectos de Bolas</h3>
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">10. Efectos de Bolas <button class="help-btn" onclick="openHelp('efectos')" title="Ayuda: efectos de bolas">?</button></h3>
             <p style="font-size:12px;color:#777;margin-bottom:12px;">Activos solo cuando "Pizarra en Bolas" está encendida.</p>
             <button id="btnFxEntry" class="btn-nombre" style="margin-bottom:8px;">
                 ✨ Animación entrada: <span id="fxEntryLabel">ACTIVADA</span>
@@ -997,7 +1004,7 @@
             </button>
 
             <div style="margin-top:18px;border-top:1px solid #444;padding-top:16px;">
-                <h3 style="margin-bottom:12px;">11. Números Calientes y Fríos</h3>
+                <h3 style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">11. Números Calientes y Fríos <button class="help-btn" onclick="openHelp('hotcold')" title="Ayuda: números calientes y fríos">?</button></h3>
                 <button id="btnHotColdColors" class="btn-nombre">
                     🎨 Color del número: <span id="hotColdColorsLabel">DESACTIVADO</span>
                 </button>
@@ -1763,6 +1770,131 @@
                 '<p style="margin-top:8px;">Se puede combinar con cualquier tema de fondo y con la animación de ruleta al mismo tiempo.</p></div>'
         },
 
+        pizarra: {
+            title: '8. Color de la Pizarra',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🎨 ¿Qué es la pizarra?</div>' +
+                '<p>La <strong>pizarra</strong> es la columna derecha de la pantalla de la mesa donde aparecen los últimos números ingresados. Este ajuste cambia el color de fondo y el borde de esa área.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🖌️ Opciones disponibles</div>' +
+                '<ul>' +
+                '<li><strong>Negro</strong> — Fondo negro, borde dorado. Opción clásica.</li>' +
+                '<li><strong>Azul Noche</strong> — Fondo azul oscuro, borde azul claro.</li>' +
+                '<li><strong>Rojo Vino</strong> — Fondo vino tinto, borde rosado.</li>' +
+                '<li><strong>Verde Noche</strong> — Fondo verde oscuro, borde verde claro.</li>' +
+                '<li><strong>Beige</strong> — Fondo claro crema, borde dorado. Para ambientes con buena luz.</li>' +
+                '<li><strong>Humo</strong> — Fondo gris claro, borde gris. Minimalista.</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">💡 Consejo</div>' +
+                '<p>Se recomienda usar colores oscuros (Negro, Azul Noche, Rojo Vino) cuando la pantalla de la mesa se ve a distancia, ya que los números resaltan más sobre fondos oscuros.</p>' +
+                '<p style="margin-top:8px;">El cambio es <strong>instantáneo</strong> en la pantalla de la mesa.</p></div>'
+        },
+
+        limtheme: {
+            title: '9. Color Tarjeta Límites',
+            body:
+                '<div class="help-block success"><div class="help-block-title">💳 ¿Qué es la tarjeta de límites?</div>' +
+                '<p>Es la sección en la parte inferior derecha de la pantalla de la mesa que muestra los montos mínimos y máximos de apuesta (Plenos, Chanzas Dobles y Chanzas Simples). Este ajuste cambia su color de fondo.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🖌️ Opciones disponibles</div>' +
+                '<ul>' +
+                '<li><strong>Azul</strong> — Degradado azul brillante. Opción por defecto.</li>' +
+                '<li><strong>Dorado</strong> — Degradado café/dorado. Lujoso.</li>' +
+                '<li><strong>Rojo</strong> — Degradado rojo oscuro a rojo brillante.</li>' +
+                '<li><strong>Negro</strong> — Degradado negro a gris oscuro. Elegante.</li>' +
+                '<li><strong>Verde</strong> — Degradado verde oscuro a verde brillante.</li>' +
+                '<li><strong>Violeta</strong> — Degradado violeta oscuro a violeta brillante.</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">💡 Consejo</div>' +
+                '<p>Combina el color de la tarjeta con el tema de fondo para una presentación coherente. El cambio es <strong>instantáneo</strong> en la pantalla de la mesa.</p></div>'
+        },
+
+        efectos: {
+            title: '10. Efectos de Bolas',
+            body:
+                '<div class="help-block warn"><div class="help-block-title">⚠️ Requisito previo</div>' +
+                '<p>Todos los efectos de esta sección solo funcionan cuando <strong>"Pizarra en Bolas"</strong> está activada (sección 6). Si la pizarra está en modo texto normal, estos efectos no tienen impacto.</p></div>' +
+
+                '<div class="help-block success"><div class="help-block-title">✨ Animación de entrada</div>' +
+                '<p>Cuando está <strong>ACTIVADA</strong>, cada vez que se confirma un número nuevo, la bola más reciente aparece con una animación de giro + escala (2 vueltas completas con efecto blur) que llama la atención del jugador hacia el resultado.</p>' +
+                '<p style="margin-top:8px;">Cuando está <strong>DESACTIVADA</strong>, la bola aparece directamente sin animación.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">💫 Brillo cada 30s</div>' +
+                '<p>La bola más reciente de la pizarra emite un destello dorado brillante cada <strong>30 segundos</strong> automáticamente. Mantiene la atención de los jugadores en el último resultado.</p>' +
+                '<p style="margin-top:6px;color:#888;">Duración del brillo: ~2.5 segundos.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🔵 Pulso cada 8s</div>' +
+                '<p>La bola más reciente de la pizarra hace un efecto de pulsación (escala) cada <strong>8 segundos</strong>. Más sutil que el brillo, ideal para mantener movimiento constante en la pantalla.</p>' +
+                '<p style="margin-top:6px;color:#888;">Duración del pulso: ~0.7 segundos.</p></div>'
+        },
+
+        hotcold: {
+            title: '11. Números Calientes y Fríos',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🔥❄️ ¿Qué son los números calientes y fríos?</div>' +
+                '<p>Son estadísticas calculadas automáticamente sobre los últimos resultados de la sesión:</p>' +
+                '<ul>' +
+                '<li><span style="color:#ff5500;">🔥 <strong>Calientes</strong></span> — Los 3 números que han salido con mayor frecuencia. Se muestran con llamas animadas.</li>' +
+                '<li><span style="color:#55aaff;">❄️ <strong>Fríos</strong></span> — Los 3 números que han salido con menor frecuencia (o nunca). Se muestran con copos de nieve.</li>' +
+                '</ul>' +
+                '<p style="margin-top:8px;">Se actualizan automáticamente cada vez que se ingresa un número.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🎱 Estilo de bola 3D</div>' +
+                '<p>Cada número se muestra como una <strong>bola esférica 3D</strong> con gradiente radial y efecto de luz:</p>' +
+                '<ul>' +
+                '<li>Los <strong>calientes</strong> tienen bola roja con resplandor naranja</li>' +
+                '<li>Los <strong>fríos</strong> tienen bola azul con resplandor celeste</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🎨 Color del número (opción)</div>' +
+                '<p>Cuando está <strong>ACTIVADO</strong>, cada bola muestra el color real del número en la ruleta en lugar del color fijo caliente/frío:</p>' +
+                '<ul>' +
+                '<li><span class="help-chip red">● ROJO</span> → bola roja brillante</li>' +
+                '<li><span class="help-chip black">● NEGRO</span> → bola negra/gris oscuro</li>' +
+                '<li><span class="help-chip green">● VERDE</span> → bola verde (solo el 0 y 00)</li>' +
+                '</ul>' +
+                '<p style="margin-top:8px;">Cuando está <strong>DESACTIVADO</strong>, todos los calientes son bola roja y todos los fríos bola azul, independiente del color del número.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">💓 Pulso escalonado automático</div>' +
+                '<p>Las bolas calientes y frías pulsan automáticamente en secuencia, una cada 8 segundos:</p>' +
+                '<ul>' +
+                '<li>Segundo 8 → pulsa la bola N°1 (caliente y fría)</li>' +
+                '<li>Segundo 16 → pulsa la bola N°2</li>' +
+                '<li>Segundo 24 → pulsa la bola N°3</li>' +
+                '<li>Segundo 32 → reinicia el ciclo con la N°1</li>' +
+                '</ul>' +
+                '<p style="margin-top:8px;">Esta animación es siempre activa, no requiere configuración.</p></div>'
+        },
+
+        demo: {
+            title: '🎬 Pantalla Demo',
+            body:
+                '<div class="help-block success"><div class="help-block-title">🎬 ¿Para qué sirve la pantalla demo?</div>' +
+                '<p>Muestra una <strong>simulación automática</strong> en la pantalla de la mesa cuando la mesa aún no ha comenzado a operar. Ideal para:</p>' +
+                '<ul>' +
+                '<li>Antes de abrir la mesa al inicio del turno</li>' +
+                '<li>Durante los descansos entre sesiones</li>' +
+                '<li>Para mostrar el sistema a supervisores o clientes</li>' +
+                '</ul></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🔄 Ciclo de la demo</div>' +
+                '<p>La demo corre en un ciclo continuo y automático:</p>' +
+                '<ol>' +
+                '<li><strong>Pantalla de presentación</strong> (4 seg) — Logo del casino, nombre de la ruleta y "MESA EN PREPARACIÓN"</li>' +
+                '<li><strong>Simulación de juego</strong> — La ruleta gira y se ingresan números aleatorios uno a uno con todos los efectos activos hasta llenar la pizarra</li>' +
+                '<li><strong>Pausa</strong> (2.5 seg) — Con la pizarra llena</li>' +
+                '<li>Regresa al paso 1 y se repite</li>' +
+                '</ol></div>' +
+
+                '<div class="help-block success"><div class="help-block-title">⚡ Desactivación automática</div>' +
+                '<p>Cuando la demo está activa y el operador <strong>ingresa un número real</strong>, la demo se detiene <strong>instantáneamente</strong> y la pantalla pasa a mostrar el número real como en operación normal. No es necesario apagarla manualmente antes de empezar a jugar.</p></div>' +
+
+                '<div class="help-block warn"><div class="help-block-title">⚠️ Importante</div>' +
+                '<p>Los números generados en la demo son <strong>aleatorios y no se guardan</strong> en el historial real. Al ingresar el primer número real, la pantalla muestra solo datos reales.</p></div>'
+        },
+
         general: {
             title: '📚 Guía de Uso — Panel del Operador',
             body:
@@ -1799,12 +1931,28 @@
                 '<div class="help-block"><div class="help-block-title">6️⃣ Pizarra en Bolas <span class="help-chip blue">?</span></div>' +
                 '<p>Convierte el historial de números de texto plano a <strong>bolas de colores</strong> con efecto 3D y animación de entrada. Cada bola mantiene la posición izquierda/centro/derecha según su color.</p></div>' +
 
+                '<div class="help-block"><div class="help-block-title">8️⃣ Color de la Pizarra <span class="help-chip blue">?</span></div>' +
+                '<p>Cambia el color de fondo y borde de la pizarra (columna de historial). 6 opciones: Negro, Azul Noche, Rojo Vino, Verde Noche, Beige, Humo. Cambio instantáneo.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">9️⃣ Color Tarjeta Límites <span class="help-chip blue">?</span></div>' +
+                '<p>Cambia el color de fondo de la tarjeta de mínimos y máximos en la pantalla. 6 colores disponibles: Azul, Dorado, Rojo, Negro, Verde, Violeta.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🔟 Efectos de Bolas <span class="help-chip blue">?</span></div>' +
+                '<p>Requiere "Pizarra en Bolas" activa. Tres efectos independientes: <strong>Animación entrada</strong> (giro al aparecer), <strong>Brillo</strong> (destello dorado cada 30s), <strong>Pulso</strong> (pulsación cada 8s).</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">1️⃣1️⃣ Números Calientes y Fríos <span class="help-chip blue">?</span></div>' +
+                '<p>Muestra los 3 números más frecuentes (🔥) y los 3 menos frecuentes (❄️) con bolas 3D que pulsan automáticamente en secuencia cada 8s. Opción para mostrar el color real del número en la ruleta.</p></div>' +
+
+                '<div class="help-block"><div class="help-block-title">🎬 Pantalla Demo <span class="help-chip blue">?</span></div>' +
+                '<p>Activa una simulación automática con números aleatorios y animaciones para mostrar cuando la mesa aún no opera. <strong>Se apaga automáticamente</strong> al ingresar el primer número real.</p></div>' +
+
                 '<div class="help-block" style="border-left-color:#f1c40f;"><div class="help-block-title">💡 Consejos prácticos</div>' +
                 '<ul>' +
-                '<li>Toca <span class="help-chip blue">?</span> en cualquier sección para ver ayuda específica de esa función</li>' +
+                '<li>Toca <span class="help-chip blue">?</span> en cualquier sección para ver ayuda específica</li>' +
+                '<li>Activa la <strong>Pantalla Demo</strong> mientras esperas jugadores — se apaga sola al primer número</li>' +
                 '<li>Si la pantalla de la mesa no se actualiza, presiona <strong>F5</strong> en esa ventana</li>' +
                 '<li>Los datos se guardan en el navegador y no se pierden al cerrar la pestaña</li>' +
-                '<li>Para instalar este panel como app de escritorio, busca el banner <strong>"📲 Instalar App"</strong> en la parte superior</li>' +
+                '<li>Para instalar este panel como app, busca el banner <strong>"📲 Instalar App"</strong></li>' +
                 '</ul></div>'
         }
     };
