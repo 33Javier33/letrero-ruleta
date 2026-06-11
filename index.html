@@ -663,6 +663,14 @@ function applyHcFx(){
 
 // ---- DEMO SIMULATOR ----
 function demoSimLimits(){var r=localStorage.getItem(LS);if(r){try{return JSON.parse(r).limits;}catch(ex){}}return{minPleno:'$1.000',maxPleno:'$20.000',minDobles:'$10.000',maxDobles:'$350.000',minSimples:'$20.000',maxSimples:'$700.000'};}
+function showDemoOverlayThen(delay,cb){
+    if(demoOv){demoOv.classList.add('active');showDemoOverlayContent();}
+    demoSimTimer=setTimeout(function(){
+        if(!demoSimActive)return;
+        if(demoOv)demoOv.classList.remove('active');
+        demoSimTimer=setTimeout(cb,600);
+    },delay);
+}
 function runDemoStep(){
     if(!demoSimActive)return;
     if(ballAnim.active){demoSimTimer=setTimeout(runDemoStep,400);return;}
@@ -676,13 +684,13 @@ function runDemoStep(){
             if(!demoSimActive)return;
             demoSimHistory=[];
             updateScreen({history:[],limits:demoSimLimits()});
-            if(demoOv){demoOv.classList.add('active');showDemoOverlayContent();}
-            demoSimTimer=setTimeout(function(){
-                if(!demoSimActive)return;
-                if(demoOv)demoOv.classList.remove('active');
-                demoSimTimer=setTimeout(runDemoStep,600);
-            },15000);
+            showDemoOverlayThen(15000,runDemoStep);
         },2500);
+    }else if(demoSimHistory.length%5===0){
+        demoSimTimer=setTimeout(function(){
+            if(!demoSimActive)return;
+            showDemoOverlayThen(15000,runDemoStep);
+        },800);
     }else{
         demoSimTimer=setTimeout(runDemoStep,localStorage.getItem('rlt_ballspin')==='1'?400:2200);
     }
