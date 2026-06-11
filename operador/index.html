@@ -809,6 +809,13 @@
         <button class="help-btn" onclick="openHelp('demo')" title="Ayuda: pantalla demo" style="width:40px;flex-shrink:0;font-size:16px;">?</button>
     </div>
 
+    <!-- TOGGLE TUTORIAL DE JUGADAS (requiere Demo activo) -->
+    <div class="toggle-row">
+        <button id="btnTutorialToggle" class="btn-spin-toggle" style="flex:1;" onclick="window.toggleDemoTutorial()">
+            📚 Tutorial de jugadas: <span id="tutorialToggleLabel">DESACTIVADO</span>
+        </button>
+    </div>
+
 </div>
 
 <!-- MODAL DE CONFIGURACIÓN -->
@@ -1525,6 +1532,12 @@
         function updateDemoBtn(on){var b=document.getElementById('btnDemoToggle'),l=document.getElementById('demoToggleLabel');if(!b||!l)return;l.textContent=on?'ACTIVA':'DESACTIVADA';b.classList.toggle('active',on);}
         window.toggleDemo=function(){demoOn=!demoOn;localStorage.setItem('rlt_demo',demoOn?'1':'0');updateDemoBtn(demoOn);showToast('Pantalla Demo: '+(demoOn?'ACTIVA':'DESACTIVADA'),'');};
         updateDemoBtn(demoOn);
+
+        // Tutorial de jugadas
+        var tutorialOn=localStorage.getItem('rlt_demo_tutorial')==='1';
+        function updateTutorialBtn(on){var b=document.getElementById('btnTutorialToggle'),l=document.getElementById('tutorialToggleLabel');if(!b||!l)return;l.textContent=on?'ACTIVO':'DESACTIVADO';b.classList.toggle('active',on);}
+        window.toggleDemoTutorial=function(){tutorialOn=!tutorialOn;localStorage.setItem('rlt_demo_tutorial',tutorialOn?'1':'0');updateTutorialBtn(tutorialOn);showToast('Tutorial de jugadas: '+(tutorialOn?'ACTIVO':'DESACTIVADO'),'');};
+        updateTutorialBtn(tutorialOn);
 
         // Textura papel
         var chkTextura = document.getElementById('chkTextura');
