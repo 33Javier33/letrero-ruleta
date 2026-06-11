@@ -240,7 +240,7 @@
         /* DEMO OVERLAY */
         .demo-overlay { position:absolute; top:0; left:0; width:100%; height:100%; z-index:80; display:none; flex-direction:column; align-items:center; justify-content:center; background:var(--bg,linear-gradient(180deg,#0022cc,#0044ff)); }
         .demo-overlay.active { display:flex; }
-        .demo-logo-big { width:calc(var(--u)*300); height:auto; margin-bottom:calc(var(--u)*22); animation:demoLogoSpinPulse 8s ease-in-out infinite; transform-origin:center center; }
+        .demo-logo-big { width:calc(var(--u)*300); height:auto; margin-bottom:calc(var(--u)*22); filter:drop-shadow(0 0 calc(var(--u)*12) rgba(255,215,0,.5)); }
         @keyframes demoLogoSpinPulse{
           0%   { transform:scale(1) rotate(0deg);     filter:drop-shadow(0 0 calc(var(--u)*12) rgba(255,215,0,.35)); }
           28%  { transform:scale(1) rotate(360deg);   filter:drop-shadow(0 0 calc(var(--u)*14) rgba(255,215,0,.42)); }
@@ -732,20 +732,18 @@ function getDemoTutSlide(idx){
     var s=DEMO_TUT_SLIDES[idx];
     var tbl=mkTutTable(s.rows,s.hl);
     var logoSrc=(document.getElementById('demoLogoImg')||{src:'/dreams-logo.png'}).src;
-    return '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;padding:calc(var(--u)*8);box-sizing:border-box;gap:calc(var(--u)*5);">'
+    return '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;padding:calc(var(--u)*6) calc(var(--u)*8);box-sizing:border-box;gap:calc(var(--u)*4);">'
+        +'<img src="'+logoSrc+'" style="width:calc(var(--u)*110);height:auto;animation:demoLogoSpinPulse 8s ease-in-out infinite;transform-origin:center center;flex-shrink:0;">'
         +'<div style="font-size:calc(var(--u)*24);font-weight:900;color:#ffd700;letter-spacing:calc(var(--u)*1.5);text-shadow:0 0 calc(var(--u)*12) rgba(255,215,0,.7);">'+s.name+'</div>'
-        +'<div style="font-size:calc(var(--u)*12);color:#aaa;margin-top:calc(var(--u)*-4);">'+s.intro+'</div>'
-        +'<div style="display:flex;align-items:center;gap:calc(var(--u)*12);">'
+        +'<div style="font-size:calc(var(--u)*11);color:#aaa;">'+s.intro+'</div>'
+        +'<div style="display:flex;align-items:center;justify-content:center;gap:calc(var(--u)*14);">'
         +'<div>'+tbl+'</div>'
-        +'<div style="display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*6);">'
-        +'<img src="'+logoSrc+'" style="width:calc(var(--u)*90);height:auto;animation:demoLogoSpinPulse 8s ease-in-out infinite;transform-origin:center center;">'
-        +'<div style="background:rgba(0,0,0,.5);border:calc(var(--u)*2) solid #ffd700;border-radius:calc(var(--u)*6);padding:calc(var(--u)*8) calc(var(--u)*14);text-align:center;min-width:calc(var(--u)*70);">'
-        +'<div style="font-size:calc(var(--u)*34);font-weight:900;color:#ffd700;line-height:1;">'+s.pago+'</div>'
-        +'<div style="font-size:calc(var(--u)*10);color:#888;letter-spacing:1px;margin-top:calc(var(--u)*2);">PAGO</div>'
+        +'<div style="background:rgba(0,0,0,.5);border:calc(var(--u)*2) solid #ffd700;border-radius:calc(var(--u)*6);padding:calc(var(--u)*10) calc(var(--u)*18);text-align:center;min-width:calc(var(--u)*80);">'
+        +'<div style="font-size:calc(var(--u)*38);font-weight:900;color:#ffd700;line-height:1;">'+s.pago+'</div>'
+        +'<div style="font-size:calc(var(--u)*10);color:#888;letter-spacing:1px;margin-top:calc(var(--u)*3);">PAGO</div>'
         +'</div>'
         +'</div>'
-        +'</div>'
-        +'<div style="font-size:calc(var(--u)*12);color:#ddd;text-align:center;line-height:1.6;max-width:calc(var(--u)*320);">'+s.desc+'</div>'
+        +'<div style="font-size:calc(var(--u)*11);color:#ddd;text-align:center;line-height:1.5;max-width:calc(var(--u)*300);">'+s.desc+'</div>'
         +'<div style="font-size:calc(var(--u)*9);color:#555;">'+s.sn+'</div>'
         +'</div>';
 }
