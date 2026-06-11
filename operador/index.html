@@ -384,6 +384,60 @@
         }
         .btn-delete-item:active { background: #aa0000; }
 
+        .btn-edit-item {
+            background: #003a6a;
+            color: white;
+            border: 1px solid #0066cc;
+            border-radius: 5px;
+            padding: 7px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            -webkit-tap-highlight-color: transparent;
+            margin-right: 5px;
+        }
+        .btn-edit-item:active { background: #0055aa; }
+
+        .history-edit-input {
+            background: #000;
+            border: 2px solid #4da6ff;
+            border-radius: 7px;
+            color: #fff;
+            font-size: 26px;
+            font-weight: bold;
+            text-align: center;
+            width: 80px;
+            padding: 3px 6px;
+            caret-color: #4da6ff;
+        }
+        .history-edit-input:focus { outline: none; }
+        .history-edit-input.edit-invalid { border-color: #ff4444; color: #ff6666; }
+        .btn-save-edit {
+            background: #004a00;
+            color: white;
+            border: 1px solid #00aa00;
+            border-radius: 5px;
+            padding: 8px 13px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            margin-right: 4px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-save-edit:active { background: #00aa00; }
+        .btn-cancel-edit {
+            background: #2a2a2a;
+            color: #aaa;
+            border: 1px solid #555;
+            border-radius: 5px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-cancel-edit:active { background: #444; }
+
         /* =========================================
            TOAST
            ========================================= */
@@ -1108,9 +1162,13 @@
             var colorText = colorClass === 'red' ? 'Rojo' : (colorClass === 'black' ? 'Negro' : 'Verde');
             var itemDiv = document.createElement('div');
             itemDiv.className = 'admin-history-item c-' + colorClass;
+            itemDiv.dataset.index = i;
             itemDiv.innerHTML =
                 '<span>N&ordm; ' + num + ' <small style="color:#888;font-weight:normal;margin-left:8px;">(' + colorText + ')</small></span>' +
-                '<button class="btn-delete-item" onclick="window.deleteIndividualNumber(' + i + ')">Borrar</button>';
+                '<div style="display:flex;gap:0;">' +
+                '<button class="btn-edit-item" onclick="window.editHistoryItem(' + i + ')">✏️ Editar</button>' +
+                '<button class="btn-delete-item" onclick="window.deleteIndividualNumber(' + i + ')">Borrar</button>' +
+                '</div>';
             list.appendChild(itemDiv);
         }
     }
@@ -1125,6 +1183,53 @@
         appData.history.splice(index, 1);
         saveLocal();
         renderAdminHistory();
+    };
+
+    window.editHistoryItem = function(index) {
+        var list = document.getElementById('adminHistoryList');
+        var item = list.querySelector('[data-index="' + index + '"]');
+        if (!item) return;
+        var currentNum = appData.history[index];
+        var colorClass = numberColors[currentNum] || 'black';
+        item.className = 'admin-history-item c-' + colorClass + ' editing';
+        item.innerHTML =
+            '<input class="history-edit-input" id="editInput_' + index + '" type="text" inputmode="numeric" maxlength="2" value="' + currentNum + '" autocomplete="off">' +
+            '<div style="display:flex;gap:4px;">' +
+            '<button class="btn-save-edit" onclick="window.saveEditHistoryItem(' + index + ')">✓ Guardar</button>' +
+            '<button class="btn-cancel-edit" onclick="renderAdminHistory()">✕</button>' +
+            '</div>';
+        var inp = document.getElementById('editInput_' + index);
+        if (inp) {
+            inp.focus(); inp.select();
+            inp.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault(); window.saveEditHistoryItem(index); }
+                if (e.key === 'Escape') { e.preventDefault(); renderAdminHistory(); }
+            });
+            inp.addEventListener('input', function() {
+                var v = inp.value.trim();
+                var valid = v in numberColors;
+                inp.classList.toggle('edit-invalid', v.length > 0 && !valid);
+                var colorC = valid ? numberColors[v] : colorClass;
+                item.className = 'admin-history-item c-' + colorC + ' editing';
+            });
+        }
+    };
+
+    window.saveEditHistoryItem = function(index) {
+        var inp = document.getElementById('editInput_' + index);
+        if (!inp) return;
+        var val = inp.value.trim();
+        if (!(val in numberColors)) {
+            inp.classList.add('edit-invalid');
+            inp.focus();
+            showToast('Número inválido — ingresa 0 a 36 ó 00', 'error');
+            return;
+        }
+        var oldNum = appData.history[index];
+        appData.history[index] = val;
+        saveLocal();
+        renderAdminHistory();
+        showToast('Nº ' + oldNum + ' → ' + val, '');
     };
 
     document.getElementById('btnDeleteLast').addEventListener('click', function() {
