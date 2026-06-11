@@ -240,9 +240,17 @@
         /* DEMO OVERLAY */
         .demo-overlay { position:absolute; top:0; left:0; width:100%; height:100%; z-index:80; display:none; flex-direction:column; align-items:center; justify-content:center; background:var(--bg,linear-gradient(180deg,#0022cc,#0044ff)); }
         .demo-overlay.active { display:flex; }
-        .demo-logo-big { width:calc(var(--u)*300); height:auto; margin-bottom:calc(var(--u)*22); animation:demoPulse 3s ease-in-out infinite; }
-        @keyframes demoPulse{0%,100%{filter:drop-shadow(0 0 calc(var(--u)*12) rgba(255,215,0,0.35));}50%{filter:drop-shadow(0 0 calc(var(--u)*32) rgba(255,215,0,0.9));}}
-        .demo-ruleta-nombre { font-size:calc(var(--u)*36); font-weight:900; color:#fff; letter-spacing:calc(var(--u)*4); text-align:center; margin-bottom:calc(var(--u)*8); text-shadow:0 0 calc(var(--u)*18) rgba(255,215,0,0.7); }
+        .demo-logo-big { width:calc(var(--u)*300); height:auto; margin-bottom:calc(var(--u)*22); animation:demoLogoSpinPulse 8s ease-in-out infinite; transform-origin:center center; }
+        @keyframes demoLogoSpinPulse{
+          0%   { transform:scale(1) rotate(0deg);     filter:drop-shadow(0 0 calc(var(--u)*12) rgba(255,215,0,.35)); }
+          28%  { transform:scale(1) rotate(360deg);   filter:drop-shadow(0 0 calc(var(--u)*14) rgba(255,215,0,.42)); }
+          38%  { transform:scale(1) rotate(360deg);   filter:drop-shadow(0 0 calc(var(--u)*14) rgba(255,215,0,.42)); }
+          52%  { transform:scale(1.28) rotate(360deg);filter:brightness(1.55) drop-shadow(0 0 calc(var(--u)*40) rgba(255,215,0,1)); }
+          61%  { transform:scale(0.92) rotate(360deg);filter:brightness(1.1) drop-shadow(0 0 calc(var(--u)*18) rgba(255,215,0,.55)); }
+          70%  { transform:scale(1.1) rotate(360deg); filter:brightness(1.22) drop-shadow(0 0 calc(var(--u)*26) rgba(255,215,0,.72)); }
+          80%  { transform:scale(1) rotate(360deg);   filter:brightness(1) drop-shadow(0 0 calc(var(--u)*14) rgba(255,215,0,.4)); }
+          100% { transform:scale(1) rotate(360deg);   filter:drop-shadow(0 0 calc(var(--u)*12) rgba(255,215,0,.35)); }
+        }        .demo-ruleta-nombre { font-size:calc(var(--u)*36); font-weight:900; color:#fff; letter-spacing:calc(var(--u)*4); text-align:center; margin-bottom:calc(var(--u)*8); text-shadow:0 0 calc(var(--u)*18) rgba(255,215,0,0.7); }
         .demo-casino-nombre { font-size:calc(var(--u)*15); color:rgba(255,255,255,0.6); letter-spacing:calc(var(--u)*6); text-align:center; margin-bottom:calc(var(--u)*38); }
         .demo-preparando { font-size:calc(var(--u)*14); color:#ffd700; border:calc(var(--u)*1) solid rgba(255,215,0,0.45); padding:calc(var(--u)*9) calc(var(--u)*30); letter-spacing:calc(var(--u)*5); animation:demoFlash 2s ease-in-out infinite; }
         @keyframes demoFlash{0%,100%{opacity:0.45;box-shadow:none;}50%{opacity:1;box-shadow:0 0 calc(var(--u)*22) rgba(255,215,0,0.45);}}
@@ -673,7 +681,7 @@ function runDemoStep(){
                 if(!demoSimActive)return;
                 if(demoOv)demoOv.classList.remove('active');
                 demoSimTimer=setTimeout(runDemoStep,600);
-            },10000);
+            },15000);
         },2500);
     }else{
         demoSimTimer=setTimeout(runDemoStep,localStorage.getItem('rlt_ballspin')==='1'?400:2200);
@@ -688,7 +696,7 @@ function startDemoSim(){
         if(demoOv)demoOv.classList.remove('active');
         updateScreen({history:[],limits:demoSimLimits()});
         demoSimTimer=setTimeout(runDemoStep,600);
-    },10000);
+    },15000);
 }
 // ---- DEMO TUTORIAL ----
 var demoTutIdx=0;
