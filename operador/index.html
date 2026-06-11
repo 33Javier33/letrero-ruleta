@@ -723,6 +723,9 @@
         .settings-modal-body { flex:1; overflow-y:auto; padding:15px; display:flex; flex-direction:column; gap:12px; -webkit-overflow-scrolling:touch; }
         .btn-open-config { grid-column:1/-1; width:100%; padding:18px; background:linear-gradient(135deg,#0a1a36,#0f2a56); border:2px solid #4da6ff; border-radius:10px; color:#4da6ff; font-size:18px; font-weight:bold; cursor:pointer; letter-spacing:0.5px; -webkit-tap-highlight-color:transparent; transition:opacity 0.15s,transform 0.1s; }
         .btn-open-config:active { opacity:0.8; transform:scale(0.98); }
+        .btn-spin-toggle { grid-column:1/-1; width:100%; padding:14px 18px; background:#1a1a1a; border:2px solid #555; border-radius:10px; color:#aaa; font-size:16px; font-weight:bold; cursor:pointer; letter-spacing:0.5px; -webkit-tap-highlight-color:transparent; transition:all 0.15s; text-align:center; }
+        .btn-spin-toggle.active { background:linear-gradient(135deg,#0a280a,#0f420f); border-color:#33cc33; color:#33ff33; }
+        .btn-spin-toggle:active { opacity:0.8; transform:scale(0.98); }
     </style>
 </head>
 <body>
@@ -786,6 +789,11 @@
 
     <!-- BOTÓN ABRIR CONFIGURACIÓN (ocupa las dos columnas) -->
     <button class="btn-open-config" onclick="openSettings()">⚙️ Configuración de la Mesa</button>
+
+    <!-- TOGGLE RÁPIDO GIRO DE BOLA (ocupa las dos columnas) -->
+    <button id="btnSpinToggle" class="btn-spin-toggle" onclick="window.toggleBallSpin()">
+        🌀 Giro de bola al entrar: <span id="spinToggleLabel">ACTIVADO</span>
+    </button>
 
 </div>
 
@@ -1423,10 +1431,25 @@
 
         // ===== EFECTOS DE BOLAS =====
         var btnFxEntry=document.getElementById('btnFxEntry'),fxEntryLabel=document.getElementById('fxEntryLabel');
-        function updateFxEntry(on){if(!btnFxEntry||!fxEntryLabel)return;fxEntryLabel.textContent=on?'ACTIVADA':'DESACTIVADA';btnFxEntry.classList.toggle('selected',on);}
+        function updateFxEntry(on){
+            if(!btnFxEntry||!fxEntryLabel)return;
+            fxEntryLabel.textContent=on?'ACTIVADA':'DESACTIVADA';
+            btnFxEntry.classList.toggle('selected',on);
+            // sync quick-access toggle
+            var st=document.getElementById('btnSpinToggle'),sl=document.getElementById('spinToggleLabel');
+            if(st){st.classList.toggle('active',on);}
+            if(sl){sl.textContent=on?'ACTIVADO':'DESACTIVADO';}
+        }
         var fxEntryOn=localStorage.getItem('rlt_fx_entry')!=='0';
         updateFxEntry(fxEntryOn);
         if(btnFxEntry)btnFxEntry.addEventListener('click',function(){fxEntryOn=!fxEntryOn;localStorage.setItem('rlt_fx_entry',fxEntryOn?'1':'0');updateFxEntry(fxEntryOn);});
+
+        window.toggleBallSpin = function(){
+            fxEntryOn=!fxEntryOn;
+            localStorage.setItem('rlt_fx_entry',fxEntryOn?'1':'0');
+            updateFxEntry(fxEntryOn);
+            showToast('Giro de bola: '+(fxEntryOn?'ACTIVADO':'DESACTIVADO'),'');
+        };
 
         var btnFxGlow=document.getElementById('btnFxGlow'),fxGlowLabel=document.getElementById('fxGlowLabel');
         function updateFxGlow(on){if(!btnFxGlow||!fxGlowLabel)return;fxGlowLabel.textContent=on?'ACTIVADA':'DESACTIVADA';btnFxGlow.classList.toggle('selected',on);}
