@@ -720,7 +720,9 @@
         .settings-modal-header span { color:#4da6ff; font-size:17px; font-weight:bold; }
         .settings-modal-close { background:#2a2a2a; border:1px solid #555; border-radius:8px; color:#fff; font-size:22px; width:44px; height:44px; cursor:pointer; display:flex; align-items:center; justify-content:center; -webkit-tap-highlight-color:transparent; }
         .settings-modal-close:active { opacity:0.7; transform:scale(0.93); }
-        .settings-modal-body { flex:1; overflow-y:auto; padding:15px; display:flex; flex-direction:column; gap:12px; -webkit-overflow-scrolling:touch; }
+        .settings-modal-body { flex:1; overflow-y:auto; padding:15px; display:grid; grid-template-columns:1fr 1fr; gap:12px; align-content:start; -webkit-overflow-scrolling:touch; }
+        .cfg-full { grid-column:1/-1; }
+        @media(max-width:520px){.settings-modal-body{grid-template-columns:1fr;}}
         .btn-open-config { grid-column:1/-1; width:100%; padding:18px; background:linear-gradient(135deg,#0a1a36,#0f2a56); border:2px solid #4da6ff; border-radius:10px; color:#4da6ff; font-size:18px; font-weight:bold; cursor:pointer; letter-spacing:0.5px; -webkit-tap-highlight-color:transparent; transition:opacity 0.15s,transform 0.1s; }
         .btn-open-config:active { opacity:0.8; transform:scale(0.98); }
         .btn-spin-toggle { width:100%; padding:14px 18px; background:#1a1a1a; border:2px solid #555; border-radius:10px; color:#aaa; font-size:16px; font-weight:bold; cursor:pointer; letter-spacing:0.5px; -webkit-tap-highlight-color:transparent; transition:all 0.15s; text-align:center; }
@@ -817,8 +819,8 @@
     </div>
     <div class="settings-modal-body">
 
-        <!-- URL PANTALLA -->
-        <div class="nombre-ruleta-section">
+        <!-- URL PANTALLA — ancho completo -->
+        <div class="nombre-ruleta-section cfg-full">
             <h3>🔗 URL Pantalla de la Mesa
                 <button class="help-btn" onclick="openHelp('pantalla')" title="Ayuda: segunda pantalla" style="margin-left:8px;">?</button>
             </h3>
@@ -830,8 +832,8 @@
             </div>
         </div>
 
-        <!-- LÍMITES -->
-        <div class="admin-section">
+        <!-- LÍMITES — ancho completo -->
+        <div class="admin-section cfg-full">
             <div class="limits-header" id="toggleLimitsBtn">
                 3. Configuración de Límites
                 <div style="display:flex;align-items:center;gap:8px;">
@@ -841,50 +843,71 @@
             </div>
             <div class="limits-content" id="limitsContent">
                 <div class="input-section-title">Plenos</div>
-                <div class="input-group">
-                    <label>Mínimo:</label>
-                    <input type="text" inputmode="numeric" id="inputMinPleno">
-                </div>
-                <div class="input-group">
-                    <label>Máximo:</label>
-                    <input type="text" inputmode="numeric" id="inputMaxPleno">
-                </div>
+                <div class="input-group"><label>Mínimo:</label><input type="text" inputmode="numeric" id="inputMinPleno"></div>
+                <div class="input-group"><label>Máximo:</label><input type="text" inputmode="numeric" id="inputMaxPleno"></div>
                 <div class="input-section-title">Chanzas Dobles</div>
-                <div class="input-group">
-                    <label>Mínimo:</label>
-                    <input type="text" inputmode="numeric" id="inputMinDobles">
-                </div>
-                <div class="input-group">
-                    <label>Máximo:</label>
-                    <input type="text" inputmode="numeric" id="inputMaxDobles">
-                </div>
+                <div class="input-group"><label>Mínimo:</label><input type="text" inputmode="numeric" id="inputMinDobles"></div>
+                <div class="input-group"><label>Máximo:</label><input type="text" inputmode="numeric" id="inputMaxDobles"></div>
                 <div class="input-section-title">Chanzas Simples</div>
-                <div class="input-group">
-                    <label>Mínimo:</label>
-                    <input type="text" inputmode="numeric" id="inputMinSimples">
-                </div>
-                <div class="input-group">
-                    <label>Máximo:</label>
-                    <input type="text" inputmode="numeric" id="inputMaxSimples">
-                </div>
+                <div class="input-group"><label>Mínimo:</label><input type="text" inputmode="numeric" id="inputMinSimples"></div>
+                <div class="input-group"><label>Máximo:</label><input type="text" inputmode="numeric" id="inputMaxSimples"></div>
                 <button class="btn-save-limits" id="btnUpdateLimits">💾 Guardar Límites en Pantalla</button>
             </div>
         </div>
 
-        <!-- NOMBRE DE LA RULETA -->
+        <!-- NOMBRE RULETA — columna izquierda -->
         <div class="nombre-ruleta-section">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">
-                4. Nombre de la Ruleta en Pantalla
+                4. Nombre de la Ruleta
                 <button class="help-btn" onclick="openHelp('nombre')" title="Ayuda: tipos de ruleta">?</button>
             </h3>
             <div class="nombre-btn-group">
-                <button class="btn-nombre" id="btnNombreAmericana">🎡 RULETA AMERICANA</button>
-                <button class="btn-nombre" id="btnNombreFrancesa">🎰 RULETA FRANCESA</button>
+                <button class="btn-nombre" id="btnNombreAmericana">🎡 AMERICANA</button>
+                <button class="btn-nombre" id="btnNombreFrancesa">🎰 FRANCESA</button>
             </div>
         </div>
 
-        <!-- TEMA DE FONDO -->
-        <div class="tema-section">
+        <!-- ANIMACIÓN DE BOLA — columna derecha -->
+        <div class="nombre-ruleta-section">
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">6. Animación Ruleta
+                <button class="help-btn" onclick="openHelp('ballspin')" title="Ayuda: animación de la bolita">?</button>
+            </h3>
+            <p style="font-size:12px;color:#777;margin-bottom:12px;">Bola girando y cayendo al número ganador.</p>
+            <button id="btnBallAnim" class="btn-nombre">
+                🎱 Bola: <span id="ballAnimLabel">DESACTIVADA</span>
+            </button>
+        </div>
+
+        <!-- PIZARRA EN BOLAS — columna izquierda -->
+        <div class="nombre-ruleta-section">
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">7. Pizarra en Bolas
+                <button class="help-btn" onclick="openHelp('ballpizarra')" title="Ayuda: historial en bolas">?</button>
+            </h3>
+            <p style="font-size:12px;color:#777;margin-bottom:12px;">Historial como bolas de colores animadas.</p>
+            <button id="btnBallPizarra" class="btn-nombre">
+                🔴 Bolas: <span id="ballPizarraLabel">DESACTIVADA</span>
+            </button>
+        </div>
+
+        <!-- EFECTOS DE BOLAS — columna derecha -->
+        <div class="nombre-ruleta-section">
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">10. Efectos de Bolas
+                <button class="help-btn" onclick="openHelp('efectos')" title="Ayuda: efectos de bolas">?</button>
+            </h3>
+            <p style="font-size:12px;color:#777;margin-bottom:8px;">Solo con Pizarra en Bolas activa.</p>
+            <button id="btnFxEntry" class="btn-nombre" style="margin-bottom:8px;">
+                ✨ Entrada: <span id="fxEntryLabel">ACTIVADA</span>
+            </button>
+            <button id="btnFxGlow" class="btn-nombre" style="margin-bottom:8px;">
+                💫 Brillo 30s: <span id="fxGlowLabel">DESACTIVADA</span>
+            </button>
+            <button id="btnFxPulse" class="btn-nombre">
+                🔵 Pulso 8s: <span id="fxPulseLabel">DESACTIVADA</span>
+            </button>
+        </div>
+
+        <!-- TEMA DE FONDO — ancho completo -->
+        <div class="tema-section cfg-full">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">5. Tema de Fondo
                 <button class="help-btn" onclick="openHelp('tema')" title="Ayuda: temas y textura">?</button>
             </h3>
@@ -917,97 +940,91 @@
             </div>
         </div>
 
-        <!-- ANIMACIÓN DE BOLA -->
+        <!-- COLOR PIZARRA — columna izquierda -->
         <div class="nombre-ruleta-section">
-            <h3 style="display:flex;align-items:center;justify-content:space-between;">6. Animación Ruleta
-                <button class="help-btn" onclick="openHelp('ballspin')" title="Ayuda: animación de la bolita">?</button>
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">8. Color Pizarra
+                <button class="help-btn" onclick="openHelp('pizarra')" title="Ayuda: color de la pizarra">?</button>
             </h3>
-            <p style="font-size:12px;color:#777;margin-bottom:12px;">Activa para ver la bola girar y caer al número ganador en pantalla.</p>
-            <button id="btnBallAnim" class="btn-nombre">
-                🎱 Animación de Bola: <span id="ballAnimLabel">DESACTIVADA</span>
-            </button>
-        </div>
-
-        <!-- PIZARRA EN BOLAS -->
-        <div class="nombre-ruleta-section">
-            <h3 style="display:flex;align-items:center;justify-content:space-between;">7. Pizarra en Bolas
-                <button class="help-btn" onclick="openHelp('ballpizarra')" title="Ayuda: historial en bolas">?</button>
-            </h3>
-            <p style="font-size:12px;color:#777;margin-bottom:12px;">Muestra el historial como bolas de colores con animación de entrada al llegar un número nuevo.</p>
-            <button id="btnBallPizarra" class="btn-nombre">
-                🔴 Bolas en Pizarra: <span id="ballPizarraLabel">DESACTIVADA</span>
-            </button>
-        </div>
-
-        <!-- COLOR PIZARRA -->
-        <div class="nombre-ruleta-section">
-            <h3 style="display:flex;align-items:center;justify-content:space-between;">8. Color de la Pizarra <button class="help-btn" onclick="openHelp('pizarra')" title="Ayuda: color de la pizarra">?</button></h3>
             <div class="tema-grid" style="grid-template-columns:repeat(3,1fr);">
-                <button class="tema-swatch piz-swatch" data-piz="negro"       style="background:#000;border-color:#e6b800;">
-                    <span class="tema-badge">Negro</span>
-                </button>
-                <button class="tema-swatch piz-swatch" data-piz="azul_noche"  style="background:#00091a;border-color:#1a5fff;">
-                    <span class="tema-badge">Azul Noche</span>
-                </button>
-                <button class="tema-swatch piz-swatch" data-piz="rojo_vino"   style="background:#140005;border-color:#880022;">
-                    <span class="tema-badge">Rojo Vino</span>
-                </button>
-                <button class="tema-swatch piz-swatch" data-piz="verde_noche" style="background:#001408;border-color:#226622;">
-                    <span class="tema-badge">Verde Noche</span>
-                </button>
-                <button class="tema-swatch piz-swatch" data-piz="beige"       style="background:#f0e8d5;border-color:#c0a060;">
-                    <span class="tema-badge" style="color:#333;">Beige</span>
-                </button>
-                <button class="tema-swatch piz-swatch" data-piz="humo"        style="background:#e0e0e0;border-color:#999;">
-                    <span class="tema-badge" style="color:#333;">Humo</span>
-                </button>
+                <button class="tema-swatch piz-swatch" data-piz="negro"       style="background:#000;border-color:#e6b800;"><span class="tema-badge">Negro</span></button>
+                <button class="tema-swatch piz-swatch" data-piz="azul_noche"  style="background:#00091a;border-color:#1a5fff;"><span class="tema-badge">Azul Noche</span></button>
+                <button class="tema-swatch piz-swatch" data-piz="rojo_vino"   style="background:#140005;border-color:#880022;"><span class="tema-badge">Rojo Vino</span></button>
+                <button class="tema-swatch piz-swatch" data-piz="verde_noche" style="background:#001408;border-color:#226622;"><span class="tema-badge">Verde Noche</span></button>
+                <button class="tema-swatch piz-swatch" data-piz="beige"       style="background:#f0e8d5;border-color:#c0a060;"><span class="tema-badge" style="color:#333;">Beige</span></button>
+                <button class="tema-swatch piz-swatch" data-piz="humo"        style="background:#e0e0e0;border-color:#999;"><span class="tema-badge" style="color:#333;">Humo</span></button>
             </div>
         </div>
 
-        <!-- COLOR TARJETA LÍMITES -->
+        <!-- COLOR TARJETA LÍMITES — columna derecha -->
         <div class="nombre-ruleta-section">
-            <h3 style="display:flex;align-items:center;justify-content:space-between;">9. Color Tarjeta Límites <button class="help-btn" onclick="openHelp('limtheme')" title="Ayuda: color tarjeta límites">?</button></h3>
+            <h3 style="display:flex;align-items:center;justify-content:space-between;">9. Color Límites
+                <button class="help-btn" onclick="openHelp('limtheme')" title="Ayuda: color tarjeta límites">?</button>
+            </h3>
             <div class="tema-grid" style="grid-template-columns:repeat(3,1fr);">
-                <button class="tema-swatch lim-swatch" data-lim="azul"    style="background:linear-gradient(135deg,#0096ff,#00c8ff);border-color:#66ccff;">
-                    <span class="tema-badge">Azul</span>
-                </button>
-                <button class="tema-swatch lim-swatch" data-lim="dorado"  style="background:linear-gradient(135deg,#6e4600,#c88c00);border-color:#ffd700;">
-                    <span class="tema-badge">Dorado</span>
-                </button>
-                <button class="tema-swatch lim-swatch" data-lim="rojo"    style="background:linear-gradient(135deg,#6e0000,#c80000);border-color:#ff6666;">
-                    <span class="tema-badge">Rojo</span>
-                </button>
-                <button class="tema-swatch lim-swatch" data-lim="negro"   style="background:linear-gradient(135deg,#0f0f0f,#323232);border-color:#888;">
-                    <span class="tema-badge">Negro</span>
-                </button>
-                <button class="tema-swatch lim-swatch" data-lim="verde"   style="background:linear-gradient(135deg,#003c00,#009600);border-color:#55ee55;">
-                    <span class="tema-badge">Verde</span>
-                </button>
-                <button class="tema-swatch lim-swatch" data-lim="violeta" style="background:linear-gradient(135deg,#320050,#6e00c8);border-color:#cc88ff;">
-                    <span class="tema-badge">Violeta</span>
-                </button>
+                <button class="tema-swatch lim-swatch" data-lim="azul"    style="background:linear-gradient(135deg,#0096ff,#00c8ff);border-color:#66ccff;"><span class="tema-badge">Azul</span></button>
+                <button class="tema-swatch lim-swatch" data-lim="dorado"  style="background:linear-gradient(135deg,#6e4600,#c88c00);border-color:#ffd700;"><span class="tema-badge">Dorado</span></button>
+                <button class="tema-swatch lim-swatch" data-lim="rojo"    style="background:linear-gradient(135deg,#6e0000,#c80000);border-color:#ff6666;"><span class="tema-badge">Rojo</span></button>
+                <button class="tema-swatch lim-swatch" data-lim="negro"   style="background:linear-gradient(135deg,#0f0f0f,#323232);border-color:#888;"><span class="tema-badge">Negro</span></button>
+                <button class="tema-swatch lim-swatch" data-lim="verde"   style="background:linear-gradient(135deg,#003c00,#009600);border-color:#55ee55;"><span class="tema-badge">Verde</span></button>
+                <button class="tema-swatch lim-swatch" data-lim="violeta" style="background:linear-gradient(135deg,#320050,#6e00c8);border-color:#cc88ff;"><span class="tema-badge">Violeta</span></button>
             </div>
         </div>
 
-        <!-- EFECTOS DE BOLAS -->
-        <div class="nombre-ruleta-section">
-            <h3 style="display:flex;align-items:center;justify-content:space-between;">10. Efectos de Bolas <button class="help-btn" onclick="openHelp('efectos')" title="Ayuda: efectos de bolas">?</button></h3>
-            <p style="font-size:12px;color:#777;margin-bottom:12px;">Activos solo cuando "Pizarra en Bolas" está encendida.</p>
-            <button id="btnFxEntry" class="btn-nombre" style="margin-bottom:8px;">
-                ✨ Animación entrada: <span id="fxEntryLabel">ACTIVADA</span>
-            </button>
-            <button id="btnFxGlow" class="btn-nombre" style="margin-bottom:8px;">
-                💫 Brillo cada 30s: <span id="fxGlowLabel">DESACTIVADA</span>
-            </button>
-            <button id="btnFxPulse" class="btn-nombre">
-                🔵 Pulso cada 8s: <span id="fxPulseLabel">DESACTIVADA</span>
+        <!-- CALIENTES Y FRÍOS — ancho completo -->
+        <div class="nombre-ruleta-section cfg-full">
+            <h3 style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                11. Números Calientes y Fríos
+                <button class="help-btn" onclick="openHelp('hotcold')" title="Ayuda: números calientes y fríos">?</button>
+            </h3>
+            <!-- Color toggle -->
+            <button id="btnHotColdColors" class="btn-nombre" style="margin-bottom:16px;">
+                🎨 Color del número: <span id="hotColdColorsLabel">DESACTIVADO</span>
             </button>
 
-            <div style="margin-top:18px;border-top:1px solid #444;padding-top:16px;">
-                <h3 style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">11. Números Calientes y Fríos <button class="help-btn" onclick="openHelp('hotcold')" title="Ayuda: números calientes y fríos">?</button></h3>
-                <button id="btnHotColdColors" class="btn-nombre">
-                    🎨 Color del número: <span id="hotColdColorsLabel">DESACTIVADO</span>
-                </button>
+            <!-- Grid de efectos calientes / fríos -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+
+                <!-- EFECTOS CALIENTES -->
+                <div>
+                    <p style="color:#ff7033;font-size:12px;font-weight:bold;margin-bottom:8px;letter-spacing:.5px;">🔥 EFECTO CALIENTES</p>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                        <button class="tema-swatch hcfx-hot-btn" data-hcfx-hot="none"  style="background:#1a0800;min-height:52px;">
+                            <span class="tema-badge">Sin efecto</span>
+                        </button>
+                        <button class="tema-swatch hcfx-hot-btn" data-hcfx-hot="flame" style="background:linear-gradient(160deg,#200400,#6a1800);min-height:52px;">
+                            <span class="tema-badge">🔥 Llamas</span>
+                        </button>
+                        <button class="tema-swatch hcfx-hot-btn" data-hcfx-hot="ring"  style="background:linear-gradient(160deg,#280600,#7a2200);min-height:52px;">
+                            <span class="tema-badge">⭕ Anillo</span>
+                        </button>
+                        <button class="tema-swatch hcfx-hot-btn" data-hcfx-hot="ember" style="background:linear-gradient(160deg,#1c0400,#581000);min-height:52px;">
+                            <span class="tema-badge">✨ Brasas</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- EFECTOS FRÍOS -->
+                <div>
+                    <p style="color:#66ccff;font-size:12px;font-weight:bold;margin-bottom:8px;letter-spacing:.5px;">❄️ EFECTO FRÍOS</p>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                        <button class="tema-swatch hcfx-cold-btn" data-hcfx-cold="none"  style="background:#000a14;min-height:52px;">
+                            <span class="tema-badge">Sin efecto</span>
+                        </button>
+                        <button class="tema-swatch hcfx-cold-btn" data-hcfx-cold="snow"  style="background:linear-gradient(160deg,#000c1e,#001830);min-height:52px;">
+                            <span class="tema-badge">❄ Nieve</span>
+                        </button>
+                        <button class="tema-swatch hcfx-cold-btn" data-hcfx-cold="frost" style="background:linear-gradient(160deg,#000e22,#001c3a);min-height:52px;">
+                            <span class="tema-badge">🧊 Escarcha</span>
+                        </button>
+                        <button class="tema-swatch hcfx-cold-btn" data-hcfx-cold="burst" style="background:linear-gradient(160deg,#000a1a,#001428);min-height:52px;">
+                            <span class="tema-badge">💎 Cristal</span>
+                        </button>
+                        <button class="tema-swatch hcfx-cold-btn" data-hcfx-cold="mist"  style="background:linear-gradient(160deg,#00080f,#000e1e);min-height:52px;grid-column:1/-1;">
+                            <span class="tema-badge">🌫 Vaho frío</span>
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -1488,6 +1505,20 @@
         function updateHotColdColors(on){if(!btnHCC||!hccLabel)return;hccLabel.textContent=on?'ACTIVADO':'DESACTIVADO';btnHCC.classList.toggle('selected',on);}
         updateHotColdColors(hotColdColorsOn);
         if(btnHCC)btnHCC.addEventListener('click',function(){hotColdColorsOn=!hotColdColorsOn;localStorage.setItem('rlt_hotcold_colors',hotColdColorsOn?'1':'0');updateHotColdColors(hotColdColorsOn);showToast('Color calientes/fríos: '+(hotColdColorsOn?'ACTIVADO':'DESACTIVADO'),'');});
+
+        // Hot effects picker
+        var hotFxBtns=document.querySelectorAll('.hcfx-hot-btn');
+        var curHotFx=localStorage.getItem('rlt_hc_hot_fx')||'none';
+        function updateHotFxBtns(v){hotFxBtns.forEach(function(b){b.classList.toggle('selected',b.dataset.hcfxHot===v);});}
+        updateHotFxBtns(curHotFx);
+        hotFxBtns.forEach(function(btn){btn.addEventListener('click',function(){curHotFx=this.dataset.hcfxHot;localStorage.setItem('rlt_hc_hot_fx',curHotFx);updateHotFxBtns(curHotFx);var names={none:'Desactivado',flame:'Llamas',ring:'Anillo de fuego',ember:'Brasas'};showToast('Efecto calientes: '+(names[curHotFx]||curHotFx),'');});});
+
+        // Cold effects picker
+        var coldFxBtns=document.querySelectorAll('.hcfx-cold-btn');
+        var curColdFx=localStorage.getItem('rlt_hc_cold_fx')||'none';
+        function updateColdFxBtns(v){coldFxBtns.forEach(function(b){b.classList.toggle('selected',b.dataset.hcfxCold===v);});}
+        updateColdFxBtns(curColdFx);
+        coldFxBtns.forEach(function(btn){btn.addEventListener('click',function(){curColdFx=this.dataset.hcfxCold;localStorage.setItem('rlt_hc_cold_fx',curColdFx);updateColdFxBtns(curColdFx);var names={none:'Desactivado',snow:'Nieve',frost:'Escarcha',burst:'Cristal de hielo',mist:'Vaho frío'};showToast('Efecto fríos: '+(names[curColdFx]||curColdFx),'');});});
 
         // Demo toggle
         var demoOn=localStorage.getItem('rlt_demo')==='1';

@@ -254,6 +254,46 @@
         /* HC ball pulse animation */
         @keyframes hcBallPulse{0%{transform:scale(1);}28%{transform:scale(1.35);filter:brightness(1.6);}55%{transform:scale(1.02);}78%{transform:scale(1.2);filter:brightness(1.25);}100%{transform:scale(1);filter:brightness(1);}}
         .hc-pulse { animation:hcBallPulse .75s ease-out forwards; }
+
+        /* ============================================
+           HOT/COLD BALL VISUAL EFFECTS
+           ============================================ */
+        .num-circle,.stat-number{position:relative;}
+        .stat-number-hot,.stat-number-cold{overflow:visible;}
+
+        /* === HOT: Llamas === */
+        @keyframes hcFlameHalo{0%,100%{box-shadow:0 0 calc(var(--u)*8) calc(var(--u)*3) rgba(255,100,0,.8),0 calc(var(--u)*-14) calc(var(--u)*20) calc(var(--u)*6) rgba(255,190,0,.55);}35%{box-shadow:0 0 calc(var(--u)*16) calc(var(--u)*7) rgba(255,55,0,1),0 calc(var(--u)*-24) calc(var(--u)*32) calc(var(--u)*10) rgba(255,230,0,.65);}70%{box-shadow:0 0 calc(var(--u)*5) calc(var(--u)*2) rgba(255,130,0,.6),0 calc(var(--u)*-7) calc(var(--u)*12) calc(var(--u)*2) rgba(255,160,0,.4);}}
+        @keyframes hcFlameSide{0%,100%{box-shadow:calc(var(--u)*-12) 0 calc(var(--u)*12) calc(var(--u)*4) rgba(255,100,0,.55),calc(var(--u)*12) 0 calc(var(--u)*12) calc(var(--u)*4) rgba(255,100,0,.55);}50%{box-shadow:calc(var(--u)*-17) 0 calc(var(--u)*18) calc(var(--u)*6) rgba(255,180,0,.75),calc(var(--u)*17) 0 calc(var(--u)*18) calc(var(--u)*6) rgba(255,180,0,.75);}}
+        .fx-hot-flame .num-circle::before{content:'';position:absolute;inset:-3px;border-radius:50%;animation:hcFlameHalo .28s ease-in-out infinite;pointer-events:none;z-index:-1;}
+        .fx-hot-flame .num-circle::after{content:'';position:absolute;inset:2px;border-radius:50%;animation:hcFlameSide .4s ease-in-out infinite .1s;pointer-events:none;z-index:-1;}
+
+        /* === HOT: Anillo de fuego === */
+        @keyframes hcFireRingR{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+        .fx-hot-ring .num-circle::before{content:'';position:absolute;top:calc(var(--u)*-3.5);left:calc(var(--u)*-3.5);right:calc(var(--u)*-3.5);bottom:calc(var(--u)*-3.5);border-radius:50%;background:conic-gradient(#ffe000,#ff8800,#ff3300,#ff0000,#ff4400,#ff8800,#ffcc00,#ffe000);animation:hcFireRingR .75s linear infinite;filter:blur(calc(var(--u)*1.8));z-index:-1;pointer-events:none;}
+
+        /* === HOT: Brasas pulsantes === */
+        @keyframes hcEmberPulse{0%,100%{box-shadow:0 0 calc(var(--u)*7) calc(var(--u)*2) rgba(255,80,0,.55);}50%{box-shadow:0 0 calc(var(--u)*20) calc(var(--u)*8) rgba(255,160,0,1),0 0 calc(var(--u)*32) calc(var(--u)*10) rgba(255,80,0,.45);}}
+        .fx-hot-ember .num-circle::before{content:'';position:absolute;inset:0;border-radius:50%;animation:hcEmberPulse .55s ease-in-out infinite;pointer-events:none;z-index:-1;}
+
+        /* === COLD: Nieve === */
+        @keyframes hcSnow1{0%{opacity:0;transform:translateY(-6px) rotate(0);}25%{opacity:.95;}100%{opacity:0;transform:translateY(calc(var(--u)*40)) translateX(8px) rotate(210deg);}}
+        @keyframes hcSnow2{0%{opacity:0;transform:translateY(-4px) rotate(0);}35%{opacity:.8;}100%{opacity:0;transform:translateY(calc(var(--u)*38)) translateX(-9px) rotate(-180deg);}}
+        .fx-cold-snow .stat-number::before{content:'❄';position:absolute;top:calc(var(--u)*-6);left:8%;font-size:calc(var(--u)*9);color:rgba(200,235,255,.95);pointer-events:none;animation:hcSnow1 1.7s ease-in infinite;filter:drop-shadow(0 0 calc(var(--u)*3) rgba(180,220,255,1));text-shadow:calc(var(--u)*15) calc(var(--u)*3) 0 rgba(190,230,255,.75),calc(var(--u)*-10) calc(var(--u)*7) 0 rgba(210,240,255,.65);z-index:3;}
+        .fx-cold-snow .stat-number::after{content:'❅';position:absolute;top:calc(var(--u)*-4);left:50%;font-size:calc(var(--u)*7);color:rgba(200,235,255,.8);pointer-events:none;animation:hcSnow2 2.2s ease-in infinite .85s;filter:drop-shadow(0 0 calc(var(--u)*2) rgba(180,220,255,.9));text-shadow:calc(var(--u)*-13) calc(var(--u)*9) 0 rgba(200,235,255,.6);z-index:3;}
+
+        /* === COLD: Escarcha === */
+        @keyframes hcFrostRing{0%,100%{opacity:.5;transform:scale(1);}50%{opacity:1;transform:scale(1.22);}}
+        .fx-cold-frost .stat-number::before{content:'';position:absolute;top:calc(var(--u)*-4.5);left:calc(var(--u)*-4.5);right:calc(var(--u)*-4.5);bottom:calc(var(--u)*-4.5);border-radius:50%;background:radial-gradient(circle,transparent 38%,rgba(140,210,255,.65) 60%,rgba(200,240,255,.22) 78%,transparent 100%);animation:hcFrostRing 2.1s ease-in-out infinite;filter:blur(calc(var(--u)*1.5));z-index:-1;pointer-events:none;}
+
+        /* === COLD: Explosión de cristal === */
+        @keyframes hcBurstFlash{0%,9%,100%{opacity:0;}5%{opacity:.75;}}
+        @keyframes hcBurstRing{0%,4%,100%{opacity:0;transform:scale(1);}5.5%{opacity:1;transform:scale(1.12);}28%{opacity:0;transform:scale(2.9);}}
+        .fx-cold-burst .stat-number::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(230,248,255,.82) 28%,rgba(180,225,255,.52) 58%,transparent 100%);animation:hcBurstFlash 4.2s ease-out infinite;z-index:2;pointer-events:none;}
+        .fx-cold-burst .stat-number::after{content:'';position:absolute;top:calc(var(--u)*-4);left:calc(var(--u)*-4);right:calc(var(--u)*-4);bottom:calc(var(--u)*-4);border-radius:50%;border:calc(var(--u)*1.5) solid rgba(180,230,255,.9);animation:hcBurstRing 4.2s ease-out infinite;z-index:1;pointer-events:none;}
+
+        /* === COLD: Vaho frío === */
+        @keyframes hcMistAura{0%,100%{opacity:.3;transform:scale(1);}50%{opacity:.8;transform:scale(1.3);}}
+        .fx-cold-mist .stat-number::before{content:'';position:absolute;top:calc(var(--u)*-5.5);left:calc(var(--u)*-5.5);right:calc(var(--u)*-5.5);bottom:calc(var(--u)*-5.5);border-radius:50%;background:radial-gradient(circle,transparent 32%,rgba(155,205,255,.48) 54%,rgba(200,232,255,.18) 74%,transparent 94%);animation:hcMistAura 3s ease-in-out infinite;filter:blur(calc(var(--u)*3));z-index:-1;pointer-events:none;}
     </style>
 </head>
 <body>
@@ -597,6 +637,17 @@ function updateScreen(data){
     eMP.textContent=lim.minPleno;eMxP.textContent=lim.maxPleno;
     eMD.textContent=lim.minDobles;eMxD.textContent=lim.maxDobles;
     eMS.textContent=lim.minSimples;eMxS.textContent=lim.maxSimples;
+    applyHcFx();
+}
+
+function applyHcFx(){
+    if(!h1||!h2||!h3||!c1||!c2||!c3)return;
+    var hotFx=localStorage.getItem('rlt_hc_hot_fx')||'none';
+    var coldFx=localStorage.getItem('rlt_hc_cold_fx')||'none';
+    var aH=['fx-hot-flame','fx-hot-ring','fx-hot-ember'];
+    var aC=['fx-cold-snow','fx-cold-frost','fx-cold-burst','fx-cold-mist'];
+    [h1,h2,h3].forEach(function(el){var w=el&&el.parentElement;if(!w)return;aH.forEach(function(c){w.classList.remove(c);});if(hotFx!=='none')w.classList.add('fx-hot-'+hotFx);});
+    [c1,c2,c3].forEach(function(el){var w=el&&el.parentElement;if(!w)return;aC.forEach(function(c){w.classList.remove(c);});if(coldFx!=='none')w.classList.add('fx-cold-'+coldFx);});
 }
 
 // ---- DEMO SIMULATOR ----
@@ -655,7 +706,7 @@ function checkStorage(){
         }catch(ex){}
     }
 }
-window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();if(e.key==='rlt_ballpizarra'||e.key==='rlt_hotcold_colors'){lastD=null;checkStorage();}});
+window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();if(e.key==='rlt_ballpizarra'||e.key==='rlt_hotcold_colors'){lastD=null;checkStorage();}if(e.key==='rlt_hc_hot_fx'||e.key==='rlt_hc_cold_fx')applyHcFx();});
 
 window.onload=function(){
     resizeCanvas();
@@ -682,6 +733,7 @@ window.onload=function(){
         if(e.key==='rlt_demo'){if(e.newValue==='1')startDemoSim();else stopDemoSim();}
     });
     checkStorage();setInterval(checkStorage,300);
+    applyHcFx();
     animW();
     // Apply saved pizarra theme
     (function(){var k=localStorage.getItem('rlt_pizarra_theme');if(k&&k!=='negro'){var b=document.getElementById('history-board');if(b)b.classList.add('pizarra-'+k);}})();
