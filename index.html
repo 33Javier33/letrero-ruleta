@@ -236,10 +236,34 @@
 
         /* LOGO PEQUEÑO EN LA TABLA */
         .table-logo-img { width:90%; max-width:calc(var(--u)*70); height:auto; object-fit:contain; display:block; margin:0 auto; }
+
+        /* DEMO OVERLAY */
+        .demo-overlay { position:absolute; top:0; left:0; width:100%; height:100%; z-index:80; display:none; flex-direction:column; align-items:center; justify-content:center; background:var(--bg,linear-gradient(180deg,#0022cc,#0044ff)); }
+        .demo-overlay.active { display:flex; }
+        .demo-logo-big { width:calc(var(--u)*300); height:auto; margin-bottom:calc(var(--u)*22); animation:demoPulse 3s ease-in-out infinite; }
+        @keyframes demoPulse{0%,100%{filter:drop-shadow(0 0 calc(var(--u)*12) rgba(255,215,0,0.35));}50%{filter:drop-shadow(0 0 calc(var(--u)*32) rgba(255,215,0,0.9));}}
+        .demo-ruleta-nombre { font-size:calc(var(--u)*36); font-weight:900; color:#fff; letter-spacing:calc(var(--u)*4); text-align:center; margin-bottom:calc(var(--u)*8); text-shadow:0 0 calc(var(--u)*18) rgba(255,215,0,0.7); }
+        .demo-casino-nombre { font-size:calc(var(--u)*15); color:rgba(255,255,255,0.6); letter-spacing:calc(var(--u)*6); text-align:center; margin-bottom:calc(var(--u)*38); }
+        .demo-preparando { font-size:calc(var(--u)*14); color:#ffd700; border:calc(var(--u)*1) solid rgba(255,215,0,0.45); padding:calc(var(--u)*9) calc(var(--u)*30); letter-spacing:calc(var(--u)*5); animation:demoFlash 2s ease-in-out infinite; }
+        @keyframes demoFlash{0%,100%{opacity:0.45;box-shadow:none;}50%{opacity:1;box-shadow:0 0 calc(var(--u)*22) rgba(255,215,0,0.45);}}
+
+        /* HOT/COLD NUMBER COLORS */
+        .num-circle.hc-red  { background:#cc0000 !important; color:#fff !important; border-color:#ff4444 !important; box-shadow:0 0 calc(var(--u)*8) rgba(255,0,0,0.7) !important; }
+        .num-circle.hc-black { background:#1a1a1a !important; color:#fff !important; border-color:#999 !important; box-shadow:0 0 calc(var(--u)*6) rgba(200,200,200,0.4) !important; }
+        .num-circle.hc-green { background:#006600 !important; color:#fff !important; border-color:#00cc00 !important; box-shadow:0 0 calc(var(--u)*8) rgba(0,200,0,0.6) !important; }
+        .stat-number.hc-red  { background:#cc0000 !important; color:#fff !important; border-color:#ff4444 !important; box-shadow:0 0 calc(var(--u)*8) rgba(255,0,0,0.7) !important; }
+        .stat-number.hc-black { background:#1a1a1a !important; color:#fff !important; border-color:#999 !important; box-shadow:0 0 calc(var(--u)*6) rgba(200,200,200,0.4) !important; }
+        .stat-number.hc-green { background:#006600 !important; color:#fff !important; border-color:#00cc00 !important; box-shadow:0 0 calc(var(--u)*8) rgba(0,200,0,0.6) !important; }
     </style>
 </head>
 <body>
 <div class="screen-container" id="screenContainer">
+<div id="demoOverlay" class="demo-overlay">
+    <img src="/dreams-logo.png" class="demo-logo-big" id="demoLogoImg">
+    <div class="demo-ruleta-nombre" id="demoNombreTexto">RULETA AMERICANA</div>
+    <div class="demo-casino-nombre">CASINO PUERTO VARAS</div>
+    <div class="demo-preparando">MESA EN PREPARACIÓN</div>
+</div>
 
     <div class="top-section">
         <div class="left-column">
@@ -565,6 +589,9 @@ function updateScreen(data){
     sT('txt-pct-d3',s.pctD3+'%');sW('bar-d3',s.pctD3);
     h1.textContent=s.hot[0];h2.textContent=s.hot[1];h3.textContent=s.hot[2];
     c1.textContent=s.cold[0];c2.textContent=s.cold[1];c3.textContent=s.cold[2];
+    var hcOn=localStorage.getItem('rlt_hotcold_colors')==='1';
+    [[h1,s.hot[0],'num-circle'],[h2,s.hot[1],'num-circle'],[h3,s.hot[2],'num-circle']].forEach(function(x){x[0].classList.remove('hc-red','hc-black','hc-green');if(hcOn&&numberColors[x[1]])x[0].classList.add('hc-'+numberColors[x[1]]);});
+    [[c1,s.cold[0]],[c2,s.cold[1]],[c3,s.cold[2]]].forEach(function(x){x[0].classList.remove('hc-red','hc-black','hc-green');if(hcOn&&numberColors[x[1]])x[0].classList.add('hc-'+numberColors[x[1]]);});
     var lim=data.limits;
     eMP.textContent=lim.minPleno;eMxP.textContent=lim.maxPleno;
     eMD.textContent=lim.minDobles;eMxD.textContent=lim.maxDobles;
@@ -572,7 +599,7 @@ function updateScreen(data){
 }
 
 function checkStorage(){var r=localStorage.getItem(LS);if(r&&r!==lastD){lastD=r;try{var d=JSON.parse(r);if(d.history&&d.history.length&&localStorage.getItem('rlt_ballspin')==='1'&&!ballAnim.active){spinToNumber(d);}else{updateScreen(d);}}catch(e){}}}
-window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();if(e.key==='rlt_ballpizarra'){lastD=null;checkStorage();}});
+window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();if(e.key==='rlt_ballpizarra'||e.key==='rlt_hotcold_colors'){lastD=null;checkStorage();}});
 
 window.onload=function(){
     resizeCanvas();
@@ -588,7 +615,16 @@ window.onload=function(){
     var brdInit=document.getElementById('history-board');if(brdInit)brdInit.classList.toggle('ball-mode',localStorage.getItem('rlt_ballpizarra')==='1');
     if(!localStorage.getItem(LS))localStorage.setItem(LS,JSON.stringify({history:[],limits:{minPleno:'$1.000',maxPleno:'$20.000',minDobles:'$10.000',maxDobles:'$350.000',minSimples:'$20.000',maxSimples:'$700.000'}}));
     var nom=localStorage.getItem('ruleta_nombre');if(nom&&elT)elT.textContent=nom;
-    window.addEventListener('storage',function(e){if(e.key==='ruleta_nombre'){if(elT)elT.textContent=e.newValue;ballAnim.phase='idle';ballAnim.active=false;wA=0;}});
+    var demoOv=document.getElementById('demoOverlay');
+    var demoNomEl=document.getElementById('demoNombreTexto');
+    var demoLogoEl=document.getElementById('demoLogoImg');
+    var ml2=document.getElementById('logoImg');if(demoLogoEl&&ml2)demoLogoEl.src=ml2.src;
+    if(nom&&demoNomEl)demoNomEl.textContent=nom;
+    if(localStorage.getItem('rlt_demo')==='1'&&demoOv)demoOv.classList.add('active');
+    window.addEventListener('storage',function(e){
+        if(e.key==='ruleta_nombre'){if(elT)elT.textContent=e.newValue;if(demoNomEl)demoNomEl.textContent=e.newValue||'RULETA AMERICANA';ballAnim.phase='idle';ballAnim.active=false;wA=0;}
+        if(e.key==='rlt_demo'){if(demoOv){if(e.newValue==='1')demoOv.classList.add('active');else demoOv.classList.remove('active');}}
+    });
     checkStorage();setInterval(checkStorage,300);
     animW();
     // Apply saved pizarra theme

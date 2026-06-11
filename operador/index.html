@@ -795,6 +795,11 @@
         🌀 Giro de bola al entrar: <span id="spinToggleLabel">ACTIVADO</span>
     </button>
 
+    <!-- TOGGLE PANTALLA DEMO (ocupa las dos columnas) -->
+    <button id="btnDemoToggle" class="btn-spin-toggle" onclick="window.toggleDemo()">
+        🎬 Pantalla Demo: <span id="demoToggleLabel">DESACTIVADA</span>
+    </button>
+
 </div>
 
 <!-- MODAL DE CONFIGURACIÓN -->
@@ -990,6 +995,13 @@
             <button id="btnFxPulse" class="btn-nombre">
                 🔵 Pulso cada 8s: <span id="fxPulseLabel">DESACTIVADA</span>
             </button>
+
+            <div style="margin-top:18px;border-top:1px solid #444;padding-top:16px;">
+                <h3 style="margin-bottom:12px;">11. Números Calientes y Fríos</h3>
+                <button id="btnHotColdColors" class="btn-nombre">
+                    🎨 Color del número: <span id="hotColdColorsLabel">DESACTIVADO</span>
+                </button>
+            </div>
         </div>
 
     </div>
@@ -1093,6 +1105,7 @@
             if (kbIn2) kbIn2.focus();
         }, 600);
         showToast('Número ' + val + ' ingresado', 'success');
+        if (demoOn) { demoOn = false; localStorage.setItem('rlt_demo', '0'); updateDemoBtn(false); }
     };
 
     /* =========================================
@@ -1462,6 +1475,19 @@
         var fxPulseOn=localStorage.getItem('rlt_fx_pulse')==='1';
         updateFxPulse(fxPulseOn);
         if(btnFxPulse)btnFxPulse.addEventListener('click',function(){fxPulseOn=!fxPulseOn;localStorage.setItem('rlt_fx_pulse',fxPulseOn?'1':'0');updateFxPulse(fxPulseOn);});
+
+        // Hot/Cold colors
+        var btnHCC=document.getElementById('btnHotColdColors'),hccLabel=document.getElementById('hotColdColorsLabel');
+        var hotColdColorsOn=localStorage.getItem('rlt_hotcold_colors')==='1';
+        function updateHotColdColors(on){if(!btnHCC||!hccLabel)return;hccLabel.textContent=on?'ACTIVADO':'DESACTIVADO';btnHCC.classList.toggle('selected',on);}
+        updateHotColdColors(hotColdColorsOn);
+        if(btnHCC)btnHCC.addEventListener('click',function(){hotColdColorsOn=!hotColdColorsOn;localStorage.setItem('rlt_hotcold_colors',hotColdColorsOn?'1':'0');updateHotColdColors(hotColdColorsOn);showToast('Color calientes/fríos: '+(hotColdColorsOn?'ACTIVADO':'DESACTIVADO'),'');});
+
+        // Demo toggle
+        var demoOn=localStorage.getItem('rlt_demo')==='1';
+        function updateDemoBtn(on){var b=document.getElementById('btnDemoToggle'),l=document.getElementById('demoToggleLabel');if(!b||!l)return;l.textContent=on?'ACTIVA':'DESACTIVADA';b.classList.toggle('active',on);}
+        window.toggleDemo=function(){demoOn=!demoOn;localStorage.setItem('rlt_demo',demoOn?'1':'0');updateDemoBtn(demoOn);showToast('Pantalla Demo: '+(demoOn?'ACTIVA':'DESACTIVADA'),'');};
+        updateDemoBtn(demoOn);
 
         // Textura papel
         var chkTextura = document.getElementById('chkTextura');
