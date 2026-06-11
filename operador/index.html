@@ -1099,10 +1099,10 @@
             showToast('Número inválido: ' + val, 'error');
             return;
         }
+        try { if (demoOn) { demoOn = false; localStorage.setItem('rlt_demo', '0'); updateDemoBtn(false); } } catch(e) {}
         appData.history.push(val);
         saveLocal();
         renderAdminHistory();
-        // Feedback visual en display antes de limpiar
         var kbInC = document.getElementById('kbInput');
         if (kbInC) { kbInC.value = '✔ ' + val; kbInC.className = 'kb-input-big valid-' + numberColors[val]; }
         setTimeout(function() {
@@ -1112,7 +1112,6 @@
             if (kbIn2) kbIn2.focus();
         }, 600);
         showToast('Número ' + val + ' ingresado', 'success');
-        if (demoOn) { demoOn = false; localStorage.setItem('rlt_demo', '0'); updateDemoBtn(false); }
     };
 
     /* =========================================

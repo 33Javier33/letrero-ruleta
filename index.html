@@ -648,7 +648,7 @@ function checkStorage(){
         try{
             var d=JSON.parse(r);
             if(demoSimActive&&d.history&&d.history.length){
-                localStorage.setItem('rlt_demo','0');stopDemoSim();
+                stopDemoSim();
             }
             if(d.history&&d.history.length&&localStorage.getItem('rlt_ballspin')==='1'&&!ballAnim.active){spinToNumber(d);}
             else{updateScreen(d);}
