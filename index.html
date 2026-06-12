@@ -743,55 +743,47 @@ function showDemoOverlayContent(){
         tEl.style.display='none';
     }
 }
-// Image: roulette-table.jpg 273×513 vertical layout — SVG viewBox="0 0 273 513"
-// 0 cell: x=111-178 y=34-65  |  00 cell: x=179-248 y=34-65
-// Number rows: y=67+row*32, height=32  (row=floor((n-1)/3), col=(n-1)%3)
-// Col 0: x=111-155  Col 1: x=156-201  Col 2: x=202-248
-// Dozen strip: x=63-110  |  Outside bets: x=17-62  |  2to1 row: y=453-490
-var TBL_CL=[111,156,202];
-var TBL_CR=[155,201,248];
+// Image: roulette-table.jpg 600×450 — SVG viewBox="0 0 600 450"
+var TBL_CL=[112,145,176,210,241,274,305,338,369,402,433,466];
+var TBL_CR=[138,169,202,233,266,297,330,361,394,425,459,490];
+var TBL_RT=[111,160,205];var TBL_RB=[149,195,243];
 function tblNumRect(n){
-    if(n==='0')return{x:111,y:34,w:68,h:32};
-    if(n==='00')return{x:179,y:34,w:70,h:32};
-    var ni=parseInt(n,10);
-    var row=Math.floor((ni-1)/3);
-    var col=(ni-1)%3;
-    return{x:TBL_CL[col],y:67+row*32,w:TBL_CR[col]-TBL_CL[col],h:32};
+    if(n==='00')return{x:41,y:107,w:71,h:70};
+    if(n==='0')return{x:41,y:177,w:71,h:70};
+    var ni=parseInt(n,10);var g=Math.floor((ni-1)/3);var r=2-((ni-1)%3);
+    return{x:TBL_CL[g],y:TBL_RT[r],w:TBL_CR[g]-TBL_CL[g],h:TBL_RB[r]-TBL_RT[r]};
 }
 function mkTableOverlay(hlNums,cx,cy){
     var rects='';
     hlNums.forEach(function(n){
         var rc=tblNumRect(String(n));
-        rects+='<rect x="'+rc.x+'" y="'+rc.y+'" width="'+rc.w+'" height="'+rc.h+'" fill="rgba(255,215,0,0.42)" stroke="#ffd700" stroke-width="2" rx="2"/>';
+        rects+='<rect x="'+rc.x+'" y="'+rc.y+'" width="'+rc.w+'" height="'+rc.h+'" fill="rgba(255,215,0,0.42)" stroke="#ffd700" stroke-width="4" rx="2"/>';
     });
-    var chip=cx!==null?('<circle cx="'+cx+'" cy="'+cy+'" r="8" fill="white" stroke="#222" stroke-width="2"/><circle cx="'+cx+'" cy="'+cy+'" r="4" fill="rgba(80,80,80,0.7)" stroke="none"/>'):'';
+    var chip=cx!==null?('<circle cx="'+cx+'" cy="'+cy+'" r="12" fill="white" stroke="#222" stroke-width="3"/><circle cx="'+cx+'" cy="'+cy+'" r="6" fill="rgba(100,100,100,0.6)" stroke="none"/>'):'';
     var esp=
-        // Dozen strip — 3 sections of 128px each
-        '<rect x="63" y="67" width="48" height="128" fill="#005520" rx="1"/>'
-        +'<text x="87" y="131" transform="rotate(-90,87,131)" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="14" font-weight="bold" fill="white">1ª 12</text>'
-        +'<rect x="63" y="195" width="48" height="128" fill="#005520" rx="1"/>'
-        +'<text x="87" y="259" transform="rotate(-90,87,259)" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="14" font-weight="bold" fill="white">2ª 12</text>'
-        +'<rect x="63" y="323" width="48" height="128" fill="#005520" rx="1"/>'
-        +'<text x="87" y="387" transform="rotate(-90,87,387)" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="14" font-weight="bold" fill="white">3ª 12</text>'
-        // "2 a 1" bottom row — one per column
-        +'<rect x="111" y="453" width="44" height="37" fill="#005520" rx="1"/>'
-        +'<text x="133" y="471" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="white">2 a 1</text>'
-        +'<rect x="156" y="453" width="45" height="37" fill="#005520" rx="1"/>'
-        +'<text x="178" y="471" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="white">2 a 1</text>'
-        +'<rect x="202" y="453" width="46" height="37" fill="#005520" rx="1"/>'
-        +'<text x="225" y="471" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="white">2 a 1</text>'
-        // Outside bets left column — 6 sections of 64px each; diamonds left as-is
-        +'<rect x="17" y="67" width="45" height="63" fill="#005520" rx="1"/>'
-        +'<text x="39" y="98" transform="rotate(-90,39,98)" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="white">1 al 18</text>'
-        +'<rect x="17" y="131" width="45" height="63" fill="#005520" rx="1"/>'
-        +'<text x="39" y="162" transform="rotate(-90,39,162)" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="white">PAR</text>'
-        +'<rect x="17" y="323" width="45" height="63" fill="#005520" rx="1"/>'
-        +'<text x="39" y="354" transform="rotate(-90,39,354)" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="white">IMPAR</text>'
-        +'<rect x="17" y="387" width="45" height="63" fill="#005520" rx="1"/>'
-        +'<text x="39" y="418" transform="rotate(-90,39,418)" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="white">19 al 36</text>';
+        '<rect x="113" y="249" width="124" height="43" fill="#005520" rx="2"/>'
+        +'<text x="175" y="271" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="16" font-weight="bold" fill="white">1ª 12</text>'
+        +'<rect x="239" y="249" width="124" height="43" fill="#005520" rx="2"/>'
+        +'<text x="301" y="271" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="16" font-weight="bold" fill="white">2ª 12</text>'
+        +'<rect x="365" y="249" width="124" height="43" fill="#005520" rx="2"/>'
+        +'<text x="427" y="271" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="16" font-weight="bold" fill="white">3ª 12</text>'
+        +'<rect x="113" y="299" width="62" height="62" fill="#005520" rx="2"/>'
+        +'<text x="144" y="330" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="white">1 al 18</text>'
+        +'<rect x="177" y="299" width="61" height="62" fill="#005520" rx="2"/>'
+        +'<text x="207" y="330" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="white">PAR</text>'
+        +'<rect x="366" y="299" width="62" height="62" fill="#005520" rx="2"/>'
+        +'<text x="397" y="330" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="white">IMPAR</text>'
+        +'<rect x="430" y="299" width="59" height="62" fill="#005520" rx="2"/>'
+        +'<text x="459" y="330" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="white">19 al 36</text>'
+        +'<rect x="492" y="107" width="64" height="47" fill="#005520" rx="2"/>'
+        +'<text x="524" y="131" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="white">2 a 1</text>'
+        +'<rect x="492" y="154" width="64" height="46" fill="#005520" rx="2"/>'
+        +'<text x="524" y="177" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="white">2 a 1</text>'
+        +'<rect x="492" y="200" width="64" height="47" fill="#005520" rx="2"/>'
+        +'<text x="524" y="224" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="white">2 a 1</text>';
     return '<div style="position:relative;flex-shrink:0;">'
-        +'<img src="/roulette-table.jpg" style="width:calc(var(--u)*155);height:auto;display:block;border-radius:calc(var(--u)*4);border:1px solid rgba(255,215,0,0.3);" loading="lazy">'
-        +'<svg viewBox="0 0 273 513" preserveAspectRatio="none" style="position:absolute;top:0;left:0;width:100%;height:100%;">'
+        +'<img src="/roulette-table.jpg" style="width:calc(var(--u)*310);height:auto;display:block;border-radius:calc(var(--u)*4);border:1px solid rgba(255,215,0,0.3);" loading="lazy">'
+        +'<svg viewBox="0 0 600 450" preserveAspectRatio="none" style="position:absolute;top:0;left:0;width:100%;height:100%;">'
         +esp+rects+chip+'</svg></div>';
 }
 function getDemoTutSlide(s,num,total){
@@ -819,59 +811,55 @@ function getDemoTutSlide(s,num,total){
         +'<div style="font-size:calc(var(--u)*12);color:#666;">'+num+' / '+total+'</div>'
         +'</div>';
 }
-// Chip positions — vertical 273×513 image
-// Col centers: x=133(col0) x=178(col1) x=225(col2)
-// Row centers: y=67+row*32+16  |  Outer-left edge: x=111  |  Col boundaries: x=155,x=201
-// Dozen strip center x=87  |  Outside bet center x=39  |  2to1 center y=471
 var DEMO_TUT_SLIDES=[
     {name:'PLENO',intro:'La apuesta más alta de la ruleta',pago:'35:1',
-     hl:['7'],imgChip:{x:133,y:147},
-     desc:'Ficha en el centro de un solo número. Si sale exactamente ese número ganas 35 veces lo apostado.'},
+     hl:['7'],imgChip:{x:189,y:224},
+     desc:'Una ficha en el centro de un solo número. Si sale exactamente ese número ganas 35 veces lo apostado.'},
     {name:'SEMI-PLENO',intro:'Apuesta a dos números adyacentes',pago:'17:1',
-     hl:['7','8'],imgChip:{x:155,y:147},
-     desc:'Ficha en el borde entre dos números de la misma fila. Si sale cualquiera de los dos ganas 17 veces.'},
-    {name:'CALLE',intro:'Tres números de la misma fila',pago:'11:1',
-     hl:['7','8','9'],imgChip:{x:111,y:147},
-     desc:'Ficha en el borde izquierdo (exterior) de la fila. Cubre 7, 8 y 9. Si sale cualquiera paga 11 veces.'},
+     hl:['7','8'],imgChip:{x:189,y:200},
+     desc:'Ficha en el borde entre dos números que se tocan. Si sale cualquiera de los dos ganas 17 veces.'},
+    {name:'CALLE',intro:'Tres números en una columna',pago:'11:1',
+     hl:['7','8','9'],imgChip:{x:189,y:248},
+     desc:'Ficha al borde exterior (lado del jugador) de la columna de tres números. Cubre 7, 8 y 9. Si sale cualquiera paga 11 veces.'},
     {name:'CUADRO',intro:'Cuatro números en esquina',pago:'8:1',
-     hl:['7','8','10','11'],imgChip:{x:155,y:163},
+     hl:['7','8','10','11'],imgChip:{x:206,y:200},
      desc:'Ficha en la esquina donde se tocan 4 números. Si sale cualquiera de los 4 ganas 8 veces lo apostado.'},
     {name:'LÍNEA',intro:'Seis números — doble calle',pago:'5:1',
-     hl:['7','8','9','10','11','12'],imgChip:{x:111,y:163},
-     desc:'Ficha en el borde exterior entre dos filas, cubriendo 6 números. Si sale cualquiera paga 5 veces.'},
+     hl:['7','8','9','10','11','12'],imgChip:{x:206,y:248},
+     desc:'Ficha al borde exterior entre dos columnas, cubriendo 6 números. Si sale cualquiera paga 5 veces.'},
     {name:'CALLE 0-1-2',intro:'Calle especial junto al cero',pago:'11:1',
-     hl:['0','1','2'],imgChip:{x:155,y:67},type:'americana',
-     desc:'Solo en ruleta americana. Ficha en la esquina inferior del 0 entre las columnas 1 y 2. Cubre 0, 1 y 2. El único semi-pleno en la zona del 0/00 es el split 0-00.'},
+     hl:['0','1','2'],imgChip:{x:112,y:200},type:'americana',
+     desc:'Solo en ruleta americana. Ficha en el borde derecho del 0 a la altura del límite entre el 1 y el 2. Cubre 0, 1 y 2. Existe también la calle 00-2-3 en la misma zona. Entre el 0 y el 00 solo existe el semi-pleno 0-00; no hay más semi-plenos en esa área.'},
     {name:'CALLE 00-2-3',intro:'Calle especial junto al doble cero',pago:'11:1',
-     hl:['00','2','3'],imgChip:{x:201,y:67},type:'americana',
-     desc:'Solo en ruleta americana. Ficha en la esquina inferior del 00, entre las columnas 2 y 3. Cubre 00, 2 y 3.'},
-    {name:'SEXTA · CORTESÍA',intro:'0, 00, 1, 2 y 3 — cinco números',pago:'6:1',
-     hl:['0','00','1','2','3'],imgChip:{x:111,y:67},type:'americana',
-     desc:'Exclusiva de ruleta americana. Ficha en la esquina exterior del 0 — desde ahí agarra el 00 y los números 1, 2 y 3. Cubre 5 números. Paga 6 veces.'},
+     hl:['00','2','3'],imgChip:{x:112,y:153},type:'americana',
+     desc:'Solo en ruleta americana. Ficha en el borde derecho del 00 a la altura del límite entre el 2 y el 3. Cubre 00, 2 y 3. Entre el 0 y el 00 solo existe el split 0-00; no hay semi-plenos individuales en esa columna.'},
+    {name:'SEXTA · CORTESÍA',intro:'Jugada especial: 0, 00, 1, 2 y 3',pago:'6:1',
+     hl:['0','00','1','2','3'],imgChip:{x:112,y:248},type:'americana',
+     desc:'Exclusiva de ruleta americana. Ficha en la esquina exterior entre el 0 y el 1 — desde ahí agarra 00, 2 y 3. Cubre los 5 números. Paga 6 veces.'},
     {name:'CUADRO DEL CERO',intro:'Cuadro de 4 números cerca del cero',pago:'8:1',
-     hl:['0','1','2','3'],imgChip:{x:155,y:67},type:'francesa',
-     desc:'Solo en ruleta francesa. Ficha en la esquina donde el 0 toca los números 1 y 2. Cubre 0, 1, 2 y 3 (sin el 00). Jugado del lado del 3 cubre 00,1,2,3 y excluye el 0.'},
+     hl:['0','1','2','3'],imgChip:{x:112,y:200},type:'francesa',
+     desc:'Solo en ruleta francesa. Jugado del lado del 1: cubre 0, 1, 2 y 3 (el 00 queda fuera). Jugado del lado del 3: cubre 00, 1, 2 y 3 (el 0 queda fuera). Ficha en el borde del 0 tocando los tres primeros números.'},
     {name:'DOCENA',intro:'12 números consecutivos',pago:'2:1',
-     hl:['1','2','3','4','5','6','7','8','9','10','11','12'],imgChip:{x:87,y:131},
+     hl:['1','2','3','4','5','6','7','8','9','10','11','12'],imgChip:{x:174,y:271},
      desc:'1ª Docena (1-12) · 2ª Docena (13-24) · 3ª Docena (25-36). Si sale cualquiera de los 12 números ganas 2 veces.'},
-    {name:'COLUMNA',intro:'12 números de la misma columna',pago:'2:1',
-     hl:['1','4','7','10','13','16','19','22','25','28','31','34'],imgChip:{x:133,y:471},
-     desc:'Columna izquierda (1,4,7,10...) · Columna central (2,5,8...) · Columna derecha (3,6,9...). Ficha en el área "2 a 1" al pie de la columna. Cubre 12 números.'},
+    {name:'COLUMNA',intro:'12 números por fila',pago:'2:1',
+     hl:['1','4','7','10','13','16','19','22','25','28','31','34'],imgChip:{x:515,y:224},
+     desc:'Fila inferior (1,4,7,10...) · Fila media (2,5,8...) · Fila superior (3,6,9...). Ficha en el extremo derecho de la fila. Cubre 12 números y paga 2 veces.'},
     {name:'ROJO / NEGRO',intro:'18 números por color',pago:'1:1',
-     hl:['1','3','5','7','9','12','14','16','18','19','21','23','25','27','30','32','34','36'],imgChip:{x:39,y:226},
-     desc:'18 números rojos o 18 números negros. Los símbolos ♦ en la tabla indican cada apuesta.',
-     descAm:'Si sale 0 ó 00 pierdes la apuesta completa.',
-     descFr:'Si sale 0 ó 00 pierdes la apuesta completa.'},
+     hl:['1','3','5','7','9','12','14','16','18','19','21','23','25','27','30','32','34','36'],imgChip:{x:270,y:319},
+     desc:'18 números rojos o 18 números negros.',
+     descAm:'Si sale 0 ó 00, pierdes la mitad de la apuesta.',
+     descFr:'Si sale 0 ó 00, pierdes toda la apuesta.'},
     {name:'PAR / IMPAR',intro:'18 números pares o impares',pago:'1:1',
-     hl:['2','4','6','8','10','12','14','16','18','20','22','24','26','28','30','32','34','36'],imgChip:{x:39,y:162},
+     hl:['2','4','6','8','10','12','14','16','18','20','22','24','26','28','30','32','34','36'],imgChip:{x:207,y:319},
      desc:'PAR: 2, 4, 6... hasta el 36. IMPAR: 1, 3, 5... hasta el 35. 18 números cada uno.',
-     descAm:'Si sale 0 ó 00 pierdes la apuesta completa.',
-     descFr:'Si sale 0 ó 00 pierdes la apuesta completa.'},
+     descAm:'Si sale 0 ó 00, pierdes la mitad de la apuesta.',
+     descFr:'Si sale 0 ó 00, pierdes toda la apuesta.'},
     {name:'MAYOR / MENOR',intro:'18 números altos o bajos',pago:'1:1',
-     hl:['19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36'],imgChip:{x:39,y:418},
+     hl:['19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36'],imgChip:{x:459,y:319},
      desc:'MENOR: del 1 al 18. MAYOR: del 19 al 36.',
-     descAm:'Si sale 0 ó 00 pierdes la apuesta completa.',
-     descFr:'Si sale 0 ó 00 pierdes la apuesta completa.'}
+     descAm:'Si sale 0 ó 00, pierdes la mitad de la apuesta.',
+     descFr:'Si sale 0 ó 00, pierdes toda la apuesta.'}
 ];
 
 function stopDemoSim(){
