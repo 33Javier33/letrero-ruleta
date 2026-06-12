@@ -735,14 +735,14 @@ function showDemoOverlayContent(){
 function mkTutTable(rows,hl){
     var M={'0':'g','00':'g','1':'r','2':'b','3':'r','4':'b','5':'r','6':'b','7':'r','8':'b','9':'r','10':'b','11':'b','12':'r','13':'b','14':'r','15':'b','16':'r','17':'b','18':'r','19':'r','20':'b','21':'r','22':'b','23':'r','24':'b','25':'r','26':'b','27':'r','28':'b','29':'b','30':'r','31':'b','32':'r','33':'b','34':'r','35':'b','36':'r'};
     var cols=rows[0].length;
-    var cw='calc(var(--u)*44)';var rh='calc(var(--u)*36)';var gap='calc(var(--u)*2)';
-    var h='<div style="display:inline-grid;grid-template-columns:repeat('+cols+','+cw+');gap:'+gap+';padding:'+gap+';background:rgba(0,0,0,.45);border:1px solid #555;border-radius:4px;">';
+    var cw='calc(var(--u)*68)';var rh='calc(var(--u)*56)';var gap='calc(var(--u)*3)';
+    var h='<div style="display:inline-grid;grid-template-columns:repeat('+cols+','+cw+');gap:'+gap+';padding:'+gap+';background:rgba(0,0,0,.5);border:1px solid #666;border-radius:calc(var(--u)*5);">';
     rows.forEach(function(row){row.forEach(function(n){
         if(n==='—'){h+='<div style="width:'+cw+';height:'+rh+';"></div>';return;}
         var c=M[n]||'b';var isHl=hl.indexOf(n)>=0;
         var bg=c==='r'?(isHl?'#dd2222':'#881111'):c==='g'?(isHl?'#229944':'#115522'):(isHl?'#2255cc':'#111126');
-        var ol=isHl?';outline:calc(var(--u)*2) solid #ffd700;box-shadow:0 0 calc(var(--u)*6) rgba(255,215,0,.75)':'';
-        h+='<div style="width:'+cw+';height:'+rh+';display:flex;align-items:center;justify-content:center;font-size:calc(var(--u)*13);font-weight:bold;color:#fff;border-radius:2px;background:'+bg+ol+'">'+n+'</div>';
+        var ol=isHl?';outline:calc(var(--u)*3) solid #ffd700;box-shadow:0 0 calc(var(--u)*8) rgba(255,215,0,.85)':'';
+        h+='<div style="width:'+cw+';height:'+rh+';display:flex;align-items:center;justify-content:center;font-size:calc(var(--u)*20);font-weight:bold;color:#fff;border-radius:calc(var(--u)*3);background:'+bg+ol+'">'+n+'</div>';
     });});
     h+='</div>';return h;
 }
@@ -750,8 +750,23 @@ function getDemoTutSlide(idx){
     var s=DEMO_TUT_SLIDES[idx];
     var tbl=mkTutTable(s.rows,s.hl);
     var logoSrc=(document.getElementById('demoLogoImg')||{src:'/dreams-logo.png'}).src;
-    return '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;padding:calc(var(--u)*6) calc(var(--u)*8);box-sizing:border-box;gap:calc(var(--u)*4);">'
-        +'<img src="'+logoSrc+'" style="width:calc(var(--u)*110);height:auto;animation:demoLogoSpinPulse 8s ease-in-out infinite;transform-origin:center center;flex-shrink:0;">'
+    return '<div style="display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;width:100%;height:100%;padding:calc(var(--u)*16) calc(var(--u)*12);box-sizing:border-box;">'
+        +'<img src="'+logoSrc+'" style="width:calc(var(--u)*130);height:auto;animation:demoLogoSpinPulse 8s ease-in-out infinite;transform-origin:center center;">'
+        +'<div style="text-align:center;">'
+        +'<div style="font-size:calc(var(--u)*42);font-weight:900;color:#ffd700;letter-spacing:calc(var(--u)*2);text-shadow:0 0 calc(var(--u)*18) rgba(255,215,0,.85);">'+s.name+'</div>'
+        +'<div style="font-size:calc(var(--u)*15);color:#bbb;margin-top:calc(var(--u)*5);">'+s.intro+'</div>'
+        +'</div>'
+        +'<div style="display:flex;align-items:center;justify-content:center;gap:calc(var(--u)*20);">'
+        +'<div>'+tbl+'</div>'
+        +'<div style="background:rgba(0,0,0,.6);border:calc(var(--u)*3) solid #ffd700;border-radius:calc(var(--u)*8);padding:calc(var(--u)*14) calc(var(--u)*22);text-align:center;min-width:calc(var(--u)*110);">'
+        +'<div style="font-size:calc(var(--u)*54);font-weight:900;color:#ffd700;line-height:1;">'+s.pago+'</div>'
+        +'<div style="font-size:calc(var(--u)*14);color:#999;letter-spacing:2px;margin-top:calc(var(--u)*5);">PAGO</div>'
+        +'</div>'
+        +'</div>'
+        +'<div style="font-size:calc(var(--u)*14);color:#ddd;text-align:center;line-height:1.65;max-width:calc(var(--u)*360);">'+s.desc+'</div>'
+        +'<div style="font-size:calc(var(--u)*12);color:#666;">'+s.sn+'</div>'
+        +'</div>';
+}
         +'<div style="font-size:calc(var(--u)*24);font-weight:900;color:#ffd700;letter-spacing:calc(var(--u)*1.5);text-shadow:0 0 calc(var(--u)*12) rgba(255,215,0,.7);">'+s.name+'</div>'
         +'<div style="font-size:calc(var(--u)*11);color:#aaa;">'+s.intro+'</div>'
         +'<div style="display:flex;align-items:center;justify-content:center;gap:calc(var(--u)*14);">'
