@@ -1,7 +1,5 @@
-const CACHE = 'operador-ruleta-v30';
+const CACHE = 'operador-ruleta-v80';
 const FILES = [
-    '/operador/',
-    '/operador/index.html',
     '/operador/manifest.json',
     '/operador/icon.svg',
     '/operador/icon-192.png',
@@ -31,19 +29,37 @@ self.addEventListener('activate', function(e) {
 });
 
 self.addEventListener('fetch', function(e) {
-    e.respondWith(
-        caches.match(e.request).then(function(cached) {
-            return cached || fetch(e.request).then(function(response) {
-                if (response && response.status === 200 && response.type === 'basic') {
+    var url = new URL(e.request.url);
+    var isHTML = e.request.destination === 'document'
+              || url.pathname === '/operador/'
+              || url.pathname === '/operador'
+              || url.pathname.endsWith('.html');
+
+    if (isHTML) {
+        e.respondWith(
+            fetch(e.request).then(function(response) {
+                if (response && response.status === 200) {
                     var clone = response.clone();
-                    caches.open(CACHE).then(function(cache) {
-                        cache.put(e.request, clone);
-                    });
+                    caches.open(CACHE).then(function(cache) { cache.put(e.request, clone); });
                 }
                 return response;
-            });
-        }).catch(function() {
-            return caches.match('./index.html');
-        })
-    );
+            }).catch(function() {
+                return caches.match(e.request) || caches.match('/operador/index.html');
+            })
+        );
+    } else {
+        e.respondWith(
+            caches.match(e.request).then(function(cached) {
+                return cached || fetch(e.request).then(function(response) {
+                    if (response && response.status === 200 && response.type === 'basic') {
+                        var clone = response.clone();
+                        caches.open(CACHE).then(function(cache) { cache.put(e.request, clone); });
+                    }
+                    return response;
+                });
+            }).catch(function() {
+                return caches.match('/operador/index.html');
+            })
+        );
+    }
 });
