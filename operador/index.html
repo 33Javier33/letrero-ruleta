@@ -816,6 +816,13 @@
         </button>
     </div>
 
+    <!-- PANTALLA COMPLETA -->
+    <div class="toggle-row">
+        <button id="btnFullscreen" class="btn-spin-toggle" style="flex:1;" onclick="window.toggleFullscreenDisplay()">
+            ⛶ Pantalla Completa: <span id="fullscreenLabel">OFF</span>
+        </button>
+    </div>
+
 </div>
 
 <!-- MODAL DE CONFIGURACIÓN -->
@@ -1541,6 +1548,12 @@
         function updateTutorialBtn(on){var b=document.getElementById('btnTutorialToggle'),l=document.getElementById('tutorialToggleLabel');if(!b||!l)return;l.textContent=on?'ACTIVO':'DESACTIVADO';b.classList.toggle('active',on);}
         window.toggleDemoTutorial=function(){tutorialOn=!tutorialOn;localStorage.setItem('rlt_demo_tutorial',tutorialOn?'1':'0');updateTutorialBtn(tutorialOn);showToast('Tutorial de jugadas: '+(tutorialOn?'ACTIVO':'DESACTIVADO'),'');};
         updateTutorialBtn(tutorialOn);
+
+        // Pantalla completa
+        var fsOn=localStorage.getItem('rlt_fullscreen')==='1';
+        function updateFsBtn(on){var b=document.getElementById('btnFullscreen'),l=document.getElementById('fullscreenLabel');if(!b||!l)return;l.textContent=on?'ACTIVA':'OFF';b.classList.toggle('active',on);}
+        window.toggleFullscreenDisplay=function(){fsOn=!fsOn;localStorage.setItem('rlt_fullscreen',fsOn?'1':'0');updateFsBtn(fsOn);showToast('Pantalla completa: '+(fsOn?'ACTIVA':'OFF'),'');};
+        updateFsBtn(fsOn);
 
         // Textura papel
         var chkTextura = document.getElementById('chkTextura');

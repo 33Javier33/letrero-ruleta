@@ -1,7 +1,8 @@
-const CACHE = 'pantalla-ruleta-v65';
+const CACHE = 'pantalla-ruleta-v66';
 const FILES = [
     '/',
     '/index.html',
+    '/manifest.json',
     '/dreams-logo.png',
     '/casino-bg.jpg'
 ];
