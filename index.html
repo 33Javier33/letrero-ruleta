@@ -813,7 +813,7 @@ function checkStorage(){
         }catch(ex){}
     }
 }
-window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();if(e.key==='rlt_ballpizarra'||e.key==='rlt_hotcold_colors'){lastD=null;checkStorage();}if(e.key==='rlt_hc_hot_fx'||e.key==='rlt_hc_cold_fx')applyHcFx();if(e.key==='rlt_fullscreen'){var want=e.newValue==='1';if(want){var el=document.documentElement;(el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen||function(){}).call(el);}else{(document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen||document.msExitFullscreen||function(){}).call(document);}}});
+window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();if(e.key==='rlt_ballpizarra'||e.key==='rlt_hotcold_colors'){lastD=null;checkStorage();}if(e.key==='rlt_hc_hot_fx'||e.key==='rlt_hc_cold_fx')applyHcFx();if(e.key==='rlt_fullscreen'){try{var want=e.newValue==='1';if(want){var el=document.documentElement;var req=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;if(req)req.call(el);}else{var ex=document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen||document.msExitFullscreen;if(ex)ex.call(document);}}catch(ex2){}}});
 
 window.onload=function(){
     resizeCanvas();
@@ -887,19 +887,23 @@ window.onload=function(){
     }
     setInterval(function(){goPanel(cp+1);},15000);
     if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js',{scope:'/'});}
-    // Auto-hide fs hint if already fullscreen (e.g. installed PWA)
+    // Hide overlay if already fullscreen or installed PWA
     if(document.fullscreenElement||document.webkitFullscreenElement||window.navigator.standalone){
-        var h=document.getElementById('fsHint');if(h)h.style.display='none';
+        hideFsHint();
     }
+    // Auto-dismiss overlay after 5 seconds regardless of fullscreen result
+    setTimeout(hideFsHint, 5000);
     document.addEventListener('fullscreenchange',hideFsHint);
     document.addEventListener('webkitfullscreenchange',hideFsHint);
 };
 function hideFsHint(){var h=document.getElementById('fsHint');if(h)h.style.display='none';}
 function enterFS(){
-    var el=document.documentElement;
-    var req=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;
-    if(req){var p=req.call(el);if(p&&p.then)p.then(hideFsHint).catch(hideFsHint);else hideFsHint();}
-    else hideFsHint();
+    hideFsHint();
+    try{
+        var el=document.documentElement;
+        var req=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;
+        if(req){var p=req.call(el);if(p&&p.then)p.catch(function(){});}
+    }catch(e){}
 }
 </script>
 </body>
