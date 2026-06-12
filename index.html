@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -310,6 +310,11 @@
     </style>
 </head>
 <body>
+<div id="fsHint" onclick="enterFS()" style="position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.82);cursor:pointer;-webkit-tap-highlight-color:transparent;">
+    <div style="font-size:clamp(28px,8vw,64px);margin-bottom:16px;">⛶</div>
+    <div style="color:#fff;font-size:clamp(16px,4vw,32px);font-weight:bold;letter-spacing:1px;">TOCA PARA PANTALLA COMPLETA</div>
+    <div style="color:#aaa;font-size:clamp(11px,2.5vw,18px);margin-top:10px;">Toca o haz clic en cualquier lugar</div>
+</div>
 <div class="screen-container" id="screenContainer">
 <div id="demoOverlay" class="demo-overlay">
     <div id="demoPresentNormal" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
@@ -867,7 +872,20 @@ window.onload=function(){
     }
     setInterval(function(){goPanel(cp+1);},15000);
     if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js',{scope:'/'});}
+    // Auto-hide fs hint if already fullscreen (e.g. installed PWA)
+    if(document.fullscreenElement||document.webkitFullscreenElement||window.navigator.standalone){
+        var h=document.getElementById('fsHint');if(h)h.style.display='none';
+    }
+    document.addEventListener('fullscreenchange',hideFsHint);
+    document.addEventListener('webkitfullscreenchange',hideFsHint);
 };
+function hideFsHint(){var h=document.getElementById('fsHint');if(h)h.style.display='none';}
+function enterFS(){
+    var el=document.documentElement;
+    var req=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;
+    if(req){var p=req.call(el);if(p&&p.then)p.then(hideFsHint).catch(hideFsHint);else hideFsHint();}
+    else hideFsHint();
+}
 </script>
 </body>
 </html>
