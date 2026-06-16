@@ -1077,8 +1077,9 @@
         clearTimeout(numpadUnlockTimer);
         numpadLocked = false;
         numpadBuffer = '';
-        updateDisplay();
         var kbIn2 = document.getElementById('kbInput');
+        if (kbIn2) kbIn2.readOnly = false;
+        updateDisplay();
         if (kbIn2) kbIn2.focus();
     }
     window.addEventListener('storage', function(e) {
@@ -1152,7 +1153,7 @@
         saveLocal();
         renderAdminHistory();
         var kbInC = document.getElementById('kbInput');
-        if (kbInC) { kbInC.value = '✔ ' + val; kbInC.className = 'kb-input-big valid-' + numberColors[val]; }
+        if (kbInC) { kbInC.value = '✔ ' + val; kbInC.className = 'kb-input-big valid-' + numberColors[val]; kbInC.readOnly = true; }
         numpadLocked = true;
         btnConfirm.disabled = true;
         numpadUnlockTimer = setTimeout(numpadUnlock, 8000);
@@ -1411,6 +1412,7 @@
         var kbInput = document.getElementById('kbInput');
         if (kbInput) {
             kbInput.addEventListener('input', function() {
+                if (numpadLocked) return;
                 var val = this.value.replace(/[^0-9]/g, '').slice(0, 2);
                 // "00" only when both chars are 0
                 this.value = val;
@@ -1420,9 +1422,8 @@
             kbInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    if (!btnConfirm.disabled) {
+                    if (!numpadLocked && !btnConfirm.disabled) {
                         window.numpadConfirm();
-                        this.value = '';
                     }
                 }
             });
