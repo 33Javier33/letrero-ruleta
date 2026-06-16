@@ -1088,33 +1088,36 @@
        TECLADO NUMÉRICO
        ========================================= */
     var numpadBuffer = ''; // lo que el usuario ha tecleado (máx 2 dígitos)
-    var pendingBadgeTimer = null;
-    var pendingBadgePoll = null;
+    var numpadLocked = false;
+    var lockPoll = null;
+    var lockFallback = null;
     var numDisplay   = document.getElementById('numDisplay');
     var btnConfirm   = document.getElementById('btnConfirm');
 
-    function showPendingBadge(val) {
-        var badge = document.getElementById('pendingBadge');
-        var badgeNum = document.getElementById('pendingBadgeNum');
-        if (badge && badgeNum) { badgeNum.textContent = val; badge.classList.add('active'); }
-        clearTimeout(pendingBadgeTimer);
-        clearInterval(pendingBadgePoll);
+    function lockNumpad(val) {
+        numpadLocked = true;
+        var kbIn = document.getElementById('kbInput');
+        if (kbIn) { kbIn.value = '✔ ' + val; kbIn.className = 'kb-input-big valid-' + numberColors[val]; kbIn.readOnly = true; }
+        btnConfirm.disabled = true;
         var snapshot = localStorage.getItem('rlt_spin_ready') || '';
-        pendingBadgeTimer = setTimeout(hidePendingBadge, 30000);
-        pendingBadgePoll = setInterval(function() {
-            if ((localStorage.getItem('rlt_spin_ready') || '') !== snapshot) {
-                hidePendingBadge();
-            }
+        clearInterval(lockPoll);
+        clearTimeout(lockFallback);
+        lockPoll = setInterval(function() {
+            if ((localStorage.getItem('rlt_spin_ready') || '') !== snapshot) unlockNumpad();
         }, 400);
+        lockFallback = setTimeout(unlockNumpad, 30000);
     }
-    function hidePendingBadge() {
-        clearTimeout(pendingBadgeTimer);
-        clearInterval(pendingBadgePoll);
-        var badge = document.getElementById('pendingBadge');
-        if (badge) badge.classList.remove('active');
+    function unlockNumpad() {
+        clearInterval(lockPoll);
+        clearTimeout(lockFallback);
+        numpadLocked = false;
+        numpadBuffer = '';
+        var kbIn = document.getElementById('kbInput');
+        if (kbIn) { kbIn.readOnly = false; kbIn.focus(); }
+        updateDisplay();
     }
     window.addEventListener('storage', function(e) {
-        if (e.key === 'rlt_spin_ready') hidePendingBadge();
+        if (e.key === 'rlt_spin_ready' && numpadLocked) unlockNumpad();
     });
 
     function updateDisplay() {
@@ -1138,6 +1141,7 @@
     }
 
     window.numpadPress = function(key) {
+        if (numpadLocked) return;
         // "00" es un valor especial directo
         if (key === '00') {
             numpadBuffer = '00';
@@ -1166,6 +1170,7 @@
     };
 
     window.numpadDel = function() {
+        if (numpadLocked) return;
         if (numpadBuffer.length === 0) return;
         numpadBuffer = numpadBuffer.slice(0, -1);
         updateDisplay();
@@ -1181,11 +1186,7 @@
         appData.history.push(val);
         saveLocal();
         renderAdminHistory();
-        showPendingBadge(val);
-        numpadBuffer = '';
-        updateDisplay();
-        var kbIn2 = document.getElementById('kbInput');
-        if (kbIn2) kbIn2.focus();
+        lockNumpad(val);
         showToast('Número ' + val + ' ingresado', 'success');
     };
 
@@ -1441,6 +1442,7 @@
         var kbInput = document.getElementById('kbInput');
         if (kbInput) {
             kbInput.addEventListener('input', function() {
+                if (numpadLocked) return;
                 var val = this.value.replace(/[^0-9]/g, '').slice(0, 2);
                 // "00" only when both chars are 0
                 this.value = val;
@@ -1450,7 +1452,7 @@
             kbInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    if (!btnConfirm.disabled) window.numpadConfirm();
+                    if (!numpadLocked && !btnConfirm.disabled) window.numpadConfirm();
                 }
             });
         }
