@@ -216,6 +216,22 @@
         }
         .btn-confirm:active { transform: scale(0.98); opacity: 0.85; }
         .btn-confirm:disabled { background: #2a2a2a; border-color: #444; color: #666; cursor: not-allowed; transform: none; }
+        .pending-badge {
+            display: none;
+            width: 100%;
+            padding: 12px;
+            background: #1a1a00;
+            border: 2px solid #aaaa00;
+            border-radius: 8px;
+            color: #ffff55;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            letter-spacing: 1px;
+        }
+        .pending-badge.active { display: block; }
 
         /* Botones secundarios */
         .btn-row { display: flex; gap: 8px; }
@@ -776,6 +792,10 @@
             ✔ CONFIRMAR NÚMERO
         </button>
 
+        <div id="pendingBadge" class="pending-badge">
+            ✔ <span id="pendingBadgeNum"></span> — en pantalla...
+        </div>
+
         <div class="btn-row">
             <button class="btn btn-danger" id="btnDeleteLast">⬅ Borrar Último</button>
             <button class="btn btn-warning" id="btnClearAll">🗑 Limpiar Todo</button>
@@ -1068,22 +1088,24 @@
        TECLADO NUMÉRICO
        ========================================= */
     var numpadBuffer = ''; // lo que el usuario ha tecleado (máx 2 dígitos)
-    var numpadLocked = false;
-    var numpadUnlockTimer = null;
+    var pendingBadgeTimer = null;
     var numDisplay   = document.getElementById('numDisplay');
     var btnConfirm   = document.getElementById('btnConfirm');
 
-    function numpadUnlock() {
-        clearTimeout(numpadUnlockTimer);
-        numpadLocked = false;
-        numpadBuffer = '';
-        var kbIn2 = document.getElementById('kbInput');
-        if (kbIn2) kbIn2.readOnly = false;
-        updateDisplay();
-        if (kbIn2) kbIn2.focus();
+    function showPendingBadge(val) {
+        var badge = document.getElementById('pendingBadge');
+        var badgeNum = document.getElementById('pendingBadgeNum');
+        if (badge && badgeNum) { badgeNum.textContent = val; badge.classList.add('active'); }
+        clearTimeout(pendingBadgeTimer);
+        pendingBadgeTimer = setTimeout(hidePendingBadge, 8000);
+    }
+    function hidePendingBadge() {
+        clearTimeout(pendingBadgeTimer);
+        var badge = document.getElementById('pendingBadge');
+        if (badge) badge.classList.remove('active');
     }
     window.addEventListener('storage', function(e) {
-        if (e.key === 'rlt_spin_ready') numpadUnlock();
+        if (e.key === 'rlt_spin_ready') hidePendingBadge();
     });
 
     function updateDisplay() {
@@ -1107,7 +1129,6 @@
     }
 
     window.numpadPress = function(key) {
-        if (numpadLocked) return;
         // "00" es un valor especial directo
         if (key === '00') {
             numpadBuffer = '00';
@@ -1136,7 +1157,6 @@
     };
 
     window.numpadDel = function() {
-        if (numpadLocked) return;
         if (numpadBuffer.length === 0) return;
         numpadBuffer = numpadBuffer.slice(0, -1);
         updateDisplay();
@@ -1152,11 +1172,11 @@
         appData.history.push(val);
         saveLocal();
         renderAdminHistory();
-        var kbInC = document.getElementById('kbInput');
-        if (kbInC) { kbInC.value = '✔ ' + val; kbInC.className = 'kb-input-big valid-' + numberColors[val]; kbInC.readOnly = true; }
-        numpadLocked = true;
-        btnConfirm.disabled = true;
-        numpadUnlockTimer = setTimeout(numpadUnlock, 8000);
+        showPendingBadge(val);
+        numpadBuffer = '';
+        updateDisplay();
+        var kbIn2 = document.getElementById('kbInput');
+        if (kbIn2) kbIn2.focus();
         showToast('Número ' + val + ' ingresado', 'success');
     };
 
@@ -1412,7 +1432,6 @@
         var kbInput = document.getElementById('kbInput');
         if (kbInput) {
             kbInput.addEventListener('input', function() {
-                if (numpadLocked) return;
                 var val = this.value.replace(/[^0-9]/g, '').slice(0, 2);
                 // "00" only when both chars are 0
                 this.value = val;
@@ -1422,9 +1441,7 @@
             kbInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    if (!numpadLocked && !btnConfirm.disabled) {
-                        window.numpadConfirm();
-                    }
+                    if (!btnConfirm.disabled) window.numpadConfirm();
                 }
             });
         }
