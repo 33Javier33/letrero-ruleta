@@ -1068,8 +1068,22 @@
        TECLADO NUMÉRICO
        ========================================= */
     var numpadBuffer = ''; // lo que el usuario ha tecleado (máx 2 dígitos)
+    var numpadLocked = false;
+    var numpadUnlockTimer = null;
     var numDisplay   = document.getElementById('numDisplay');
     var btnConfirm   = document.getElementById('btnConfirm');
+
+    function numpadUnlock() {
+        clearTimeout(numpadUnlockTimer);
+        numpadLocked = false;
+        numpadBuffer = '';
+        updateDisplay();
+        var kbIn2 = document.getElementById('kbInput');
+        if (kbIn2) kbIn2.focus();
+    }
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'rlt_spin_ready') numpadUnlock();
+    });
 
     function updateDisplay() {
         var kbIn = document.getElementById('kbInput');
@@ -1092,6 +1106,7 @@
     }
 
     window.numpadPress = function(key) {
+        if (numpadLocked) return;
         // "00" es un valor especial directo
         if (key === '00') {
             numpadBuffer = '00';
@@ -1120,6 +1135,7 @@
     };
 
     window.numpadDel = function() {
+        if (numpadLocked) return;
         if (numpadBuffer.length === 0) return;
         numpadBuffer = numpadBuffer.slice(0, -1);
         updateDisplay();
@@ -1137,12 +1153,9 @@
         renderAdminHistory();
         var kbInC = document.getElementById('kbInput');
         if (kbInC) { kbInC.value = '✔ ' + val; kbInC.className = 'kb-input-big valid-' + numberColors[val]; }
-        setTimeout(function() {
-            numpadBuffer = '';
-            updateDisplay();
-            var kbIn2 = document.getElementById('kbInput');
-            if (kbIn2) kbIn2.focus();
-        }, 600);
+        numpadLocked = true;
+        btnConfirm.disabled = true;
+        numpadUnlockTimer = setTimeout(numpadUnlock, 8000);
         showToast('Número ' + val + ' ingresado', 'success');
     };
 

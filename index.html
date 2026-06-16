@@ -545,6 +545,7 @@ function tickBall(){
         ballAnim.timer++;
         if(ballAnim.timer===1&&ballAnim.pendingData){
             updateScreen(ballAnim.pendingData);
+            localStorage.setItem('rlt_spin_ready',Date.now().toString());
             if(elN){elN.classList.add('num-reveal');setTimeout(function(){if(elN)elN.classList.remove('num-reveal');},800);}
             ballAnim.pendingData=null;
         }
@@ -877,7 +878,7 @@ function checkStorage(){
                 stopDemoSim();
             }
             if(d.history&&d.history.length&&localStorage.getItem('rlt_ballspin')==='1'&&!ballAnim.active){spinToNumber(d);}
-            else{updateScreen(d);}
+            else{updateScreen(d);localStorage.setItem('rlt_spin_ready',Date.now().toString());}
         }catch(ex){}
     }
 }
