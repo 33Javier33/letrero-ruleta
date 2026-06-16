@@ -1089,6 +1089,7 @@
        ========================================= */
     var numpadBuffer = ''; // lo que el usuario ha tecleado (máx 2 dígitos)
     var pendingBadgeTimer = null;
+    var pendingBadgePoll = null;
     var numDisplay   = document.getElementById('numDisplay');
     var btnConfirm   = document.getElementById('btnConfirm');
 
@@ -1097,10 +1098,18 @@
         var badgeNum = document.getElementById('pendingBadgeNum');
         if (badge && badgeNum) { badgeNum.textContent = val; badge.classList.add('active'); }
         clearTimeout(pendingBadgeTimer);
-        pendingBadgeTimer = setTimeout(hidePendingBadge, 8000);
+        clearInterval(pendingBadgePoll);
+        var snapshot = localStorage.getItem('rlt_spin_ready') || '';
+        pendingBadgeTimer = setTimeout(hidePendingBadge, 30000);
+        pendingBadgePoll = setInterval(function() {
+            if ((localStorage.getItem('rlt_spin_ready') || '') !== snapshot) {
+                hidePendingBadge();
+            }
+        }, 400);
     }
     function hidePendingBadge() {
         clearTimeout(pendingBadgeTimer);
+        clearInterval(pendingBadgePoll);
         var badge = document.getElementById('pendingBadge');
         if (badge) badge.classList.remove('active');
     }
