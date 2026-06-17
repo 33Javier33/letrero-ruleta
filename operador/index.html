@@ -1391,6 +1391,13 @@
         showToast('Pantalla actualizada: ' + nombre, 'success');
     }
 
+    (function(){
+        var wl=null;
+        function aqWL(){if('wakeLock' in navigator){navigator.wakeLock.request('screen').then(function(l){wl=l;l.addEventListener('release',function(){wl=null;});}).catch(function(){});}}
+        aqWL();
+        document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')aqWL();});
+    })();
+
     window.onload = function() {
         setupLimitInputs();
 
