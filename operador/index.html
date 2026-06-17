@@ -1068,6 +1068,7 @@
        TECLADO NUMÉRICO
        ========================================= */
     var numpadBuffer = ''; // lo que el usuario ha tecleado (máx 2 dígitos)
+    var numpadConfirming = false;
     var numDisplay   = document.getElementById('numDisplay');
     var btnConfirm   = document.getElementById('btnConfirm');
 
@@ -1135,9 +1136,12 @@
         appData.history.push(val);
         saveLocal();
         renderAdminHistory();
+        numpadConfirming = true;
         var kbInC = document.getElementById('kbInput');
         if (kbInC) { kbInC.value = '✔ ' + val; kbInC.className = 'kb-input-big valid-' + numberColors[val]; }
+        btnConfirm.disabled = true;
         setTimeout(function() {
+            numpadConfirming = false;
             numpadBuffer = '';
             updateDisplay();
             var kbIn2 = document.getElementById('kbInput');
@@ -1405,6 +1409,7 @@
         var kbInput = document.getElementById('kbInput');
         if (kbInput) {
             kbInput.addEventListener('input', function() {
+                if (numpadConfirming) { this.value = '✔ ' + numpadBuffer; return; }
                 var val = this.value.replace(/[^0-9]/g, '').slice(0, 2);
                 // "00" only when both chars are 0
                 this.value = val;
@@ -1414,10 +1419,7 @@
             kbInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    if (!btnConfirm.disabled) {
-                        window.numpadConfirm();
-                        this.value = '';
-                    }
+                    if (!btnConfirm.disabled) window.numpadConfirm();
                 }
             });
         }
