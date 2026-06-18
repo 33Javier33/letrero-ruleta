@@ -1131,7 +1131,13 @@
             showToast('Número inválido: ' + val, 'error');
             return;
         }
-        try { if (demoOn) { demoOn = false; localStorage.setItem('rlt_demo', '0'); updateDemoBtn(false); } } catch(e) {}
+        if (localStorage.getItem('rlt_demo') === '1') {
+            localStorage.setItem('rlt_demo', '0');
+            var _bl = document.getElementById('demoToggleLabel');
+            var _bb = document.getElementById('btnDemoToggle');
+            if (_bl) _bl.textContent = 'DESACTIVADA';
+            if (_bb) _bb.classList.remove('active');
+        }
         appData.history.push(val);
         saveLocal();
         renderAdminHistory();
