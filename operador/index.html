@@ -886,6 +886,18 @@
             </button>
         </div>
 
+        <!-- TEMA DE RULETA — columna izquierda -->
+        <div class="nombre-ruleta-section">
+            <h3>Tema de Ruleta</h3>
+            <p style="font-size:12px;color:#777;margin-bottom:12px;">Vista de la ruleta en pantalla.</p>
+            <button id="btnThemeTop" class="btn-nombre selected" data-wtheme="top" style="margin-bottom:8px;">
+                🎡 Vista Superior
+            </button>
+            <button id="btnThemeSide" class="btn-nombre" data-wtheme="side">
+                🎰 Vista Lateral
+            </button>
+        </div>
+
         <!-- PIZARRA EN BOLAS — columna izquierda -->
         <div class="nombre-ruleta-section">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">7. Pizarra en Bolas
@@ -1452,6 +1464,17 @@
             localStorage.setItem('rlt_ballspin',ballOn?'1':'0');
             updateBallBtn(ballOn);
         });
+
+        // ===== TEMA RULETA =====
+        var wThemeBtns=document.querySelectorAll('[data-wtheme]');
+        function updateWheelTheme(t){wThemeBtns.forEach(function(b){b.classList.toggle('selected',b.dataset.wtheme===t);});}
+        var curWheelTheme=localStorage.getItem('rlt_wheel_theme')||'top';
+        updateWheelTheme(curWheelTheme);
+        wThemeBtns.forEach(function(b){b.addEventListener('click',function(){
+            curWheelTheme=this.dataset.wtheme;
+            localStorage.setItem('rlt_wheel_theme',curWheelTheme);
+            updateWheelTheme(curWheelTheme);
+        });});
 
         var btnBP=document.getElementById('btnBallPizarra');
         var bpLabel=document.getElementById('ballPizarraLabel');
