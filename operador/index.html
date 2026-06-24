@@ -990,6 +990,7 @@
                 <button class="tema-swatch lim-swatch" data-lim="negro"   style="background:linear-gradient(135deg,#0f0f0f,#323232);border-color:#888;"><span class="tema-badge">Negro</span></button>
                 <button class="tema-swatch lim-swatch" data-lim="verde"   style="background:linear-gradient(135deg,#003c00,#009600);border-color:#55ee55;"><span class="tema-badge">Verde</span></button>
                 <button class="tema-swatch lim-swatch" data-lim="violeta" style="background:linear-gradient(135deg,#320050,#6e00c8);border-color:#cc88ff;"><span class="tema-badge">Violeta</span></button>
+                <button class="tema-swatch lim-swatch" data-lim="cartas" style="background:#12060a;border-color:#880020;font-size:18px;line-height:1.1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;"><span style="color:#dd1111;">♥</span><span style="color:#ddd;">♠♣</span><span style="color:#dd1111;">♦</span><span class="tema-badge">Cartas</span></button>
             </div>
         </div>
 
@@ -1421,6 +1422,11 @@
             kbInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
+                    if (demoOn || tutorialOn) {
+                        if (demoOn) { demoOn = false; localStorage.setItem('rlt_demo', '0'); updateDemoBtn(false); }
+                        if (tutorialOn) { tutorialOn = false; localStorage.setItem('rlt_demo_tutorial', '0'); updateTutorialBtn(false); }
+                        return;
+                    }
                     if (!btnConfirm.disabled) {
                         window.numpadConfirm();
                         this.value = '';
@@ -1616,7 +1622,12 @@
                 window.numpadPress(e.key);
             } else if (e.key === 'Enter') {
                 e.preventDefault();
-                if (!btnConfirm.disabled) window.numpadConfirm();
+                if (demoOn || tutorialOn) {
+                    if (demoOn) { demoOn = false; localStorage.setItem('rlt_demo', '0'); updateDemoBtn(false); }
+                    if (tutorialOn) { tutorialOn = false; localStorage.setItem('rlt_demo_tutorial', '0'); updateTutorialBtn(false); }
+                } else if (!btnConfirm.disabled) {
+                    window.numpadConfirm();
+                }
             } else if (e.key === 'Backspace' || e.key === 'Delete') {
                 e.preventDefault();
                 window.numpadDel();

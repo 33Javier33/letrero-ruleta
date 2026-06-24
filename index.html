@@ -146,9 +146,9 @@
         .history-board {
             flex:1; background:var(--pizarra-bg,#000); border:calc(var(--u)*6) solid var(--pizarra-border,#e6b800); border-radius:calc(var(--u)*5);
             display:flex; flex-direction:column; align-items:center;
-            padding:calc(var(--u)*6) 0 0; overflow:hidden;
+            padding:calc(var(--u)*6) 0 0; overflow:hidden; position:relative;
         }
-        .history-items-wrapper { flex:1; width:100%; display:flex; flex-direction:column; overflow:hidden; }
+        .history-items-wrapper { flex:1; width:100%; display:flex; flex-direction:column; overflow:hidden; position:relative; z-index:1; }
         .history-item { flex:1; font-size:calc(var(--u)*34); font-weight:bold; width:100%; box-sizing:border-box; display:flex; align-items:center; }
         .color-red   { color:#ff0000; justify-content:flex-end; padding-right:calc(var(--u)*8); }
         .color-black { color:#ffd700; justify-content:flex-start; padding-left:calc(var(--u)*8); }
@@ -207,13 +207,14 @@
         .lim-negro   .row-label { color:#222 !important; }
         .lim-verde   .row-label { color:#1a4a1a !important; }
         .lim-violeta .row-label { color:#4a0088 !important; }
+        /* lim-cartas CSS injected by JS at runtime */
 
         /* IMAGEN RULETA AL PIE DE LA PIZARRA */
         .ruleta-pie {
             width:100%;
             flex-shrink:0;
             height:calc(var(--u)*70);
-            overflow:hidden;
+            overflow:hidden; position:relative; z-index:1;
         }
         .ruleta-pie img {
             width:100%;
@@ -1060,6 +1061,31 @@ window.onload=function(){
     checkStorage();setInterval(checkStorage,300);
     applyHcFx();
     animW();
+    // Card suits mosaic CSS for lim-cartas theme
+    (function(){
+        var tc=document.createElement('canvas');tc.width=80;tc.height=80;
+        var tx=tc.getContext('2d');
+        tx.fillStyle='#12060a';tx.fillRect(0,0,80,80);
+        tx.font='bold 32px serif';
+        tx.fillStyle='#dd1111';tx.fillText('♥',5,37);
+        tx.fillStyle='#dddddd';tx.fillText('♠',42,37);
+        tx.fillStyle='#dddddd';tx.fillText('♣',5,74);
+        tx.fillStyle='#dd1111';tx.fillText('♦',42,74);
+        var tu=tc.toDataURL();
+        var ts=document.createElement('style');
+        ts.textContent='.lim-cartas{--lim-bg:url('+tu+') repeat !important;--lim-border:#880020 !important;}';
+        document.head.appendChild(ts);
+    })();
+    // Roulette wheel as pizarra background (rendered once, fixed)
+    setTimeout(function(){
+        var brd=document.getElementById('history-board');if(!brd)return;
+        var pw=brd.offsetWidth;var sz=Math.round(pw*0.90);
+        var bgC=document.createElement('canvas');bgC.width=400;bgC.height=400;
+        var wT=localStorage.getItem('rlt_wheel_theme')||'top';
+        if(wT==='classic'){drawWheelClassic(bgC,0.35,mO);}else{drawWheel(bgC,0.35,mO);}
+        bgC.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);width:'+sz+'px;height:'+sz+'px;pointer-events:none;z-index:0;opacity:0.22;border-radius:50%;';
+        brd.insertBefore(bgC,brd.firstChild);
+    },200);
     // Apply saved pizarra theme
     (function(){var k=localStorage.getItem('rlt_pizarra_theme');if(k&&k!=='negro'){var b=document.getElementById('history-board');if(b)b.classList.add('pizarra-'+k);}})();
     // Apply saved limits theme
