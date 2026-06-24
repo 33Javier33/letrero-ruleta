@@ -568,82 +568,130 @@ function drawBallOnCanvas(canvas){
     ctx.restore();
 }
 
-// ---- SIDE VIEW THEME ----
+// ---- LATERAL (PERSPECTIVE HALF-WHEEL) THEME ----
 function drawWheelSide(canvas,angle,o){
     var order=getActiveWheelOrder();
-    var ctx=canvas.getContext('2d'),W=canvas.width,H=canvas.height,cx=W/2,cy=H/2;
-    var total=order.length,slice=2*Math.PI/total;
-    ctx.clearRect(0,0,W,H);
-    ctx.fillStyle='#090500';ctx.fillRect(0,0,W,H);
-    var bandH=H*0.4,bandCY=cy,bandT=bandCY-bandH/2,bandB=bandCY+bandH/2;
-    var dispR=cx*0.88;
-    var pMaxW=2*Math.PI*dispR/total*1.12;
-    // collect + sort back-to-front
-    var pks=[];
-    for(var i=0;i<total;i++){
-        var a=((angle+i*slice)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
-        if(a>Math.PI)a-=2*Math.PI;
-        pks.push({i:i,a:a,c:Math.cos(a),s:Math.sin(a)});
+    var ctx=canvas.getContext('2d'),W=canvas.width,H=canvas.height;
+    var cx=W/2,cy=H/2;
+    var total=order.length,sl=2*Math.PI/total;
+    // Perspective: P(r,a) maps wheel polar coords to screen.
+    // a=π/2 → bottom of canvas (nearest viewer), a=3π/2 → top (farthest)
+    var pF=0.55;
+    function P(r,a){return[cx+r*Math.cos(a),cy+r*Math.sin(a)*pF];}
+    // Append arc points to current open path
+    function pa(r,a1,a2,n,mv){
+        for(var k=0;k<=n;k++){
+            var p=P(r,a1+(a2-a1)*k/n);
+            if(mv&&k===0)ctx.moveTo(p[0],p[1]);else ctx.lineTo(p[0],p[1]);
+        }
     }
-    pks.sort(function(a,b){return a.c-b.c;});
+    // Fill a full ellipse
+    function fe(r,fs){ctx.beginPath();pa(r,0,2*Math.PI,64,true);ctx.closePath();ctx.fillStyle=fs;ctx.fill();}
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#080400';ctx.fillRect(0,0,W,H);
+
+    // Layer 1: outer wood rim
+    ctx.beginPath();pa(o.ob,0,2*Math.PI,72,true);ctx.closePath();
+    var gW=ctx.createLinearGradient(cx,cy-o.ob*pF,cx,cy+o.ob*pF);
+    gW.addColorStop(0,'#3a1808');gW.addColorStop(0.3,'#9a4818');gW.addColorStop(0.65,'#c06828');gW.addColorStop(1,'#4a2408');
+    ctx.fillStyle=gW;ctx.fill();
+
+    // Layer 2: dark ball track (fills inside, leaving wood rim)
+    fe(o.or,'#070707');
+
+    // Layer 3: gold inner turret band
+    fe(o.ii,'#8a6010');
+
+    // Layer 4: dark mahogany hub
+    ctx.beginPath();pa(o.ii*0.95,0,2*Math.PI,48,true);ctx.closePath();
+    var gHub=ctx.createRadialGradient(cx,cy-o.ii*pF*0.25,0,cx,cy,o.ii);
+    gHub.addColorStop(0,'#1e0a00');gHub.addColorStop(0.6,'#0e0500');gHub.addColorStop(1,'#040200');
+    ctx.fillStyle=gHub;ctx.fill();
+
+    // Layer 5: pockets — near half only, sorted far→near (sin ascending)
+    var pks=[];
+    for(var i=0;i<total;i++){var mid=angle+i*sl;pks.push({i:i,mid:mid,s:Math.sin(mid)});}
+    pks.sort(function(a,b){return a.s-b.s;}); // sin=-1 far first
+
     for(var pi=0;pi<pks.length;pi++){
         var pk=pks[pi];
-        if(pk.c<-0.06)continue;
-        var xPos=cx+pk.s*dispR;
-        var pW=Math.max(0,pk.c*pMaxW);
-        if(pW<0.4)continue;
-        var pH=bandH*(0.5+0.5*Math.max(0,pk.c));
-        var pY=bandCY-pH/2;
+        if(pk.s<-0.04)continue; // hide back half
+        var a1=pk.mid-sl/2,a2=pk.mid+sl/2;
         var col=numberColors[order[pk.i]];
-        var base=col==='green'?'#004200':col==='red'?'#780000':'#040404';
-        var hi=col==='green'?'#006800':col==='red'?'#b81000':'#181818';
-        ctx.fillStyle=base;ctx.fillRect(xPos-pW/2,pY,pW,pH);
-        if(pk.c>0.22){
-            var gF=ctx.createLinearGradient(xPos,pY,xPos,pY+pH);
-            gF.addColorStop(0,'rgba(0,0,0,0.32)');gF.addColorStop(0.32,hi);gF.addColorStop(0.68,'rgba(0,0,0,0)');gF.addColorStop(1,'rgba(0,0,0,0.52)');
-            ctx.fillStyle=gF;ctx.fillRect(xPos-pW/2,pY,pW,pH);
+        var base=col==='green'?'#004400':col==='red'?'#880000':'#060606';
+        var hiR=col==='green'?0:col==='red'?204:30;
+        var hiG=col==='green'?104:col==='red'?17:30;
+        var hiB=col==='green'?0:col==='red'?0:30;
+
+        // Pocket sector
+        ctx.beginPath();
+        pa(o.no,a1,a2,4,true);
+        pa(o.ni,a2,a1,4,false);
+        ctx.closePath();
+        ctx.fillStyle=base;ctx.fill();
+
+        // Inner highlight on near pockets
+        if(pk.s>0.1){
+            ctx.fillStyle='rgba('+hiR+','+hiG+','+hiB+','+(pk.s*0.52)+')';
+            ctx.fill();
         }
-        var shade=Math.max(0,(1-pk.c)*0.72);
-        if(shade>0.02){ctx.fillStyle='rgba(0,0,0,'+shade+')';ctx.fillRect(xPos-pW/2,pY,pW,pH);}
-        if(pk.c>0.1&&pW>4.5){
-            var fs=Math.min(o.fs*1.75,pW*0.76,11);
-            ctx.save();ctx.font='bold '+fs+'px Arial';ctx.textAlign='center';ctx.textBaseline='middle';
-            ctx.shadowColor='#000';ctx.shadowBlur=2;ctx.fillStyle='#fff';
-            ctx.fillText(order[pk.i],xPos,bandCY);ctx.restore();
+
+        // Number text
+        if(pk.s>0.08){
+            var tp=P((o.ni+o.no)/2,pk.mid);
+            var fs=Math.min(o.fs*(0.45+pk.s*0.75),o.fs*1.35);
+            if(fs>3.5){
+                ctx.save();
+                ctx.font='bold '+fs+'px Arial';
+                ctx.textAlign='center';ctx.textBaseline='middle';
+                ctx.shadowColor='#000';ctx.shadowBlur=2;
+                ctx.fillStyle='rgba(255,255,255,'+Math.min(1,pk.s*1.5+0.05)+')';
+                ctx.fillText(order[pk.i],tp[0],tp[1]);
+                ctx.restore();
+            }
         }
-        var fa=0.18+0.78*Math.max(0,pk.c);
-        ctx.beginPath();ctx.moveTo(xPos-pW/2,pY);ctx.lineTo(xPos-pW/2,pY+pH);
-        ctx.strokeStyle='rgba(215,175,45,'+fa+')';ctx.lineWidth=0.9;ctx.stroke();
+
+        // Gold fret divider
+        var p1=P(o.ni,a1),p2=P(o.no,a1);
+        ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);
+        ctx.strokeStyle='rgba(215,175,45,'+Math.max(0.08,pk.s*0.92)+')';
+        ctx.lineWidth=0.9;ctx.stroke();
     }
-    // Upper wood rim
-    var gT=ctx.createLinearGradient(0,0,0,bandT);
-    gT.addColorStop(0,'#100600');gT.addColorStop(0.42,'#7a3808');gT.addColorStop(0.82,'#b05018');gT.addColorStop(1,'#d06820');
-    ctx.fillStyle=gT;ctx.fillRect(0,0,W,bandT);
-    ctx.fillStyle='rgba(218,175,46,0.9)';ctx.fillRect(0,bandT,W,2.5);
-    var gST=ctx.createLinearGradient(0,bandT+2.5,0,bandT+14);
-    gST.addColorStop(0,'rgba(0,0,0,0.68)');gST.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.fillStyle=gST;ctx.fillRect(0,bandT+2.5,W,14);
-    // Lower wood rim
-    var gB=ctx.createLinearGradient(0,bandB,0,H);
-    gB.addColorStop(0,'#d06820');gB.addColorStop(0.18,'#b05018');gB.addColorStop(0.58,'#7a3808');gB.addColorStop(1,'#100600');
-    ctx.fillStyle=gB;ctx.fillRect(0,bandB,W,H-bandB);
-    ctx.fillStyle='rgba(218,175,46,0.9)';ctx.fillRect(0,bandB-2.5,W,2.5);
-    var gSB=ctx.createLinearGradient(0,bandB-14,0,bandB-2.5);
-    gSB.addColorStop(0,'rgba(0,0,0,0)');gSB.addColorStop(1,'rgba(0,0,0,0.68)');
-    ctx.fillStyle=gSB;ctx.fillRect(0,bandB-14,W,14);
+
+    // Layer 6: spokes (near half only)
+    for(var si=0;si<4;si++){
+        var sa=angle*0.3+si*Math.PI/2;
+        var sinSa=Math.sin(sa);
+        if(sinSa<-0.06)continue;
+        var p1=P(o.hr*0.65,sa),p2=P(o.ii*0.84,sa);
+        ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);
+        ctx.strokeStyle='rgba(200,144,24,'+(0.22+Math.max(0,sinSa)*0.72)+')';
+        ctx.lineWidth=o.aw;ctx.lineCap='round';ctx.stroke();
+        var bp=P(o.ii*0.79,sa);
+        var bR=o.br*Math.max(0.28,sinSa);
+        if(bR>0.4){ctx.beginPath();ctx.arc(bp[0],bp[1],bR,0,2*Math.PI);ctx.fillStyle='#e0ba38';ctx.fill();}
+    }
+
+    // Layer 7: hub cap (always at center)
+    ctx.beginPath();ctx.arc(cx,cy,o.hr,0,2*Math.PI);
+    var hg=ctx.createRadialGradient(cx-o.hr*.35,cy-o.hr*.35,o.hr*.08,cx,cy,o.hr);
+    hg.addColorStop(0,'#ffe060');hg.addColorStop(0.5,'#c89018');hg.addColorStop(1,'#6a4400');
+    ctx.fillStyle=hg;ctx.fill();
+    ctx.strokeStyle='rgba(255,215,80,0.5)';ctx.lineWidth=0.8;ctx.stroke();
 }
 
 function drawBallSide(canvas,o){
     if(ballAnim.phase==='idle')return;
     if(localStorage.getItem('rlt_ballspin')!=='1'){ballAnim.phase='idle';ballAnim.active=false;return;}
-    var ctx=canvas.getContext('2d'),W=canvas.width,H=canvas.height,cx=W/2,cy=H/2;
+    var ctx=canvas.getContext('2d'),W=canvas.width,cx=W/2,cy=W/2;
     if(ballAnim.phase==='rest'){ballAnim.bR=o.no*1.02;ballAnim.bAngle=ballAnim.restOffset+wA;}
-    var cosA=Math.cos(ballAnim.bAngle);
-    if(cosA<0.06)return;
-    var dispR=cx*0.88;
-    var bx=cx+Math.sin(ballAnim.bAngle)*dispR;
-    var by=cy;
-    var br=o.ob*0.072*Math.max(0.38,cosA);
+    var pF=0.55;
+    var sinA=Math.sin(ballAnim.bAngle);
+    if(sinA<0.05)return; // invisible on far side
+    var bx=cx+ballAnim.bR*Math.cos(ballAnim.bAngle);
+    var by=cy+ballAnim.bR*Math.sin(ballAnim.bAngle)*pF;
+    var br=o.ob*0.072*Math.max(0.3,sinA);
     ctx.save();
     ctx.beginPath();ctx.arc(bx+br*.55,by+br*.5,br*.88,0,Math.PI*2);
     ctx.fillStyle='rgba(0,0,0,0.48)';ctx.fill();
