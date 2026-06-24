@@ -228,8 +228,8 @@
         .bottom-section { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:calc(var(--u)*6); padding:calc(var(--u)*5) calc(var(--u)*15) calc(var(--u)*6); position:relative; z-index:1; }
         .title-card { width:100%; flex-shrink:0; background:linear-gradient(135deg,rgba(0,80,180,.85),rgba(0,140,255,.65)); border-radius:calc(var(--u)*12); border:2px solid #66ccff; padding:calc(var(--u)*6) calc(var(--u)*8); box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; }
         .title-ruleta { color:white; font-size:calc(var(--u)*28); font-weight:bold; text-shadow:2px 4px 8px rgba(0,0,0,0.6),0 0 20px rgba(255,255,255,0.3); letter-spacing:calc(var(--u)*1); text-align:center; width:100%; }
-        .limits-table-container { flex:1; width:100%; background:var(--lim-bg,linear-gradient(135deg,rgba(0,150,255,.9),rgba(0,200,255,.6))); border-radius:calc(var(--u)*12); border:2px solid var(--lim-border,#66ccff); padding:calc(var(--u)*8); box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,0.3); display:flex; flex-direction:column; overflow:hidden; }
-        .limits-table-wrapper { flex:1; overflow:visible; }
+        .limits-table-container { flex:1; width:100%; background:var(--lim-bg,linear-gradient(135deg,rgba(0,150,255,.9),rgba(0,200,255,.6))); border-radius:calc(var(--u)*12); border:2px solid var(--lim-border,#66ccff); padding:calc(var(--u)*8); box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,0.3); display:flex; flex-direction:column; overflow:hidden; position:relative; }
+        .limits-table-wrapper { flex:1; overflow:visible; position:relative; z-index:1; }
         .limits-table { width:100%; height:100%; border-collapse:collapse; color:#003366; font-weight:bold; }
         .limits-table thead tr { height:28%; }
         .limits-table tbody tr { height:36%; }
@@ -1061,30 +1061,36 @@ window.onload=function(){
     checkStorage();setInterval(checkStorage,300);
     applyHcFx();
     animW();
-    // Card suits mosaic CSS for lim-cartas theme
+    // Card suits mosaic watermark for lim-cartas theme (::before, very subtle)
     (function(){
         var tc=document.createElement('canvas');tc.width=80;tc.height=80;
         var tx=tc.getContext('2d');
-        tx.fillStyle='#12060a';tx.fillRect(0,0,80,80);
+        tx.clearRect(0,0,80,80);
         tx.font='bold 32px serif';
-        tx.fillStyle='#dd1111';tx.fillText('♥',5,37);
-        tx.fillStyle='#dddddd';tx.fillText('♠',42,37);
-        tx.fillStyle='#dddddd';tx.fillText('♣',5,74);
-        tx.fillStyle='#dd1111';tx.fillText('♦',42,74);
+        tx.fillStyle='rgba(200,0,0,0.85)';tx.fillText('♥',5,37);
+        tx.fillStyle='rgba(220,220,220,0.85)';tx.fillText('♠',42,37);
+        tx.fillStyle='rgba(220,220,220,0.85)';tx.fillText('♣',5,74);
+        tx.fillStyle='rgba(200,0,0,0.85)';tx.fillText('♦',42,74);
         var tu=tc.toDataURL();
         var ts=document.createElement('style');
-        ts.textContent='.lim-cartas{--lim-bg:url('+tu+') repeat !important;--lim-border:#880020 !important;}';
+        ts.textContent='.lim-cartas{--lim-bg:linear-gradient(135deg,#0a0005,#1a000f) !important;--lim-border:#880020 !important;}'
+            +'.lim-cartas::before{content:"";position:absolute;inset:0;background:url('+tu+') repeat;background-size:80px 80px;opacity:0.09;z-index:0;pointer-events:none;border-radius:inherit;}'
+            +'.lim-cartas .limits-table th,.lim-cartas .limits-table td,.lim-cartas .casino-name,.lim-cartas .row-label{color:#fff !important;text-shadow:0 1px 3px rgba(0,0,0,0.8) !important;}';
         document.head.appendChild(ts);
     })();
-    // Roulette wheel as pizarra background (rendered once, fixed)
+    // Roulette wheel rendered at the pie/footer of pizarra (replaces static image)
     setTimeout(function(){
-        var brd=document.getElementById('history-board');if(!brd)return;
-        var pw=brd.offsetWidth;var sz=Math.round(pw*0.90);
-        var bgC=document.createElement('canvas');bgC.width=400;bgC.height=400;
+        var pie=document.querySelector('.ruleta-pie');if(!pie)return;
+        var pw=pie.offsetWidth,ph=pie.offsetHeight;if(!pw||!ph)return;
+        var sz=ph; // square wheel, height-constrained
+        var offC=document.createElement('canvas');offC.width=400;offC.height=400;
         var wT=localStorage.getItem('rlt_wheel_theme')||'top';
-        if(wT==='classic'){drawWheelClassic(bgC,0.35,mO);}else{drawWheel(bgC,0.35,mO);}
-        bgC.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);width:'+sz+'px;height:'+sz+'px;pointer-events:none;z-index:0;opacity:0.22;border-radius:50%;';
-        brd.insertBefore(bgC,brd.firstChild);
+        if(wT==='classic'){drawWheelClassic(offC,0.35,mO);}else{drawWheel(offC,0.35,mO);}
+        var vis=document.createElement('canvas');vis.width=pw;vis.height=ph;
+        var vx=vis.getContext('2d');
+        vx.drawImage(offC,(pw-sz)/2,0,sz,sz);
+        vis.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;';
+        pie.insertBefore(vis,pie.firstChild);
     },200);
     // Apply saved pizarra theme
     (function(){var k=localStorage.getItem('rlt_pizarra_theme');if(k&&k!=='negro'){var b=document.getElementById('history-board');if(b)b.classList.add('pizarra-'+k);}})();
