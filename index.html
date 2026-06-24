@@ -52,9 +52,9 @@
         .wheel-wrapper canvas { position:absolute; top:0; left:0; width:100%; height:100%; border-radius:50%; }
         .current-number-display {
             position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-            width:calc(var(--u)*93); height:calc(var(--u)*93); background-color:#d1e8ff; border-radius:50%;
+            width:calc(var(--u)*145); height:calc(var(--u)*145); background-color:#d1e8ff; border-radius:50%;
             display:flex; justify-content:center; align-items:center;
-            font-size:calc(var(--u)*47); font-weight:bold; color:#000;
+            font-size:calc(var(--u)*76); font-weight:bold; color:#000;
             border:calc(var(--u)*6) solid #fff; box-shadow:0 0 calc(var(--u)*16) rgba(0,0,0,0.7); z-index:10;
         }
         .current-number-display.num-red   { background-color:#cc0000!important; color:#fff!important; border-color:#ff6666; }
@@ -554,6 +554,7 @@ function tickBall(){
 
 function spinToNumber(data){
     if(localStorage.getItem('rlt_ballspin')!=='1'||ballAnim.active||!data.history.length){updateScreen(data);return;}
+    updatePizarra(data);
     var last=data.history[data.history.length-1];
     var activeOrder=getActiveWheelOrder();
     var idx=activeOrder.indexOf(last);
@@ -611,7 +612,7 @@ function calcStats(h){
         hot:sorted.slice(0,3),cold:sorted.slice().reverse().slice(0,3)};
 }
 
-function updateScreen(data){
+function updatePizarra(data){
     var iW=document.getElementById('history-items');
     iW.innerHTML='';
     var nums=data.history.slice().reverse().slice(0,MAX_H);
@@ -628,12 +629,6 @@ function updateScreen(data){
         }
         iW.appendChild(d);
     }
-    if(data.history.length){
-        var last=data.history[data.history.length-1];elN.textContent=last;
-        elN.className='current-number-display';
-        var cc=numberColors[last];
-        if(cc==='red')elN.classList.add('num-red');else if(cc==='black')elN.classList.add('num-black');else elN.classList.add('num-green');
-    }else{elN.textContent='-';elN.className='current-number-display';}
     var s=calcStats(data.history);
     sT('txt-pct-red',s.pctRed+'%');sW('bar-red',s.pctRed);
     sT('txt-pct-green',s.pctGreen+'%');sW('bar-green',s.pctGreen);
@@ -657,6 +652,16 @@ function updateScreen(data){
     eMD.textContent=lim.minDobles;eMxD.textContent=lim.maxDobles;
     eMS.textContent=lim.minSimples;eMxS.textContent=lim.maxSimples;
     applyHcFx();
+}
+
+function updateScreen(data){
+    updatePizarra(data);
+    if(data.history.length){
+        var last=data.history[data.history.length-1];elN.textContent=last;
+        elN.className='current-number-display';
+        var cc=numberColors[last];
+        if(cc==='red')elN.classList.add('num-red');else if(cc==='black')elN.classList.add('num-black');else elN.classList.add('num-green');
+    }else{elN.textContent='-';elN.className='current-number-display';}
 }
 
 function applyHcFx(){
