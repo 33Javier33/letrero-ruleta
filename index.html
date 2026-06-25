@@ -239,17 +239,25 @@
             position:relative;
         }
         .ruleta-pie::before {
-            content:''; position:absolute; top:0; left:0; right:0; height:28%;
-            background:linear-gradient(to bottom, var(--pizarra-bg,#000) 0%, var(--pizarra-bg,#000) 10%, transparent 100%);
+            content:''; position:absolute; top:0; left:0; right:0; height:65%;
+            background:linear-gradient(to bottom,
+                var(--pizarra-bg,#000) 0%,
+                var(--pizarra-bg,#000) 8%,
+                #000 52%,
+                transparent 100%);
             z-index:1; pointer-events:none;
         }
         .pie-foto3d::before {
             inset:0; height:100%;
             background:
-                linear-gradient(to bottom, var(--pizarra-bg,#000) 0%, var(--pizarra-bg,#000) 10%, transparent 50%),
-                linear-gradient(to top,    rgba(0,0,0,0.70)       0%, transparent 28%),
-                linear-gradient(to right,  var(--pizarra-bg,#000) 0%, transparent 8%),
-                linear-gradient(to left,   var(--pizarra-bg,#000) 0%, transparent 8%);
+                linear-gradient(to bottom,
+                    var(--pizarra-bg,#000) 0%,
+                    var(--pizarra-bg,#000) 8%,
+                    #000 48%,
+                    transparent 72%),
+                linear-gradient(to top,  rgba(0,0,0,0.70) 0%, transparent 28%),
+                linear-gradient(to right,var(--pizarra-bg,#000) 0%, transparent 8%),
+                linear-gradient(to left, var(--pizarra-bg,#000) 0%, transparent 8%);
         }
         .ruleta-pie img {
             width:100%;
