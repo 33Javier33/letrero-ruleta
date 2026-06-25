@@ -246,10 +246,10 @@
         .pie-foto3d::before {
             inset:0; height:100%;
             background:
-                linear-gradient(to bottom, var(--pizarra-bg,#000) 0%, transparent 42%),
-                linear-gradient(to top,    rgba(0,0,0,0.88)       0%, transparent 40%),
-                linear-gradient(to right,  var(--pizarra-bg,#000) 0%, transparent 10%),
-                linear-gradient(to left,   var(--pizarra-bg,#000) 0%, transparent 10%);
+                linear-gradient(to bottom, var(--pizarra-bg,#000) 0%, var(--pizarra-bg,#000) 14%, transparent 58%),
+                linear-gradient(to top,    rgba(0,0,0,0.92)       0%, transparent 38%),
+                linear-gradient(to right,  var(--pizarra-bg,#000) 0%, transparent 12%),
+                linear-gradient(to left,   var(--pizarra-bg,#000) 0%, transparent 12%);
         }
         .ruleta-pie img {
             width:100%;
@@ -1134,6 +1134,20 @@ window.onload=function(){
             +'.lim-cartas::before{content:"";position:absolute;inset:0;background:url('+tu+') repeat;background-size:80px 80px;opacity:0.09;z-index:0;pointer-events:none;border-radius:inherit;}'
             +'.lim-cartas .limits-table th,.lim-cartas .limits-table td,.lim-cartas .casino-name,.lim-cartas .row-label{color:#fff !important;text-shadow:0 1px 3px rgba(0,0,0,0.8) !important;}';
         document.head.appendChild(ts);
+        // Light themes: dark suits watermark (black/dark-red for light backgrounds)
+        var tc2=document.createElement('canvas');tc2.width=80;tc2.height=80;
+        var tx2=tc2.getContext('2d');
+        tx2.clearRect(0,0,80,80);
+        tx2.font='bold 32px serif';
+        tx2.fillStyle='rgba(140,0,0,0.88)';tx2.fillText('♥',5,37);
+        tx2.fillStyle='rgba(15,15,15,0.88)';tx2.fillText('♠',42,37);
+        tx2.fillStyle='rgba(15,15,15,0.88)';tx2.fillText('♣',5,74);
+        tx2.fillStyle='rgba(140,0,0,0.88)';tx2.fillText('♦',42,74);
+        var tu2=tc2.toDataURL();
+        var ts2=document.createElement('style');
+        ts2.textContent='.lim-crema::before,.lim-rosa::before,.lim-menta::before,.lim-cielo::before,.lim-durazno::before{'
+            +'content:"";position:absolute;inset:0;background:url('+tu2+') repeat;background-size:80px 80px;opacity:0.08;z-index:0;pointer-events:none;border-radius:inherit;}';
+        document.head.appendChild(ts2);
     })();
     // Apply saved pizarra + lim themes (checkThemes handles this on load and every 300ms)
     // Logo pulse every 9s
