@@ -218,9 +218,12 @@
             position:relative;
         }
         .ruleta-pie::before {
-            content:''; position:absolute; top:0; left:0; right:0; height:55%;
-            background:linear-gradient(to bottom, var(--pizarra-bg,#000) 0%, transparent 100%);
-            z-index:1; pointer-events:none;
+            content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+            background:
+                linear-gradient(to bottom, var(--pizarra-bg,#000) 0%, transparent 55%),
+                linear-gradient(to top,    rgba(0,0,0,0.94)       0%, transparent 48%),
+                linear-gradient(to right,  var(--pizarra-bg,#000) 0%, transparent 14%),
+                linear-gradient(to left,   var(--pizarra-bg,#000) 0%, transparent 14%);
         }
         .ruleta-pie img {
             width:100%;
