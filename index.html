@@ -16,8 +16,8 @@
     <script>(function(){function u(){var h=window.innerHeight;document.documentElement.style.setProperty('--vh100',h+'px');document.documentElement.style.setProperty('--vh',(h*.01)+'px');}u();window.addEventListener('resize',u);window.addEventListener('orientationchange',function(){setTimeout(u,150);});var T={negro:'linear-gradient(180deg,#0a0a14 0%,#1c1c38 100%)',rojo:'linear-gradient(180deg,#5c0000 0%,#aa0000 100%)',azul:'linear-gradient(180deg,#0022cc 0%,#0044ff 100%)',verde:'linear-gradient(180deg,#003300 0%,#005800 100%)',violeta:'linear-gradient(180deg,#1a0033 0%,#440088 100%)',dorado:'linear-gradient(180deg,#0f0800 0%,#2d1a00 100%)',teal:'linear-gradient(180deg,#002233 0%,#004455 100%)',casino:'linear-gradient(180deg,rgba(0,5,30,0.78) 0%,rgba(0,10,45,0.74) 100%), url(/casino-bg.jpg) center/cover no-repeat'};function applyT(k){var g=T[k]||T.azul;document.documentElement.style.setProperty('--bg',g);document.documentElement.style.setProperty('--tex',(k==='casino')?'0':(localStorage.getItem('rlt_textura')==='0'?'0':'0.30'));}var sv=localStorage.getItem('rlt_theme');if(sv)applyT(sv);function applyTex(v){if(localStorage.getItem('rlt_theme')==='casino')return;document.documentElement.style.setProperty('--tex',v==='0'?'0':'0.30');}applyTex(localStorage.getItem('rlt_textura'));window.addEventListener('storage',function(e){
     if(e.key==='rlt_theme')applyT(e.newValue);
     if(e.key==='rlt_textura')applyTex(e.newValue);
-    if(e.key==='rlt_pizarra_theme'){var b=document.getElementById('history-board');if(b){b.className=b.className.replace(/\bpizarra-\S+/g,'').trim();var pk=e.newValue;if(pk&&pk!=='negro')b.classList.add('pizarra-'+pk);}var pie=document.querySelector('.ruleta-pie');var pi=pie?pie.querySelector('img'):null;if(pi){if(!pi.dataset.origSrc)pi.dataset.origSrc=pi.src;var isFoto=e.newValue==='foto3d';pie.classList.toggle('pie-foto3d',isFoto);pi.src=isFoto?'/roulette-3d.jpg':(pi.dataset.origSrc);pi.style.objectPosition=isFoto?'center 38%':'center 20%';pi.style.filter=isFoto?'brightness(0.78) saturate(1.15)':'';pi.style.transform='';}}}
-    if(e.key==='rlt_lim_theme'){var lc=document.querySelector('.limits-table-container');if(lc){lc.className=lc.className.replace(/\blim-\S+/g,'').trim();var lk=e.newValue;if(lk&&lk!=='azul')lc.classList.add('lim-'+lk);}}
+    if(e.key==='rlt_pizarra_theme'){if(window.wPT)window.wPT(e.newValue);}
+    if(e.key==='rlt_lim_theme'){if(window.wLT)window.wLT(e.newValue);}
 });}());</script>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
@@ -161,11 +161,11 @@
         .pizarra-morado      { --pizarra-bg:#330068 !important; --pizarra-border:#8844cc !important; }
         .pizarra-beige       { --pizarra-bg:#f0e8d5 !important; --pizarra-border:#c0a060 !important; }
         .pizarra-humo        { --pizarra-bg:#e0e0e0 !important; --pizarra-border:#999 !important; }
-        .pizarra-dorado      { --pizarra-bg:#120c00 !important; --pizarra-border:#c8a000 !important; }
-        .pizarra-indigo      { --pizarra-bg:#0a0018 !important; --pizarra-border:#6644cc !important; }
-        .pizarra-esmeralda   { --pizarra-bg:#001808 !important; --pizarra-border:#00a844 !important; }
-        .pizarra-cafe        { --pizarra-bg:#100800 !important; --pizarra-border:#8b5a2b !important; }
-        .pizarra-cielo       { --pizarra-bg:#001428 !important; --pizarra-border:#0088cc !important; }
+        .pizarra-dorado      { --pizarra-bg:#2a1800 !important; --pizarra-border:#c8a000 !important; }
+        .pizarra-indigo      { --pizarra-bg:#1e0044 !important; --pizarra-border:#7755ee !important; }
+        .pizarra-esmeralda   { --pizarra-bg:#004020 !important; --pizarra-border:#00c855 !important; }
+        .pizarra-cafe        { --pizarra-bg:#2a1400 !important; --pizarra-border:#a06830 !important; }
+        .pizarra-cielo       { --pizarra-bg:#003060 !important; --pizarra-border:#1aadff !important; }
         .history-board.pizarra-beige .color-red, .history-board.pizarra-humo .color-red   { color:#aa0000; }
         .history-board.pizarra-beige .color-black, .history-board.pizarra-humo .color-black { color:#333; }
         .history-board.pizarra-beige .color-green, .history-board.pizarra-humo .color-green { color:#006600; }
@@ -1063,6 +1063,23 @@ function checkStorage(){
         }catch(ex){}
     }
 }
+window.wPT=function(k){
+    var b=document.getElementById('history-board');
+    if(b){b.className=b.className.replace(/\bpizarra-\S+/g,'').trim();if(k&&k!=='negro')b.classList.add('pizarra-'+k);}
+    var pie=document.querySelector('.ruleta-pie');var pi=pie?pie.querySelector('img'):null;
+    if(pi){if(!pi.dataset.origSrc)pi.dataset.origSrc=pi.src;var isFoto=k==='foto3d';pie.classList.toggle('pie-foto3d',isFoto);pi.src=isFoto?'/roulette-3d.jpg':(pi.dataset.origSrc||pi.src);pi.style.objectPosition=isFoto?'center 38%':'center 20%';pi.style.filter=isFoto?'brightness(0.78) saturate(1.15)':'';pi.style.transform='';}
+};
+window.wLT=function(k){
+    var lc=document.querySelector('.limits-table-container');
+    if(lc){lc.className=lc.className.replace(/\blim-\S+/g,'').trim();if(k&&k!=='azul')lc.classList.add('lim-'+k);}
+};
+var lastPizTh=null,lastLimTh=null;
+function checkThemes(){
+    var pt=localStorage.getItem('rlt_pizarra_theme')||'negro';
+    var lt=localStorage.getItem('rlt_lim_theme')||'azul';
+    if(pt!==lastPizTh){lastPizTh=pt;window.wPT(pt);}
+    if(lt!==lastLimTh){lastLimTh=lt;window.wLT(lt);}
+}
 window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();if(e.key==='rlt_ballpizarra'||e.key==='rlt_hotcold_colors'){lastD=null;checkStorage();}if(e.key==='rlt_hc_hot_fx'||e.key==='rlt_hc_cold_fx')applyHcFx();if(e.key==='rlt_fullscreen'){try{var want=e.newValue==='1';if(want){var el=document.documentElement;var req=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;if(req)req.call(el);}else{var ex=document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen||document.msExitFullscreen;if(ex)ex.call(document);}}catch(ex2){}}});
 
 (function(){
@@ -1098,6 +1115,7 @@ window.onload=function(){
         if(e.key==='rlt_demo_tutorial'&&demoSimActive&&demoOv&&demoOv.classList.contains('active'))showDemoOverlayContent();
     });
     checkStorage();setInterval(checkStorage,300);
+    checkThemes();setInterval(checkThemes,300);
     applyHcFx();
     animW();
     // Card suits mosaic watermark for lim-cartas theme (::before, very subtle)
@@ -1117,10 +1135,7 @@ window.onload=function(){
             +'.lim-cartas .limits-table th,.lim-cartas .limits-table td,.lim-cartas .casino-name,.lim-cartas .row-label{color:#fff !important;text-shadow:0 1px 3px rgba(0,0,0,0.8) !important;}';
         document.head.appendChild(ts);
     })();
-    // Apply saved pizarra theme
-    (function(){var k=localStorage.getItem('rlt_pizarra_theme');if(k&&k!=='negro'){var b=document.getElementById('history-board');if(b)b.classList.add('pizarra-'+k);}if(k==='foto3d'){var pie=document.querySelector('.ruleta-pie');var pi=pie?pie.querySelector('img'):null;if(pi){if(!pi.dataset.origSrc)pi.dataset.origSrc=pi.src;pie.classList.add('pie-foto3d');pi.src='/roulette-3d.jpg';pi.style.objectPosition='center 38%';pi.style.filter='brightness(0.78) saturate(1.15)';}}})();
-    // Apply saved limits theme
-    (function(){var k=localStorage.getItem('rlt_lim_theme');if(k&&k!=='azul'){var c=document.querySelector('.limits-table-container');if(c)c.classList.add('lim-'+k);}})();
+    // Apply saved pizarra + lim themes (checkThemes handles this on load and every 300ms)
     // Logo pulse every 9s
     setInterval(function(){var lg=document.getElementById('tableLogoImg');if(lg){lg.classList.add('logo-pulse');setTimeout(function(){lg.classList.remove('logo-pulse');},1400);}},9000);
     // Title shine every 14s
