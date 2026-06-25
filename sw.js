@@ -1,10 +1,9 @@
-const CACHE = 'pantalla-ruleta-v119';
+const CACHE = 'pantalla-ruleta-v120';
 const FILES = [
     '/manifest.json',
     '/dreams-logo.png',
     '/casino-bg.jpg',
-    '/roulette-pie.jpg',
-    '/roulette-3d.jpg'
+    '/roulette-pie.jpg'
 ];
 
 self.addEventListener('install', function(e) {
