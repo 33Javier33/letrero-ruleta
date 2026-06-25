@@ -239,32 +239,25 @@
             position:relative;
         }
         .ruleta-pie::before {
-            content:''; position:absolute; top:0; left:0; right:0; height:65%;
-            background:linear-gradient(to bottom,
-                var(--pizarra-bg,#000) 0%,
-                var(--pizarra-bg,#000) 8%,
-                #000 52%,
-                transparent 100%);
+            content:''; position:absolute; top:0; left:0; right:0; height:22%;
+            background:linear-gradient(to bottom, var(--pizarra-bg,#000) 0%, transparent 100%);
             z-index:1; pointer-events:none;
         }
         .pie-foto3d::before {
             inset:0; height:100%;
             background:
-                linear-gradient(to bottom,
-                    var(--pizarra-bg,#000) 0%,
-                    var(--pizarra-bg,#000) 8%,
-                    #000 48%,
-                    transparent 72%),
-                linear-gradient(to top,  rgba(0,0,0,0.70) 0%, transparent 28%),
-                linear-gradient(to right,var(--pizarra-bg,#000) 0%, transparent 8%),
-                linear-gradient(to left, var(--pizarra-bg,#000) 0%, transparent 8%);
+                linear-gradient(to bottom, var(--pizarra-bg,#000) 0%, transparent 30%),
+                linear-gradient(to top,    rgba(0,0,0,0.55) 0%, transparent 22%),
+                linear-gradient(to right,  var(--pizarra-bg,#000) 0%, transparent 6%),
+                linear-gradient(to left,   var(--pizarra-bg,#000) 0%, transparent 6%);
         }
         .ruleta-pie img {
             width:100%;
             height:calc(var(--u)*105);
             object-fit:cover;
-            object-position:center 45%;
+            object-position:center 58%;
             display:block;
+            mix-blend-mode:screen;
         }
 
         /* SECCION INFERIOR */
@@ -1075,7 +1068,7 @@ window.wPT=function(k){
     var b=document.getElementById('history-board');
     if(b){b.className=b.className.replace(/\bpizarra-\S+/g,'').trim();if(k&&k!=='negro')b.classList.add('pizarra-'+k);}
     var pie=document.querySelector('.ruleta-pie');var pi=pie?pie.querySelector('img'):null;
-    if(pi){if(!pi.dataset.origSrc)pi.dataset.origSrc=pi.src;var isFoto=k==='foto3d';pie.classList.toggle('pie-foto3d',isFoto);pi.src=isFoto?'/roulette-3d.jpg':(pi.dataset.origSrc||pi.src);pi.style.objectPosition=isFoto?'center 38%':'center 20%';pi.style.filter=isFoto?'brightness(0.78) saturate(1.15)':'';pi.style.transform='';}
+    if(pi){if(!pi.dataset.origSrc)pi.dataset.origSrc=pi.src;var isFoto=k==='foto3d';pie.classList.toggle('pie-foto3d',isFoto);pi.src=isFoto?'/roulette-3d.jpg':(pi.dataset.origSrc||pi.src);pi.style.objectPosition=isFoto?'center 45%':'center 58%';pi.style.filter='';pi.style.transform='';}
 };
 window.wLT=function(k){
     var lc=document.querySelector('.limits-table-container');
