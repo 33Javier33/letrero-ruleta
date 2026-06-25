@@ -1,4 +1,4 @@
-const CACHE = 'pantalla-ruleta-v110';
+const CACHE = 'pantalla-ruleta-v111';
 const FILES = [
     '/manifest.json',
     '/dreams-logo.png',

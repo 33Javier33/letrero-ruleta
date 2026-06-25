@@ -16,7 +16,7 @@
     <script>(function(){function u(){var h=window.innerHeight;document.documentElement.style.setProperty('--vh100',h+'px');document.documentElement.style.setProperty('--vh',(h*.01)+'px');}u();window.addEventListener('resize',u);window.addEventListener('orientationchange',function(){setTimeout(u,150);});var T={negro:'linear-gradient(180deg,#0a0a14 0%,#1c1c38 100%)',rojo:'linear-gradient(180deg,#5c0000 0%,#aa0000 100%)',azul:'linear-gradient(180deg,#0022cc 0%,#0044ff 100%)',verde:'linear-gradient(180deg,#003300 0%,#005800 100%)',violeta:'linear-gradient(180deg,#1a0033 0%,#440088 100%)',dorado:'linear-gradient(180deg,#0f0800 0%,#2d1a00 100%)',teal:'linear-gradient(180deg,#002233 0%,#004455 100%)',casino:'linear-gradient(180deg,rgba(0,5,30,0.78) 0%,rgba(0,10,45,0.74) 100%), url(/casino-bg.jpg) center/cover no-repeat'};function applyT(k){var g=T[k]||T.azul;document.documentElement.style.setProperty('--bg',g);document.documentElement.style.setProperty('--tex',(k==='casino')?'0':(localStorage.getItem('rlt_textura')==='0'?'0':'0.30'));}var sv=localStorage.getItem('rlt_theme');if(sv)applyT(sv);function applyTex(v){if(localStorage.getItem('rlt_theme')==='casino')return;document.documentElement.style.setProperty('--tex',v==='0'?'0':'0.30');}applyTex(localStorage.getItem('rlt_textura'));window.addEventListener('storage',function(e){
     if(e.key==='rlt_theme')applyT(e.newValue);
     if(e.key==='rlt_textura')applyTex(e.newValue);
-    if(e.key==='rlt_pizarra_theme'){var b=document.getElementById('history-board');if(b){b.className=b.className.replace(/\bpizarra-\S+/g,'').trim();var pk=e.newValue;if(pk&&pk!=='negro')b.classList.add('pizarra-'+pk);}var pi=document.querySelector('.ruleta-pie img');if(pi){if(!pi.dataset.origSrc)pi.dataset.origSrc=pi.src;pi.src=(e.newValue==='foto3d')?'/roulette-3d.jpg':(pi.dataset.origSrc);pi.style.objectPosition=(e.newValue==='foto3d')?'center 55%':'center 20%';}}
+    if(e.key==='rlt_pizarra_theme'){var b=document.getElementById('history-board');if(b){b.className=b.className.replace(/\bpizarra-\S+/g,'').trim();var pk=e.newValue;if(pk&&pk!=='negro')b.classList.add('pizarra-'+pk);}var pi=document.querySelector('.ruleta-pie img');if(pi){if(!pi.dataset.origSrc)pi.dataset.origSrc=pi.src;var isFoto=e.newValue==='foto3d';pi.src=isFoto?'/roulette-3d.jpg':(pi.dataset.origSrc);pi.style.objectPosition=isFoto?'center 62%':'center 20%';pi.style.filter=isFoto?'brightness(0.72) saturate(1.2)':'';pi.style.transform=isFoto?'scale(1.08)':'';}}
     if(e.key==='rlt_lim_theme'){var lc=document.querySelector('.limits-table-container');if(lc){lc.className=lc.className.replace(/\blim-\S+/g,'').trim();var lk=e.newValue;if(lk&&lk!=='azul')lc.classList.add('lim-'+lk);}}
 });}());</script>
     <style>
@@ -215,6 +215,12 @@
             flex-shrink:0;
             height:calc(var(--u)*70);
             overflow:hidden;
+            position:relative;
+        }
+        .ruleta-pie::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:55%;
+            background:linear-gradient(to bottom, var(--pizarra-bg,#000) 0%, transparent 100%);
+            z-index:1; pointer-events:none;
         }
         .ruleta-pie img {
             width:100%;
@@ -793,11 +799,15 @@ function updatePizarra(data){
 function updateScreen(data){
     updatePizarra(data);
     if(data.history.length){
-        var last=data.history[data.history.length-1];elN.textContent=last;
+        var last=data.history[data.history.length-1];
+        elN.textContent=last;
         elN.className='current-number-display';
         var cc=numberColors[last];
         if(cc==='red')elN.classList.add('num-red');else if(cc==='black')elN.classList.add('num-black');else elN.classList.add('num-green');
-    }else{elN.textContent='-';elN.className='current-number-display';}
+    }else{
+        elN.className='current-number-display';
+        elN.innerHTML='<img src="/dreams-logo.png" style="width:78%;height:78%;object-fit:contain;border-radius:50%;opacity:0.88;">';
+    }
 }
 
 function applyHcFx(){
@@ -1079,7 +1089,7 @@ window.onload=function(){
         document.head.appendChild(ts);
     })();
     // Apply saved pizarra theme
-    (function(){var k=localStorage.getItem('rlt_pizarra_theme');if(k&&k!=='negro'){var b=document.getElementById('history-board');if(b)b.classList.add('pizarra-'+k);}if(k==='foto3d'){var pi=document.querySelector('.ruleta-pie img');if(pi){if(!pi.dataset.origSrc)pi.dataset.origSrc=pi.src;pi.src='/roulette-3d.jpg';pi.style.objectPosition='center 55%';}}})();
+    (function(){var k=localStorage.getItem('rlt_pizarra_theme');if(k&&k!=='negro'){var b=document.getElementById('history-board');if(b)b.classList.add('pizarra-'+k);}if(k==='foto3d'){var pi=document.querySelector('.ruleta-pie img');if(pi){if(!pi.dataset.origSrc)pi.dataset.origSrc=pi.src;pi.src='/roulette-3d.jpg';pi.style.objectPosition='center 62%';pi.style.filter='brightness(0.72) saturate(1.2)';pi.style.transform='scale(1.08)';}}})();
     // Apply saved limits theme
     (function(){var k=localStorage.getItem('rlt_lim_theme');if(k&&k!=='azul'){var c=document.querySelector('.limits-table-container');if(c)c.classList.add('lim-'+k);}})();
     // Logo pulse every 9s
