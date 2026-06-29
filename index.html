@@ -13,7 +13,7 @@
     <meta name="theme-color" content="#0022cc">
     <title>Pantalla Ruleta Americana - Casino</title>
     <!-- Set --vh100 from window.innerHeight so 100vh-chrome browsers don't clip content -->
-    <script>(function(){function u(){var h=window.innerHeight;document.documentElement.style.setProperty('--vh100',h+'px');document.documentElement.style.setProperty('--vh',(h*.01)+'px');}u();window.addEventListener('resize',u);window.addEventListener('orientationchange',function(){setTimeout(u,150);});var T={negro:'linear-gradient(180deg,#0a0a14 0%,#1c1c38 100%)',rojo:'linear-gradient(180deg,#5c0000 0%,#aa0000 100%)',azul:'linear-gradient(180deg,#0022cc 0%,#0044ff 100%)',verde:'linear-gradient(180deg,#003300 0%,#005800 100%)',violeta:'linear-gradient(180deg,#1a0033 0%,#440088 100%)',dorado:'linear-gradient(180deg,#0f0800 0%,#2d1a00 100%)',teal:'linear-gradient(180deg,#002233 0%,#004455 100%)',casino:'linear-gradient(180deg,rgba(0,5,30,0.78) 0%,rgba(0,10,45,0.74) 100%), url(/casino-bg.jpg) center/cover no-repeat'};function applyT(k){var g=T[k]||T.azul;document.documentElement.style.setProperty('--bg',g);document.documentElement.style.setProperty('--tex',(k==='casino')?'0':(localStorage.getItem('rlt_textura')==='0'?'0':'0.30'));}var sv=localStorage.getItem('rlt_theme');if(sv)applyT(sv);function applyTex(v){if(localStorage.getItem('rlt_theme')==='casino')return;document.documentElement.style.setProperty('--tex',v==='0'?'0':'0.30');}applyTex(localStorage.getItem('rlt_textura'));window.addEventListener('storage',function(e){
+    <script>(function(){function u(){var h=window.innerHeight;document.documentElement.style.setProperty('--vh100',h+'px');document.documentElement.style.setProperty('--vh',(h*.01)+'px');}u();window.addEventListener('resize',u);window.addEventListener('orientationchange',function(){setTimeout(u,150);});var T={negro:'linear-gradient(180deg,#0a0a14 0%,#1c1c38 100%)',rojo:'linear-gradient(180deg,#5c0000 0%,#aa0000 100%)',azul:'linear-gradient(180deg,#0022cc 0%,#0044ff 100%)',verde:'linear-gradient(180deg,#003300 0%,#005800 100%)',violeta:'linear-gradient(180deg,#1a0033 0%,#440088 100%)',dorado:'linear-gradient(180deg,#0f0800 0%,#2d1a00 100%)',teal:'linear-gradient(180deg,#002233 0%,#004455 100%)',casino:'linear-gradient(180deg,rgba(0,5,30,0.78) 0%,rgba(0,10,45,0.74) 100%), url(/casino-bg.jpg) center/cover no-repeat',chile18:'url(/chile-flag.jpg) center/cover no-repeat'};function applyT(k){var g=T[k]||T.azul;document.documentElement.style.setProperty('--bg',g);document.documentElement.style.setProperty('--tex',(k==='casino'||k==='chile18')?'0':(localStorage.getItem('rlt_textura')==='0'?'0':'0.30'));}var sv=localStorage.getItem('rlt_theme');if(sv)applyT(sv);function applyTex(v){var _t=localStorage.getItem('rlt_theme');if(_t==='casino'||_t==='chile18')return;document.documentElement.style.setProperty('--tex',v==='0'?'0':'0.30');}applyTex(localStorage.getItem('rlt_textura'));window.addEventListener('storage',function(e){
     if(e.key==='rlt_theme')applyT(e.newValue);
     if(e.key==='rlt_textura')applyTex(e.newValue);
     if(e.key==='rlt_pizarra_theme'){if(window.wPT)window.wPT(e.newValue);}
@@ -180,7 +180,7 @@
         /* BOLAS MODE PIZARRA */
         .history-board.ball-mode { background:var(--pizarra-bg,#1c1c3a); }
         .ball-mode .history-item { flex:1; min-height:0; }
-        .ball-circle { display:inline-flex; align-items:center; justify-content:center; width:calc(var(--u)*52); height:calc(var(--u)*52); border-radius:50%; font-size:calc(var(--u)*26); font-weight:bold; color:#fff; box-shadow:inset -2px -3px 6px rgba(0,0,0,0.5),inset 1px 2px 4px rgba(255,255,255,0.2),0 2px 5px rgba(0,0,0,0.5); }
+        .ball-circle { display:inline-flex; align-items:center; justify-content:center; width:calc(var(--u)*52); height:calc(var(--u)*52); border-radius:50%; font-size:calc(var(--u)*26); font-weight:bold; color:#fff; box-shadow:inset -2px -3px 6px rgba(0,0,0,0.5),inset 1px 2px 4px rgba(255,255,255,0.2),0 2px 5px rgba(0,0,0,0.5); position:relative; overflow:hidden; }
         .color-red .ball-circle   { background:radial-gradient(circle at 35% 30%,#ff5555,#8b0000); }
         .color-black .ball-circle { background:radial-gradient(circle at 35% 30%,#666,#111); }
         .color-green .ball-circle { background:radial-gradient(circle at 35% 30%,#44dd44,#004400); }
@@ -200,6 +200,18 @@
         .ball-glow-anim { animation:ballGlow 2.5s ease-in-out; }
         @keyframes ballPulse { 0%,100%{transform:scale(1);}50%{transform:scale(1.18);} }
         .ball-pulse-anim { animation:ballPulse 0.7s ease-in-out; }
+
+        /* CHILE 18 THEME — flag ball entry effect */
+        @keyframes chileFlagFx { 0%,55%{opacity:1;} 100%{opacity:0;} }
+        .chile-entry::after {
+            content:''; position:absolute; inset:0; border-radius:50%; z-index:2; pointer-events:none;
+            background:
+                radial-gradient(circle at 28% 26%, rgba(255,255,255,0.52) 0%, transparent 38%),
+                linear-gradient(to bottom, transparent 50%, #d52b1e 50%),
+                linear-gradient(to right,  #003399 40%, #ffffff 40%);
+            box-shadow:inset -2px -3px 6px rgba(0,0,0,0.45), inset 1px 2px 4px rgba(255,255,255,0.35);
+            animation:chileFlagFx 2.4s ease-out forwards;
+        }
 
         /* LIMITS CARD THEMES */
         .lim-dorado  { --lim-bg:linear-gradient(135deg,#fff3cc,#ffe082) !important; --lim-border:#d4a000 !important; }
@@ -794,7 +806,7 @@ function updatePizarra(data){
         if(i<nums.length){
             var num=nums[i];var c=numberColors[num];
             d.classList.add(c==='red'?'color-red':c==='black'?'color-black':'color-green');
-            if(bp){var s=document.createElement('span');s.className='ball-circle';s.textContent=num;if(i===0&&localStorage.getItem('rlt_fx_entry')!=='0')s.classList.add('ball-new');d.appendChild(s);}
+            if(bp){var s=document.createElement('span');s.className='ball-circle';s.textContent=num;if(i===0&&localStorage.getItem('rlt_fx_entry')!=='0')s.classList.add('ball-new');if(i===0&&localStorage.getItem('rlt_theme')==='chile18')s.classList.add('chile-entry');d.appendChild(s);}
             else{d.textContent=num;}
         }
         iW.appendChild(d);
