@@ -175,12 +175,10 @@
         .pizarra-oliva       { --pizarra-bg:#1e2600 !important; --pizarra-bg0:rgba(30,38,0,0) !important;     --pizarra-border:#6a8800 !important; }
         .pizarra-ciruela     { --pizarra-bg:#280035 !important; --pizarra-bg0:rgba(40,0,53,0) !important;     --pizarra-border:#aa00dd !important; }
         .pizarra-bronce      { --pizarra-bg:#2a1200 !important; --pizarra-bg0:rgba(42,18,0,0) !important;     --pizarra-border:#cc7700 !important; }
-        .pizarra-transparente{ --pizarra-bg:rgba(0,0,0,0) !important; --pizarra-bg0:rgba(0,0,0,0) !important; --pizarra-border:rgba(255,255,255,0.35) !important; }
         .history-board.pizarra-beige .color-red, .history-board.pizarra-humo .color-red   { color:#aa0000; }
         .history-board.pizarra-beige .color-black, .history-board.pizarra-humo .color-black { color:#333; }
         .history-board.pizarra-beige .color-green, .history-board.pizarra-humo .color-green { color:#006600; }
         .history-board.pizarra-beige .history-item, .history-board.pizarra-humo .history-item { font-size:calc(var(--u)*34); }
-        .history-board.pizarra-transparente .history-item { text-shadow:0 1px 5px rgba(0,0,0,0.95),0 0 10px rgba(0,0,0,0.8) !important; }
 
         /* BOLAS MODE PIZARRA */
         .history-board.ball-mode { background:var(--pizarra-bg,#1c1c3a); }
@@ -292,9 +290,7 @@
             width:100%; height:calc(var(--u)*105); object-fit:cover; object-position:center 58%; display:block;
             mix-blend-mode:screen;
         }
-        /* Transparente: use body background so screen blend removes dark image pixels correctly */
-        .right-column.pizarra-transparente .ruleta-pie { background:var(--bg,linear-gradient(180deg,#0022cc 0%,#0044ff 100%)); }
-        .right-column.pizarra-transparente .ruleta-pie::before { display:none; }
+
 
         /* SECCION INFERIOR */
         .bottom-section { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:calc(var(--u)*6); padding:calc(var(--u)*5) calc(var(--u)*15) calc(var(--u)*6); position:relative; z-index:1; }
