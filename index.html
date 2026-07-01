@@ -287,7 +287,12 @@
         }
         .ruleta-pie img {
             width:100%; height:calc(var(--u)*105); object-fit:cover; object-position:center 58%; display:block;
+            mix-blend-mode:screen;
         }
+        /* Light themes: image shows original colors (pizarra is lighter than image darks) */
+        .history-board.pizarra-beige .ruleta-pie img,
+        .history-board.pizarra-humo  .ruleta-pie img,
+        .history-board.pizarra-transparente .ruleta-pie img { mix-blend-mode:normal; }
 
         /* SECCION INFERIOR */
         .bottom-section { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:calc(var(--u)*6); padding:calc(var(--u)*5) calc(var(--u)*15) calc(var(--u)*6); position:relative; z-index:1; }
