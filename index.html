@@ -201,16 +201,23 @@
         @keyframes ballPulse { 0%,100%{transform:scale(1);}50%{transform:scale(1.18);} }
         .ball-pulse-anim { animation:ballPulse 0.7s ease-in-out; }
 
-        /* CHILE 18 THEME — flag ball entry effect */
-        @keyframes chileFlagFx { 0%,55%{opacity:1;} 100%{opacity:0;} }
+        /* CHILE 18 THEME — flag ball horizontal coin-flip effect */
+        @keyframes chileFlagFx {
+            0%   { transform:scaleX(0); }
+            18%  { transform:scaleX(1); }
+            75%  { transform:scaleX(1); }
+            92%  { transform:scaleX(0); }
+            100% { transform:scaleX(0); }
+        }
         .chile-entry::after {
             content:''; position:absolute; inset:0; border-radius:50%; z-index:2; pointer-events:none;
+            transform-origin:center;
             background:
                 radial-gradient(circle at 28% 26%, rgba(255,255,255,0.52) 0%, transparent 38%),
                 linear-gradient(to bottom, transparent 50%, #d52b1e 50%),
                 linear-gradient(to right,  #003399 40%, #ffffff 40%);
             box-shadow:inset -2px -3px 6px rgba(0,0,0,0.45), inset 1px 2px 4px rgba(255,255,255,0.35);
-            animation:chileFlagFx 2.4s ease-out forwards;
+            animation:chileFlagFx 2.6s ease-in-out forwards;
         }
 
         /* LIMITS CARD THEMES */
