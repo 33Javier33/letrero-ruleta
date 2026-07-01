@@ -898,6 +898,23 @@
             </button>
         </div>
 
+        <!-- CENTRO DE LA RULETA — fondo del hub -->
+        <div class="nombre-ruleta-section cfg-full">
+            <h3 style="margin-bottom:10px;">Centro de la Ruleta</h3>
+            <p style="font-size:12px;color:#777;margin-bottom:12px;">Color del círculo central cuando no hay número.</p>
+            <div class="tema-grid" style="grid-template-columns:repeat(3,1fr);">
+                <button class="tema-swatch hub-btn" data-hub="cielo"   style="background:#d1e8ff;border-color:#aad0ff;"><span class="tema-badge" style="color:#333;">Cielo</span></button>
+                <button class="tema-swatch hub-btn" data-hub="blanco"  style="background:#fff;border-color:#bbb;"><span class="tema-badge" style="color:#333;">Blanco</span></button>
+                <button class="tema-swatch hub-btn" data-hub="negro"   style="background:#111;border-color:#555;"><span class="tema-badge">Negro</span></button>
+                <button class="tema-swatch hub-btn" data-hub="azul"    style="background:#003399;border-color:#6699ff;"><span class="tema-badge">Azul</span></button>
+                <button class="tema-swatch hub-btn" data-hub="marino"  style="background:#001440;border-color:#2255cc;"><span class="tema-badge">Marino</span></button>
+                <button class="tema-swatch hub-btn" data-hub="morado"  style="background:#2d0055;border-color:#9955ee;"><span class="tema-badge">Morado</span></button>
+                <button class="tema-swatch hub-btn" data-hub="celeste" style="background:#0099cc;border-color:#55ddff;"><span class="tema-badge">Celeste</span></button>
+                <button class="tema-swatch hub-btn" data-hub="dorado"  style="background:#2a1400;border-color:#c89020;"><span class="tema-badge">Dorado</span></button>
+                <button class="tema-swatch hub-btn" data-hub="verde"   style="background:#003300;border-color:#33aa44;"><span class="tema-badge">Verde</span></button>
+            </div>
+        </div>
+
         <!-- PIZARRA EN BOLAS — columna izquierda -->
         <div class="nombre-ruleta-section">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">7. Pizarra en Bolas
@@ -1564,6 +1581,17 @@
                 limFxActive = this.dataset.limFx;
                 localStorage.setItem('rlt_lim_fx', limFxActive);
                 document.querySelectorAll('.lim-fx-btn').forEach(function(x){ x.classList.toggle('tema-active', x.dataset.limFx === limFxActive); });
+            });
+        });
+
+        // Centro de la Ruleta (hub background)
+        var hubActive = localStorage.getItem('rlt_hub_bg') || 'cielo';
+        document.querySelectorAll('.hub-btn').forEach(function(b){
+            b.classList.toggle('tema-active', b.dataset.hub === hubActive);
+            b.addEventListener('click', function(){
+                hubActive = this.dataset.hub;
+                localStorage.setItem('rlt_hub_bg', hubActive);
+                document.querySelectorAll('.hub-btn').forEach(function(x){ x.classList.toggle('tema-active', x.dataset.hub === hubActive); });
             });
         });
 
