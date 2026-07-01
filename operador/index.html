@@ -921,8 +921,11 @@
             <button id="btnFxGlow" class="btn-nombre" style="margin-bottom:8px;">
                 💫 Brillo 30s: <span id="fxGlowLabel">DESACTIVADA</span>
             </button>
-            <button id="btnFxPulse" class="btn-nombre">
+            <button id="btnFxPulse" class="btn-nombre" style="margin-bottom:8px;">
                 🔵 Pulso 8s: <span id="fxPulseLabel">DESACTIVADA</span>
+            </button>
+            <button id="btnFxChile18" class="btn-nombre">
+                🇨🇱 Efecto 18 (8s): <span id="fxChile18Label">DESACTIVADO</span>
             </button>
         </div>
 
@@ -1010,6 +1013,7 @@
                 <button class="tema-swatch lim-swatch" data-lim="menta"   style="background:linear-gradient(135deg,#e0fff0,#a8f0cc);border-color:#229944;"><span class="tema-badge" style="color:#333;">Menta</span></button>
                 <button class="tema-swatch lim-swatch" data-lim="cielo"   style="background:linear-gradient(135deg,#e0f4ff,#a8d8ff);border-color:#2266cc;"><span class="tema-badge" style="color:#333;">Cielo</span></button>
                 <button class="tema-swatch lim-swatch" data-lim="durazno" style="background:linear-gradient(135deg,#fff0e0,#ffc898);border-color:#cc6622;"><span class="tema-badge" style="color:#333;">Durazno</span></button>
+                <button class="tema-swatch lim-swatch" data-lim="chile" style="background:url(/chile-flag-wood.jpg) center/cover;border-color:#d52b1e;grid-column:span 3;height:52px;"><span class="tema-badge">🇨🇱 Chile</span></button>
             </div>
         </div>
 
@@ -1563,6 +1567,12 @@
         var fxPulseOn=localStorage.getItem('rlt_fx_pulse')==='1';
         updateFxPulse(fxPulseOn);
         if(btnFxPulse)btnFxPulse.addEventListener('click',function(){fxPulseOn=!fxPulseOn;localStorage.setItem('rlt_fx_pulse',fxPulseOn?'1':'0');updateFxPulse(fxPulseOn);});
+
+        var btnFxChile18=document.getElementById('btnFxChile18'),fxChile18Label=document.getElementById('fxChile18Label');
+        function updateFxChile18(on){if(!btnFxChile18||!fxChile18Label)return;fxChile18Label.textContent=on?'ACTIVADO':'DESACTIVADO';btnFxChile18.classList.toggle('selected',on);}
+        var fxChile18On=localStorage.getItem('rlt_fx_18')==='1';
+        updateFxChile18(fxChile18On);
+        if(btnFxChile18)btnFxChile18.addEventListener('click',function(){fxChile18On=!fxChile18On;localStorage.setItem('rlt_fx_18',fxChile18On?'1':'0');updateFxChile18(fxChile18On);});
 
         // Hot/Cold colors
         var btnHCC=document.getElementById('btnHotColdColors'),hccLabel=document.getElementById('hotColdColorsLabel');

@@ -246,6 +246,9 @@
         .lim-menta   .row-label { color:#115522 !important; }
         .lim-cielo   .row-label { color:#113388 !important; }
         .lim-durazno .row-label { color:#7a3300 !important; }
+        /* Chile flag limits theme */
+        .lim-chile { --lim-bg:url(/chile-flag-wood.jpg) center/cover !important; --lim-border:#d52b1e !important; }
+        .lim-chile .limits-table th,.lim-chile .limits-table td,.lim-chile .casino-name,.lim-chile .row-label { color:#fff !important; text-shadow:0 1px 5px rgba(0,0,0,0.95),0 0 10px rgba(0,0,0,0.8) !important; }
         /* lim-cartas CSS injected by JS at runtime */
 
         /* IMAGEN RULETA AL PIE DE LA PIZARRA */
@@ -1188,6 +1191,15 @@ window.onload=function(){
         bc.classList.remove('ball-pulse-anim');void bc.offsetWidth;
         bc.classList.add('ball-pulse-anim');
         setTimeout(function(){bc.classList.remove('ball-pulse-anim');},700);
+    },8000);
+    // Efecto 18 (Chile flag ball) every 8s
+    setInterval(function(){
+        if(localStorage.getItem('rlt_fx_18')!=='1'||localStorage.getItem('rlt_ballpizarra')!=='1')return;
+        var bc=document.querySelector('#history-items .ball-circle');
+        if(!bc)return;
+        bc.classList.remove('chile-entry');void bc.offsetWidth;
+        bc.classList.add('chile-entry');
+        setTimeout(function(){bc.classList.remove('chile-entry');},2500);
     },8000);
     var cp=0;
     function goPanel(i){
