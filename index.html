@@ -289,9 +289,11 @@
             width:100%; height:calc(var(--u)*105); object-fit:cover; object-position:center 58%; display:block;
             mix-blend-mode:screen;
         }
-        /* Light themes only: image shows original colors (screen would wash out against light bg) */
+        /* Light themes: no blend mode */
         .history-board.pizarra-beige .ruleta-pie img,
         .history-board.pizarra-humo  .ruleta-pie img { mix-blend-mode:normal; }
+        /* Transparent: hide pie image — background shows through pizarra already */
+        .history-board.pizarra-transparente .ruleta-pie { display:none; }
 
         /* SECCION INFERIOR */
         .bottom-section { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:calc(var(--u)*6); padding:calc(var(--u)*5) calc(var(--u)*15) calc(var(--u)*6); position:relative; z-index:1; }
