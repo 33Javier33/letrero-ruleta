@@ -290,13 +290,10 @@
             width:100%; height:calc(var(--u)*105); object-fit:cover; object-position:center 58%; display:block;
             mix-blend-mode:screen;
         }
-        /* Transparente: usar el fondo del tema principal para que screen blend elimine el negro */
-        .history-board.pizarra-transparente .ruleta-pie {
-            background: var(--bg, #000);
-        }
-        .history-board.pizarra-transparente .ruleta-pie::before {
-            background: linear-gradient(to bottom, var(--bg,#000) 0%, transparent 100%);
-        }
+        /* Transparente: ocultar imagen y gradiente, dejar espacio vacío y transparente */
+        .history-board.pizarra-transparente .ruleta-pie { background:transparent; }
+        .history-board.pizarra-transparente .ruleta-pie::before { display:none; }
+        .history-board.pizarra-transparente .ruleta-pie img { display:none; }
 
         /* SECCION INFERIOR */
         .bottom-section { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:calc(var(--u)*6); padding:calc(var(--u)*5) calc(var(--u)*15) calc(var(--u)*6); position:relative; z-index:1; }
