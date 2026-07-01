@@ -156,28 +156,30 @@
         .color-black { color:#ffd700; justify-content:flex-start; padding-left:calc(var(--u)*8); }
         .color-green { color:#33ff33; justify-content:center; }
 
-        /* PIZARRA THEMES */
-        .pizarra-azul_noche  { --pizarra-bg:#0e2f6e !important; --pizarra-border:#3a7acc !important; }
-        .pizarra-rojo_vino   { --pizarra-bg:#5a001a !important; --pizarra-border:#c0305a !important; }
-        .pizarra-verde_noche { --pizarra-bg:#004f22 !important; --pizarra-border:#2a9a55 !important; }
-        .pizarra-morado      { --pizarra-bg:#330068 !important; --pizarra-border:#8844cc !important; }
-        .pizarra-beige       { --pizarra-bg:#f0e8d5 !important; --pizarra-border:#c0a060 !important; }
-        .pizarra-humo        { --pizarra-bg:#e0e0e0 !important; --pizarra-border:#999 !important; }
-        .pizarra-dorado      { --pizarra-bg:#2a1800 !important; --pizarra-border:#c8a000 !important; }
-        .pizarra-indigo      { --pizarra-bg:#1e0044 !important; --pizarra-border:#7755ee !important; }
-        .pizarra-esmeralda   { --pizarra-bg:#004020 !important; --pizarra-border:#00c855 !important; }
-        .pizarra-cafe        { --pizarra-bg:#2a1400 !important; --pizarra-border:#a06830 !important; }
-        .pizarra-cielo       { --pizarra-bg:#003060 !important; --pizarra-border:#1aadff !important; }
-        .pizarra-rubi        { --pizarra-bg:#350010 !important; --pizarra-border:#cc1144 !important; }
-        .pizarra-teal        { --pizarra-bg:#003535 !important; --pizarra-border:#00aaaa !important; }
-        .pizarra-marino      { --pizarra-bg:#000d30 !important; --pizarra-border:#0055cc !important; }
-        .pizarra-oliva       { --pizarra-bg:#1e2600 !important; --pizarra-border:#6a8800 !important; }
-        .pizarra-ciruela     { --pizarra-bg:#280035 !important; --pizarra-border:#aa00dd !important; }
-        .pizarra-bronce      { --pizarra-bg:#2a1200 !important; --pizarra-border:#cc7700 !important; }
+        /* PIZARRA THEMES — --pizarra-bg0 is the rgba(r,g,b,0) version for smooth gradient */
+        .pizarra-azul_noche  { --pizarra-bg:#0e2f6e !important; --pizarra-bg0:rgba(14,47,110,0) !important;   --pizarra-border:#3a7acc !important; }
+        .pizarra-rojo_vino   { --pizarra-bg:#5a001a !important; --pizarra-bg0:rgba(90,0,26,0) !important;     --pizarra-border:#c0305a !important; }
+        .pizarra-verde_noche { --pizarra-bg:#004f22 !important; --pizarra-bg0:rgba(0,79,34,0) !important;     --pizarra-border:#2a9a55 !important; }
+        .pizarra-morado      { --pizarra-bg:#330068 !important; --pizarra-bg0:rgba(51,0,104,0) !important;    --pizarra-border:#8844cc !important; }
+        .pizarra-beige       { --pizarra-bg:#f0e8d5 !important; --pizarra-bg0:rgba(240,232,213,0) !important; --pizarra-border:#c0a060 !important; }
+        .pizarra-humo        { --pizarra-bg:#e0e0e0 !important; --pizarra-bg0:rgba(224,224,224,0) !important; --pizarra-border:#999 !important; }
+        .pizarra-dorado      { --pizarra-bg:#2a1800 !important; --pizarra-bg0:rgba(42,24,0,0) !important;     --pizarra-border:#c8a000 !important; }
+        .pizarra-indigo      { --pizarra-bg:#1e0044 !important; --pizarra-bg0:rgba(30,0,68,0) !important;     --pizarra-border:#7755ee !important; }
+        .pizarra-esmeralda   { --pizarra-bg:#004020 !important; --pizarra-bg0:rgba(0,64,32,0) !important;     --pizarra-border:#00c855 !important; }
+        .pizarra-cafe        { --pizarra-bg:#2a1400 !important; --pizarra-bg0:rgba(42,20,0,0) !important;     --pizarra-border:#a06830 !important; }
+        .pizarra-cielo       { --pizarra-bg:#003060 !important; --pizarra-bg0:rgba(0,48,96,0) !important;     --pizarra-border:#1aadff !important; }
+        .pizarra-rubi        { --pizarra-bg:#350010 !important; --pizarra-bg0:rgba(53,0,16,0) !important;     --pizarra-border:#cc1144 !important; }
+        .pizarra-teal        { --pizarra-bg:#003535 !important; --pizarra-bg0:rgba(0,53,53,0) !important;     --pizarra-border:#00aaaa !important; }
+        .pizarra-marino      { --pizarra-bg:#000d30 !important; --pizarra-bg0:rgba(0,13,48,0) !important;     --pizarra-border:#0055cc !important; }
+        .pizarra-oliva       { --pizarra-bg:#1e2600 !important; --pizarra-bg0:rgba(30,38,0,0) !important;     --pizarra-border:#6a8800 !important; }
+        .pizarra-ciruela     { --pizarra-bg:#280035 !important; --pizarra-bg0:rgba(40,0,53,0) !important;     --pizarra-border:#aa00dd !important; }
+        .pizarra-bronce      { --pizarra-bg:#2a1200 !important; --pizarra-bg0:rgba(42,18,0,0) !important;     --pizarra-border:#cc7700 !important; }
+        .pizarra-transparente{ --pizarra-bg:rgba(0,0,0,0) !important; --pizarra-bg0:rgba(0,0,0,0) !important; --pizarra-border:rgba(255,255,255,0.35) !important; }
         .history-board.pizarra-beige .color-red, .history-board.pizarra-humo .color-red   { color:#aa0000; }
         .history-board.pizarra-beige .color-black, .history-board.pizarra-humo .color-black { color:#333; }
         .history-board.pizarra-beige .color-green, .history-board.pizarra-humo .color-green { color:#006600; }
         .history-board.pizarra-beige .history-item, .history-board.pizarra-humo .history-item { font-size:calc(var(--u)*34); }
+        .history-board.pizarra-transparente .history-item { text-shadow:0 1px 5px rgba(0,0,0,0.95),0 0 10px rgba(0,0,0,0.8) !important; }
 
         /* BOLAS MODE PIZARRA */
         .history-board.ball-mode { background:var(--pizarra-bg,#1c1c3a); }
@@ -275,24 +277,16 @@
 
         /* IMAGEN RULETA AL PIE DE LA PIZARRA */
         .ruleta-pie {
-            width:100%;
-            flex-shrink:0;
-            height:calc(var(--u)*105);
-            overflow:hidden;
-            position:relative;
+            width:100%; flex-shrink:0; height:calc(var(--u)*105); overflow:hidden; position:relative;
+            background:var(--pizarra-bg,#000);
         }
         .ruleta-pie::before {
-            content:''; position:absolute; top:0; left:0; right:0; height:22%;
-            background:linear-gradient(to bottom, var(--pizarra-bg,#000) 0%, transparent 100%);
+            content:''; position:absolute; top:0; left:0; right:0; height:55%;
+            background:linear-gradient(to bottom, var(--pizarra-bg,#000) 0%, var(--pizarra-bg0,rgba(0,0,0,0)) 100%);
             z-index:1; pointer-events:none;
         }
         .ruleta-pie img {
-            width:100%;
-            height:calc(var(--u)*105);
-            object-fit:cover;
-            object-position:center 58%;
-            display:block;
-            mix-blend-mode:screen;
+            width:100%; height:calc(var(--u)*105); object-fit:cover; object-position:center 58%; display:block;
         }
 
         /* SECCION INFERIOR */
