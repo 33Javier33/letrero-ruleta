@@ -146,7 +146,7 @@
         /* COLUMNA DERECHA - PIZARRA CON IMAGEN AL PIE */
         .right-column { width:calc(var(--u)*185); display:flex; flex-direction:column; height:100%; }
         .history-board {
-            flex:1; background:var(--pizarra-bg,#000); border:calc(var(--u)*6) solid var(--pizarra-border,#e6b800); border-radius:calc(var(--u)*5);
+            flex:1; background:var(--pizarra-bg,#000); border:calc(var(--u)*6) solid var(--pizarra-border,#e6b800); border-radius:calc(var(--u)*5) calc(var(--u)*5) 0 0; border-bottom:none;
             display:flex; flex-direction:column; align-items:center;
             padding:calc(var(--u)*6) 0 0; overflow:hidden;
         }
@@ -280,6 +280,8 @@
         .ruleta-pie {
             width:100%; flex-shrink:0; height:calc(var(--u)*105); overflow:hidden; position:relative;
             background:var(--pizarra-bg,#000);
+            border:calc(var(--u)*6) solid var(--pizarra-border,#e6b800); border-top:none;
+            border-radius:0 0 calc(var(--u)*5) calc(var(--u)*5);
         }
         .ruleta-pie::before {
             content:''; position:absolute; top:0; left:0; right:0; height:55%;
@@ -290,10 +292,9 @@
             width:100%; height:calc(var(--u)*105); object-fit:cover; object-position:center 58%; display:block;
             mix-blend-mode:screen;
         }
-        /* Transparente: ocultar imagen y gradiente, dejar espacio vacío y transparente */
-        .history-board.pizarra-transparente .ruleta-pie { background:transparent; }
-        .history-board.pizarra-transparente .ruleta-pie::before { display:none; }
-        .history-board.pizarra-transparente .ruleta-pie img { display:none; }
+        /* Transparente: use body background so screen blend removes dark image pixels correctly */
+        .right-column.pizarra-transparente .ruleta-pie { background:var(--bg,linear-gradient(180deg,#0022cc 0%,#0044ff 100%)); }
+        .right-column.pizarra-transparente .ruleta-pie::before { display:none; }
 
         /* SECCION INFERIOR */
         .bottom-section { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:calc(var(--u)*6); padding:calc(var(--u)*5) calc(var(--u)*15) calc(var(--u)*6); position:relative; z-index:1; }
@@ -491,9 +492,9 @@
         <div class="right-column">
             <div class="history-board" id="history-board">
                 <div class="history-items-wrapper" id="history-items"></div>
-                <div class="ruleta-pie">
-                    <img src="/roulette-pie.jpg" alt="Ruleta Casino">
-                </div>
+            </div>
+            <div class="ruleta-pie">
+                <img src="/roulette-pie.jpg" alt="Ruleta Casino">
             </div>
         </div>
     </div>
@@ -1101,7 +1102,9 @@ function checkStorage(){
 }
 window.wPT=function(k){
     var b=document.getElementById('history-board');
+    var rc=document.querySelector('.right-column');
     if(b){b.className=b.className.replace(/\bpizarra-\S+/g,'').trim();if(k)b.classList.add('pizarra-'+k);}
+    if(rc){rc.className=rc.className.replace(/\bpizarra-\S+/g,'').trim();if(k)rc.classList.add('pizarra-'+k);}
 };
 window.wLT=function(k){
     var lc=document.querySelector('.limits-table-container');
