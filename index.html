@@ -18,6 +18,7 @@
     if(e.key==='rlt_textura')applyTex(e.newValue);
     if(e.key==='rlt_pizarra_theme'){if(window.wPT)window.wPT(e.newValue);}
     if(e.key==='rlt_lim_theme'){if(window.wLT)window.wLT(e.newValue);}
+    if(e.key==='rlt_lim_fx'){if(window.wLF)window.wLF(e.newValue||'none');}
 });}());</script>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
@@ -257,6 +258,19 @@
         .lim-chile { --lim-bg:linear-gradient(rgba(255,255,255,0.58),rgba(255,255,255,0.58)),url(/chile-flag-wood.jpg) center/cover !important; --lim-border:#d52b1e !important; }
         .lim-chile .limits-table th,.lim-chile .limits-table td,.lim-chile .casino-name,.lim-chile .row-label { color:#1a0005 !important; text-shadow:0 1px 2px rgba(255,255,255,0.6) !important; }
         /* lim-cartas CSS injected by JS at runtime */
+
+        /* LIMITS CARD EFFECTS */
+        @keyframes limSweep { 0%{transform:translateX(-130%) skewX(-14deg)} 100%{transform:translateX(320%) skewX(-14deg)} }
+        .lim-fx-destello::before { content:'';position:absolute;top:0;left:0;width:45%;height:100%;z-index:8;pointer-events:none;background:linear-gradient(105deg,transparent 15%,rgba(255,255,255,0.6) 50%,transparent 85%);animation:limSweep 3s ease-in-out infinite; }
+
+        @keyframes limPulso { 0%,100%{box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,.3),0 0 4px var(--lim-border,#66ccff)} 50%{box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,.3),0 0 16px var(--lim-border,#66ccff),0 0 34px var(--lim-border,#66ccff)} }
+        .lim-fx-pulso { animation:limPulso 2s ease-in-out infinite !important; }
+
+        @keyframes limNeon { 0%,86%,90%,94%,97%,100%{box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,.3),0 0 8px var(--lim-border,#66ccff),0 0 18px var(--lim-border,#66ccff)} 87%,91%,95%{box-shadow:inset 0 0 calc(var(--u)*10) rgba(255,255,255,.3)} }
+        .lim-fx-neon { animation:limNeon 4.5s linear infinite !important; }
+
+        @keyframes limArcoiris { to{filter:hue-rotate(360deg) saturate(1.6)} }
+        .lim-fx-arcoiris { animation:limArcoiris 5s linear infinite !important; }
 
         /* IMAGEN RULETA AL PIE DE LA PIZARRA */
         .ruleta-pie {
@@ -1090,14 +1104,24 @@ window.wPT=function(k){
 };
 window.wLT=function(k){
     var lc=document.querySelector('.limits-table-container');
-    if(lc){lc.className=lc.className.replace(/\blim-\S+/g,'').trim();if(k&&k!=='azul')lc.classList.add('lim-'+k);}
+    if(!lc)return;
+    lc.className=lc.className.replace(/\blim-(?!fx-)\S+/g,'').trim();
+    if(k&&k!=='azul')lc.classList.add('lim-'+k);
 };
-var lastPizTh=null,lastLimTh=null;
+window.wLF=function(k){
+    var lc=document.querySelector('.limits-table-container');
+    if(!lc)return;
+    lc.className=lc.className.replace(/\blim-fx-\S+/g,'').trim();
+    if(k&&k!=='none')lc.classList.add('lim-fx-'+k);
+};
+var lastPizTh=null,lastLimTh=null,lastLimFx=null;
 function checkThemes(){
     var pt=localStorage.getItem('rlt_pizarra_theme')||'negro';
     var lt=localStorage.getItem('rlt_lim_theme')||'azul';
+    var lf=localStorage.getItem('rlt_lim_fx')||'none';
     if(pt!==lastPizTh){lastPizTh=pt;window.wPT(pt);}
     if(lt!==lastLimTh){lastLimTh=lt;window.wLT(lt);}
+    if(lf!==lastLimFx){lastLimFx=lf;window.wLF(lf);}
 }
 window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();if(e.key==='rlt_ballpizarra'||e.key==='rlt_hotcold_colors'){lastD=null;checkStorage();}if(e.key==='rlt_hc_hot_fx'||e.key==='rlt_hc_cold_fx')applyHcFx();if(e.key==='rlt_fullscreen'){try{var want=e.newValue==='1';if(want){var el=document.documentElement;var req=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;if(req)req.call(el);}else{var ex=document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen||document.msExitFullscreen;if(ex)ex.call(document);}}catch(ex2){}}});
 

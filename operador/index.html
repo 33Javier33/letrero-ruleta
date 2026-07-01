@@ -1017,6 +1017,28 @@
             </div>
         </div>
 
+        <!-- EFECTOS DE LÍMITES -->
+        <div class="nombre-ruleta-section cfg-full">
+            <h3 style="margin-bottom:12px;">Efectos de Límites</h3>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+                <button class="tema-swatch lim-fx-btn" data-lim-fx="none" style="background:#0a0a18;min-height:52px;">
+                    <span class="tema-badge">Sin Efecto</span>
+                </button>
+                <button class="tema-swatch lim-fx-btn" data-lim-fx="destello" style="background:linear-gradient(105deg,#001833 20%,rgba(255,255,255,0.55) 50%,#001833 80%);min-height:52px;">
+                    <span class="tema-badge">✨ Destello</span>
+                </button>
+                <button class="tema-swatch lim-fx-btn" data-lim-fx="pulso" style="background:#001833;box-shadow:0 0 14px #66ccff,0 0 28px #66ccff;min-height:52px;">
+                    <span class="tema-badge">💫 Pulso</span>
+                </button>
+                <button class="tema-swatch lim-fx-btn" data-lim-fx="neon" style="background:#001833;border-color:#00eeff;box-shadow:0 0 8px #00eeff,0 0 20px #00eeff;min-height:52px;">
+                    <span class="tema-badge">⚡ Neón</span>
+                </button>
+                <button class="tema-swatch lim-fx-btn" data-lim-fx="arcoiris" style="background:linear-gradient(135deg,#ff0000,#ff8800,#ffee00,#00cc44,#0066ff,#8800cc);grid-column:span 4;min-height:48px;">
+                    <span class="tema-badge">🌈 Arcoíris</span>
+                </button>
+            </div>
+        </div>
+
         <!-- CALIENTES Y FRÍOS — ancho completo -->
         <div class="nombre-ruleta-section cfg-full">
             <h3 style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
@@ -1531,6 +1553,17 @@
                 limActive = this.dataset.lim;
                 localStorage.setItem('rlt_lim_theme', limActive);
                 document.querySelectorAll('.lim-swatch').forEach(function(x){ x.classList.toggle('tema-active', x.dataset.lim === limActive); });
+            });
+        });
+
+        // Efectos de Límites
+        var limFxActive = localStorage.getItem('rlt_lim_fx') || 'none';
+        document.querySelectorAll('.lim-fx-btn').forEach(function(b){
+            b.classList.toggle('tema-active', b.dataset.limFx === limFxActive);
+            b.addEventListener('click', function(){
+                limFxActive = this.dataset.limFx;
+                localStorage.setItem('rlt_lim_fx', limFxActive);
+                document.querySelectorAll('.lim-fx-btn').forEach(function(x){ x.classList.toggle('tema-active', x.dataset.limFx === limFxActive); });
             });
         });
 
