@@ -303,15 +303,24 @@
             background:var(--pizarra-bg,#000);
             border:calc(var(--u)*6) solid var(--pizarra-border,#e6b800); border-top:none;
             border-radius:0 0 calc(var(--u)*5) calc(var(--u)*5);
+            margin-top:-1px;
         }
         .ruleta-pie::before {
-            content:''; position:absolute; top:0; left:0; right:0; height:55%;
-            background:linear-gradient(to bottom, var(--pizarra-bg,#000) 0%, var(--pizarra-bg0,rgba(0,0,0,0)) 100%);
+            content:''; position:absolute; top:0; left:0; right:0; height:75%;
+            background:linear-gradient(to bottom, var(--pizarra-bg,#000) 0%, var(--pizarra-bg,#000) 12%, var(--pizarra-bg0,rgba(0,0,0,0)) 100%);
             z-index:1; pointer-events:none;
         }
         .ruleta-pie img {
             width:100%; height:calc(var(--u)*105); object-fit:cover; object-position:center 58%; display:block;
             mix-blend-mode:screen;
+        }
+        /* WC26: extiende el watermark del trofeo hacia la zona de transición */
+        .right-column.pizarra-wc26 .ruleta-pie::after {
+            content:''; position:absolute; top:0; left:0; right:0; height:80%;
+            background:url('/wc26-logo.jpg') center bottom / cover no-repeat;
+            opacity:0.15; pointer-events:none; z-index:2;
+            -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,0.9) 0%,rgba(0,0,0,0) 100%);
+            mask-image:linear-gradient(to bottom,rgba(0,0,0,0.9) 0%,rgba(0,0,0,0) 100%);
         }
 
 
