@@ -175,6 +175,34 @@
         .pizarra-oliva       { --pizarra-bg:#1e2600 !important; --pizarra-bg0:rgba(30,38,0,0) !important;     --pizarra-border:#6a8800 !important; }
         .pizarra-ciruela     { --pizarra-bg:#280035 !important; --pizarra-bg0:rgba(40,0,53,0) !important;     --pizarra-border:#aa00dd !important; }
         .pizarra-bronce      { --pizarra-bg:#2a1200 !important; --pizarra-bg0:rgba(42,18,0,0) !important;     --pizarra-border:#cc7700 !important; }
+        .pizarra-wc26        { --pizarra-bg:#060b1e !important; --pizarra-bg0:rgba(6,11,30,0) !important;     --pizarra-border:#c8a000 !important; }
+        /* WC26: FIFA 2026 watermark + soccer ball pizarra */
+        .history-board.pizarra-wc26 { position:relative; }
+        .history-board.pizarra-wc26::before {
+            content:''; position:absolute; inset:0;
+            background:url('/wc26-logo.jpg') center 38% / 80% auto no-repeat;
+            opacity:0.18; pointer-events:none; z-index:0;
+        }
+        .history-board.pizarra-wc26 .history-items-wrapper { position:relative; z-index:1; }
+        /* Soccer ball: all balls become Trionda-style multicolor */
+        .history-board.pizarra-wc26 .ball-circle,
+        .history-board.pizarra-wc26 .color-red .ball-circle,
+        .history-board.pizarra-wc26 .color-black .ball-circle,
+        .history-board.pizarra-wc26 .color-green .ball-circle {
+            background:
+                radial-gradient(circle at 38% 28%, rgba(255,255,255,0.5) 0%, transparent 34%),
+                conic-gradient(from 22deg,
+                    #1456c0 0deg 68deg,
+                    #f0f0f0 68deg 108deg,
+                    #c41230 108deg 163deg,
+                    #f0f0f0 163deg 198deg,
+                    #0a7814 198deg 262deg,
+                    #1a90e0 262deg 308deg,
+                    #f0f0f0 308deg 360deg) !important;
+            box-shadow:inset -3px -4px 8px rgba(0,0,0,0.5),inset 2px 2px 5px rgba(255,255,255,0.3),0 4px 10px rgba(0,0,0,0.7),0 0 14px rgba(20,86,192,0.4) !important;
+            color:#fff !important;
+            text-shadow:0 1px 4px #000,0 0 10px rgba(0,0,0,0.9) !important;
+        }
         .history-board.pizarra-beige .color-red, .history-board.pizarra-humo .color-red   { color:#aa0000; }
         .history-board.pizarra-beige .color-black, .history-board.pizarra-humo .color-black { color:#333; }
         .history-board.pizarra-beige .color-green, .history-board.pizarra-humo .color-green { color:#006600; }
@@ -1101,6 +1129,7 @@ window.wPT=function(k){
     var rc=document.querySelector('.right-column');
     if(b){b.className=b.className.replace(/\bpizarra-\S+/g,'').trim();if(k)b.classList.add('pizarra-'+k);}
     if(rc){rc.className=rc.className.replace(/\bpizarra-\S+/g,'').trim();if(k)rc.classList.add('pizarra-'+k);}
+    if(b)b.classList.toggle('ball-mode',k==='wc26'||localStorage.getItem('rlt_ballpizarra')==='1');
 };
 window.wLT=function(k){
     var lc=document.querySelector('.limits-table-container');
