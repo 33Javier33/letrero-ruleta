@@ -123,6 +123,10 @@
         .bar-d1{background:linear-gradient(90deg,#004488,#66ccff);}
         .bar-d2{background:linear-gradient(90deg,#006622,#99ff99);}
         .bar-d3{background:linear-gradient(90deg,#885500,#ffbb66);}
+        .c-c1{color:#ff88cc;} .c-c2{color:#44ddee;} .c-c3{color:#ccff55;}
+        .bar-c1{background:linear-gradient(90deg,#770033,#ff88cc);}
+        .bar-c2{background:linear-gradient(90deg,#005566,#44ddee);}
+        .bar-c3{background:linear-gradient(90deg,#445500,#ccff55);}
 
         /* CALIENTES Y FRIOS */
         .hot-cold-box { width:100%; height:calc(var(--u)*48); border-radius:calc(var(--u)*10); display:flex; justify-content:space-around; align-items:center; padding:calc(var(--u)*3); position:relative; overflow:hidden; box-shadow:0 calc(var(--u)*4) calc(var(--u)*10) rgba(0,0,0,0.5); }
@@ -479,6 +483,7 @@
                         <div class="carousel-dot" id="dot-1"></div>
                         <div class="carousel-dot" id="dot-2"></div>
                         <div class="carousel-dot" id="dot-3"></div>
+                        <div class="carousel-dot" id="dot-4"></div>
                     </div>
                     <div class="stat-panel active" id="panel-0">
                         <div class="panel-title">&#127752; Colores</div>
@@ -530,6 +535,19 @@
                             <div class="pct-bar bar-d1" id="bar-d1" style="width:0%"></div>
                             <div class="pct-bar bar-d2" id="bar-d2" style="width:0%"></div>
                             <div class="pct-bar bar-d3" id="bar-d3" style="width:0%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-panel" id="panel-4">
+                        <div class="panel-title">Columnas</div>
+                        <div class="pct-labels">
+                            <div class="pct-label c-c1">1&ordf;<span id="txt-pct-c1">0%</span></div>
+                            <div class="pct-label c-c2">2&ordf;<span id="txt-pct-c2">0%</span></div>
+                            <div class="pct-label c-c3">3&ordf;<span id="txt-pct-c3">0%</span></div>
+                        </div>
+                        <div class="pct-bar-container">
+                            <div class="pct-bar bar-c1" id="bar-c1" style="width:0%"></div>
+                            <div class="pct-bar bar-c2" id="bar-c2" style="width:0%"></div>
+                            <div class="pct-bar bar-c3" id="bar-c3" style="width:0%"></div>
                         </div>
                     </div>
                 </div>
@@ -881,8 +899,8 @@ function sT(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
 function sW(id,v){var e=document.getElementById(id);if(e)e.style.width=v+'%';}
 
 function calcStats(h){
-    if(!h.length)return{pctRed:0,pctBlack:0,pctGreen:0,pctPar:0,pctImpar:0,pctMenor:0,pctMayor:0,pctD1:0,pctD2:0,pctD3:0,hot:['36','35','34'],cold:['0','00','1']};
-    var counts={},rC=0,bC=0,gC=0,pC=0,iC=0,menC=0,mayC=0,d1=0,d2=0,d3=0;
+    if(!h.length)return{pctRed:0,pctBlack:0,pctGreen:0,pctPar:0,pctImpar:0,pctMenor:0,pctMayor:0,pctD1:0,pctD2:0,pctD3:0,pctC1:0,pctC2:0,pctC3:0,hot:['36','35','34'],cold:['0','00','1']};
+    var counts={},rC=0,bC=0,gC=0,pC=0,iC=0,menC=0,mayC=0,d1=0,d2=0,d3=0,c1=0,c2=0,c3=0;
     Object.keys(numberColors).forEach(function(n){counts[n]=0;});
     h.forEach(function(num){
         if(counts[num]===undefined)return;
@@ -890,7 +908,7 @@ function calcStats(h){
         var col=numberColors[num];
         if(col==='red')rC++;else if(col==='black')bC++;else gC++;
         var n=parseInt(num);
-        if(!isNaN(n)&&n>=1&&n<=36){if(n%2===0)pC++;else iC++;if(n<=18)menC++;else mayC++;if(n<=12)d1++;else if(n<=24)d2++;else d3++;}
+        if(!isNaN(n)&&n>=1&&n<=36){if(n%2===0)pC++;else iC++;if(n<=18)menC++;else mayC++;if(n<=12)d1++;else if(n<=24)d2++;else d3++;if(n%3===1)c1++;else if(n%3===2)c2++;else c3++;}
     });
     var t=h.length,v=pC+iC;
     var sorted=Object.keys(counts).sort(function(a,b){return counts[b]-counts[a];});
@@ -898,6 +916,7 @@ function calcStats(h){
         pctPar:t?Math.round(pC/t*100):0,pctImpar:t?Math.round(iC/t*100):0,
         pctMenor:t?Math.round(menC/t*100):0,pctMayor:t?Math.round(mayC/t*100):0,
         pctD1:v?Math.round(d1/v*100):0,pctD2:v?Math.round(d2/v*100):0,pctD3:v?Math.round(d3/v*100):0,
+        pctC1:v?Math.round(c1/v*100):0,pctC2:v?Math.round(c2/v*100):0,pctC3:v?Math.round(c3/v*100):0,
         hot:sorted.slice(0,3),cold:sorted.slice().reverse().slice(0,3)};
 }
 
@@ -934,6 +953,9 @@ function updatePizarra(data){
     sT('txt-pct-d1',s.pctD1+'%');sW('bar-d1',s.pctD1);
     sT('txt-pct-d2',s.pctD2+'%');sW('bar-d2',s.pctD2);
     sT('txt-pct-d3',s.pctD3+'%');sW('bar-d3',s.pctD3);
+    sT('txt-pct-c1',s.pctC1+'%');sW('bar-c1',s.pctC1);
+    sT('txt-pct-c2',s.pctC2+'%');sW('bar-c2',s.pctC2);
+    sT('txt-pct-c3',s.pctC3+'%');sW('bar-c3',s.pctC3);
     h1.textContent=s.hot[0];h2.textContent=s.hot[1];h3.textContent=s.hot[2];
     c1.textContent=s.cold[0];c2.textContent=s.cold[1];c3.textContent=s.cold[2];
     var hcOn=localStorage.getItem('rlt_hotcold_colors')==='1';
@@ -1390,7 +1412,7 @@ window.onload=function(){
     function goPanel(i){
         var p=document.getElementById('panel-'+cp),d=document.getElementById('dot-'+cp);
         if(p)p.classList.remove('active');if(d)d.classList.remove('active');
-        cp=i%4;
+        cp=i%5;
         var np=document.getElementById('panel-'+cp),nd=document.getElementById('dot-'+cp);
         if(np)np.classList.add('active');if(nd)nd.classList.add('active');
     }
