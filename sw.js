@@ -1,9 +1,9 @@
-const CACHE = 'pantalla-ruleta-v149';
+const CACHE = 'pantalla-ruleta-v150';
 const FILES = [
     '/manifest.json',
     '/dreams-logo.png',
     '/casino-bg.jpg',
-    '/roulette-pie.jpg',
+    '/roulette-pie.png',
     '/chile-flag.jpg',
     '/chile-flag-wood.jpg',
     '/wc26-logo.jpg',
