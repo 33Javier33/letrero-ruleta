@@ -860,6 +860,11 @@
                 <div class="input-group"><label>Mínimo:</label><input type="text" inputmode="numeric" id="inputMinSimples"></div>
                 <div class="input-group"><label>Máximo:</label><input type="text" inputmode="numeric" id="inputMaxSimples"></div>
                 <button class="btn-save-limits" id="btnUpdateLimits">💾 Guardar Límites en Pantalla</button>
+                <div class="toggle-row" style="margin-top:10px;">
+                    <button id="btnLimSpin" class="btn-spin-toggle" style="flex:1;font-size:13px;padding:10px 8px;" onclick="window.toggleLimSpin()">
+                        🔄 Rotación de columnas: <span id="limSpinLabel">DESACTIVADA</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -1673,6 +1678,13 @@
         var fxChile18On=localStorage.getItem('rlt_fx_18')==='1';
         updateFxChile18(fxChile18On);
         if(btnFxChile18)btnFxChile18.addEventListener('click',function(){fxChile18On=!fxChile18On;localStorage.setItem('rlt_fx_18',fxChile18On?'1':'0');updateFxChile18(fxChile18On);});
+
+        // Rotación de columnas en tarjeta de límites
+        var btnLimSpin=document.getElementById('btnLimSpin'),limSpinLabel=document.getElementById('limSpinLabel');
+        function updateLimSpin(on){if(!btnLimSpin||!limSpinLabel)return;limSpinLabel.textContent=on?'ACTIVADA':'DESACTIVADA';btnLimSpin.classList.toggle('active',on);}
+        var limSpinOn=localStorage.getItem('rlt_limits_spin')==='1';
+        updateLimSpin(limSpinOn);
+        window.toggleLimSpin=function(){limSpinOn=!limSpinOn;localStorage.setItem('rlt_limits_spin',limSpinOn?'1':'0');updateLimSpin(limSpinOn);showToast('Rotación columnas: '+(limSpinOn?'ACTIVADA':'DESACTIVADA'),'');};
 
         // Hot/Cold colors
         var btnHCC=document.getElementById('btnHotColdColors'),hccLabel=document.getElementById('hotColdColorsLabel');
