@@ -177,6 +177,10 @@
         .pizarra-bronce      { --pizarra-bg:#2a1200 !important; --pizarra-bg0:rgba(42,18,0,0) !important;     --pizarra-border:#cc7700 !important; }
         .pizarra-wc26        { --pizarra-bg:#060b1e !important; --pizarra-bg0:rgba(6,11,30,0) !important;     --pizarra-border:#c8a000 !important; }
         .pizarra-chile18     { --pizarra-bg:#000000 !important; --pizarra-bg0:rgba(0,0,0,0) !important;       --pizarra-border:#cc2020 !important; }
+        .pizarra-transparente{ --pizarra-bg:rgba(0,0,0,0.38) !important; --pizarra-bg0:rgba(0,0,0,0) !important; --pizarra-border:rgba(230,184,0,0.55) !important; }
+        /* Transparente: text-shadow para legibilidad sobre fondo variable */
+        .history-board.pizarra-transparente .history-item { text-shadow:0 1px 6px rgba(0,0,0,0.9),0 0 12px rgba(0,0,0,0.7); }
+        .history-board.pizarra-transparente .ball-circle  { box-shadow:inset -2px -3px 6px rgba(0,0,0,0.6),inset 1px 2px 4px rgba(255,255,255,0.2),0 2px 8px rgba(0,0,0,0.8) !important; }
         /* WC26: FIFA 2026 watermark + soccer ball pizarra */
         .history-board.pizarra-wc26 { position:relative; }
         .history-board.pizarra-wc26::before {
