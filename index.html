@@ -181,6 +181,12 @@
         /* Transparente: text-shadow para legibilidad sobre fondo variable */
         .history-board.pizarra-transparente .history-item { text-shadow:0 1px 6px rgba(0,0,0,0.9),0 0 12px rgba(0,0,0,0.7); }
         .history-board.pizarra-transparente .ball-circle  { box-shadow:inset -2px -3px 6px rgba(0,0,0,0.6),inset 1px 2px 4px rgba(255,255,255,0.2),0 2px 8px rgba(0,0,0,0.8) !important; }
+        /* Transparente: ocultar la imagen del pie (evita el borde oscuro) y redondear todo el board */
+        .history-board.pizarra-transparente {
+            border-radius:calc(var(--u)*5) !important;
+            border-bottom:calc(var(--u)*6) solid var(--pizarra-border,#e6b800) !important;
+        }
+        .right-column.pizarra-transparente .ruleta-pie { display:none; }
         /* WC26: FIFA 2026 watermark + soccer ball pizarra */
         .history-board.pizarra-wc26 { position:relative; }
         .history-board.pizarra-wc26::before {
