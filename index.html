@@ -176,6 +176,7 @@
         .pizarra-ciruela     { --pizarra-bg:#280035 !important; --pizarra-bg0:rgba(40,0,53,0) !important;     --pizarra-border:#aa00dd !important; }
         .pizarra-bronce      { --pizarra-bg:#2a1200 !important; --pizarra-bg0:rgba(42,18,0,0) !important;     --pizarra-border:#cc7700 !important; }
         .pizarra-wc26        { --pizarra-bg:#060b1e !important; --pizarra-bg0:rgba(6,11,30,0) !important;     --pizarra-border:#c8a000 !important; }
+        .pizarra-chile18     { --pizarra-bg:#000000 !important; --pizarra-bg0:rgba(0,0,0,0) !important;       --pizarra-border:#cc2020 !important; }
         /* WC26: FIFA 2026 watermark + soccer ball pizarra */
         .history-board.pizarra-wc26 { position:relative; }
         .history-board.pizarra-wc26::before {
@@ -184,6 +185,22 @@
             opacity:0.18; pointer-events:none; z-index:0;
         }
         .history-board.pizarra-wc26 .history-items-wrapper { position:relative; z-index:1; }
+        /* Chile 18: mapa de Chile con bandera como fondo de pizarra */
+        .history-board.pizarra-chile18 { position:relative; }
+        .history-board.pizarra-chile18::before {
+            content:''; position:absolute; inset:0;
+            background:url('/chile18-bg.jpg') center center / contain no-repeat;
+            opacity:0.28; pointer-events:none; z-index:0;
+        }
+        .history-board.pizarra-chile18 .history-items-wrapper { position:relative; z-index:1; }
+        /* Chile 18 ruleta-pie: continúa el mapa hacia la zona de transición */
+        .right-column.pizarra-chile18 .ruleta-pie::after {
+            content:''; position:absolute; top:0; left:0; right:0; height:80%;
+            background:url('/chile18-bg.jpg') center bottom / contain no-repeat;
+            opacity:0.18; pointer-events:none; z-index:2;
+            -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0) 100%);
+            mask-image:linear-gradient(to bottom,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0) 100%);
+        }
         /* Soccer ball overlay: fades in during spin, stays visible, then fades to roulette color */
         @keyframes wcBallOverlay {
             0%   { opacity:0; }
@@ -871,7 +888,8 @@ function updatePizarra(data){
     var nums=data.history.slice().reverse().slice(0,MAX_H);
     var bp=localStorage.getItem('rlt_ballpizarra')==='1';
     var isWC26=localStorage.getItem('rlt_pizarra_theme')==='wc26';
-    var bp2=bp||isWC26;
+    var isChile18Piz=localStorage.getItem('rlt_pizarra_theme')==='chile18';
+    var bp2=bp||isWC26||isChile18Piz;
     var brd=document.getElementById('history-board');if(brd)brd.classList.toggle('ball-mode',bp2);
     var bpCount=bp2?10:MAX_H;
     for(var i=0;i<bpCount;i++){
@@ -879,7 +897,7 @@ function updatePizarra(data){
         if(i<nums.length){
             var num=nums[i];var c=numberColors[num];
             d.classList.add(c==='red'?'color-red':c==='black'?'color-black':'color-green');
-            if(bp2){var s=document.createElement('span');s.className='ball-circle';s.textContent=num;if(i===0&&localStorage.getItem('rlt_fx_entry')!=='0')s.classList.add('ball-new');if(i===0&&localStorage.getItem('rlt_theme')==='chile18')s.classList.add('chile-entry');if(i===0&&isWC26)s.classList.add('wc26-new');d.appendChild(s);}
+            if(bp2){var s=document.createElement('span');s.className='ball-circle';s.textContent=num;if(i===0&&localStorage.getItem('rlt_fx_entry')!=='0')s.classList.add('ball-new');if(i===0&&(localStorage.getItem('rlt_theme')==='chile18'||isChile18Piz))s.classList.add('chile-entry');if(i===0&&isWC26)s.classList.add('wc26-new');d.appendChild(s);}
             else{d.textContent=num;}
         }
         iW.appendChild(d);
@@ -1152,7 +1170,7 @@ window.wPT=function(k){
     var rc=document.querySelector('.right-column');
     if(b){b.className=b.className.replace(/\bpizarra-\S+/g,'').trim();if(k)b.classList.add('pizarra-'+k);}
     if(rc){rc.className=rc.className.replace(/\bpizarra-\S+/g,'').trim();if(k)rc.classList.add('pizarra-'+k);}
-    if(b)b.classList.toggle('ball-mode',k==='wc26'||localStorage.getItem('rlt_ballpizarra')==='1');
+    if(b)b.classList.toggle('ball-mode',k==='wc26'||k==='chile18'||localStorage.getItem('rlt_ballpizarra')==='1');
 };
 window.wLT=function(k){
     var lc=document.querySelector('.limits-table-container');
@@ -1314,6 +1332,14 @@ window.onload=function(){
         if(!bc)return;
         bc.classList.remove('wc26-new');void bc.offsetWidth;
         bc.classList.add('wc26-new');
+    },8000);
+    // Chile 18 pizarra: animación bandera cada 8s
+    setInterval(function(){
+        if(localStorage.getItem('rlt_pizarra_theme')!=='chile18')return;
+        var bc=document.querySelector('#history-items .ball-circle');
+        if(!bc)return;
+        bc.classList.remove('chile-entry');void bc.offsetWidth;
+        bc.classList.add('chile-entry');
     },8000);
     var cp=0;
     function goPanel(i){
