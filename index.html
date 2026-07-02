@@ -385,7 +385,7 @@
     <div id="demoPresentNormal" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
         <img src="/dreams-logo.png" class="demo-logo-big" id="demoLogoImg" onclick="toggleFS()" style="cursor:default;">
         <div class="demo-ruleta-nombre" id="demoNombreTexto">RULETA AMERICANA</div>
-        <div class="demo-casino-nombre">CASINO PUERTO VARAS</div>
+        <div class="demo-casino-nombre" id="demoCasinoNombre">CASINO PUERTO VARAS</div>
         <div class="demo-preparando">MESA EN PREPARACIÓN</div>
     </div>
     <div id="demoPresentTut" style="position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;"></div>
@@ -521,7 +521,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="casino-name">CASINO PUERTO VARAS</div>
+            <div class="casino-name" id="casinoNombreDisplay">CASINO PUERTO VARAS</div>
         </div>
     </div>
 </div>
@@ -1169,9 +1169,14 @@ window.onload=function(){
     var demoLogoEl=document.getElementById('demoLogoImg');
     var ml2=document.getElementById('logoImg');if(demoLogoEl&&ml2)demoLogoEl.src=ml2.src;
     if(nom&&demoNomEl)demoNomEl.textContent=nom;
+    var elCN=document.getElementById('casinoNombreDisplay');
+    var elDCN=document.getElementById('demoCasinoNombre');
+    var cnSaved=localStorage.getItem('rlt_casino_nombre');
+    if(cnSaved){if(elCN)elCN.textContent=cnSaved;if(elDCN)elDCN.textContent=cnSaved;}
     if(localStorage.getItem('rlt_demo')==='1')startDemoSim();
     window.addEventListener('storage',function(e){
         if(e.key==='ruleta_nombre'){if(elT)elT.textContent=e.newValue;if(demoNomEl)demoNomEl.textContent=e.newValue||'RULETA AMERICANA';ballAnim.phase='idle';ballAnim.active=false;wA=0;}
+        if(e.key==='rlt_casino_nombre'){var v=e.newValue||'CASINO PUERTO VARAS';if(elCN)elCN.textContent=v;if(elDCN)elDCN.textContent=v;}
         if(e.key==='rlt_demo'){if(e.newValue==='1')startDemoSim();else stopDemoSim();}
         if(e.key==='rlt_demo_tutorial'&&demoSimActive&&demoOv&&demoOv.classList.contains('active'))showDemoOverlayContent();
     });

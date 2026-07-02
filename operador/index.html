@@ -863,7 +863,19 @@
             </div>
         </div>
 
-        <!-- NOMBRE RULETA — columna izquierda -->
+        <!-- NOMBRE CASINO — columna izquierda -->
+        <div class="nombre-ruleta-section">
+            <h3>Nombre del Casino</h3>
+            <p style="font-size:12px;color:#777;margin-bottom:10px;">Aparece al pie de la tarjeta de límites.</p>
+            <input type="text" id="inputCasinoNombre" maxlength="40" placeholder="CASINO PUERTO VARAS"
+                style="width:100%;padding:10px 12px;border-radius:7px;border:1px solid #444;background:#111;color:#fff;font-size:14px;letter-spacing:1px;outline:none;">
+            <button id="btnGuardarCasinoNombre"
+                style="margin-top:8px;width:100%;padding:10px;border-radius:7px;border:none;background:#1a6a1a;color:#fff;font-size:14px;font-weight:bold;cursor:pointer;">
+                Guardar Nombre
+            </button>
+        </div>
+
+        <!-- NOMBRE RULETA — columna derecha (was left) -->
         <div class="nombre-ruleta-section">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">
                 4. Nombre de la Ruleta
@@ -1504,6 +1516,21 @@
         var btnF = document.getElementById('btnNombreFrancesa');
         if (btnA) btnA.addEventListener('click', function() { setNombreRuleta('RULETA AMERICANA'); });
         if (btnF) btnF.addEventListener('click', function() { setNombreRuleta('RULETA FRANCESA'); });
+
+        // ===== NOMBRE CASINO =====
+        var inputCN = document.getElementById('inputCasinoNombre');
+        var btnCN = document.getElementById('btnGuardarCasinoNombre');
+        var savedCN = localStorage.getItem('rlt_casino_nombre');
+        if (inputCN && savedCN) inputCN.value = savedCN;
+        if (btnCN) btnCN.addEventListener('click', function() {
+            var v = (inputCN ? inputCN.value.trim() : '') || 'CASINO PUERTO VARAS';
+            localStorage.setItem('rlt_casino_nombre', v);
+            btnCN.textContent = 'Guardado ✓';
+            setTimeout(function() { btnCN.textContent = 'Guardar Nombre'; }, 1800);
+        });
+        if (inputCN) inputCN.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') btnCN && btnCN.click();
+        });
 
         // ===== TEMAS DE FONDO =====
         function setTema(key) {
