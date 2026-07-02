@@ -373,6 +373,7 @@
             100% { opacity:1; transform:perspective(180px) rotateX(0deg) translateY(0); }
         }
         .limits-table thead th.lbl-spin { animation:lblSpinIn 0.5s ease-out forwards; }
+        .limits-table tbody td.lbl-spin { animation:lblSpinIn 0.5s ease-out both; }
         .casino-name { flex-shrink:0; text-align:center; color:#e6b800; font-size:calc(var(--u)*16); padding:calc(var(--u)*6) 0 0; letter-spacing:calc(var(--u)*2); font-weight:bold; text-shadow:0 0 calc(var(--u)*6) rgba(230,184,0,0.5); }
 
         /* LOGO PEQUEÑO EN LA TABLA */
@@ -1237,6 +1238,11 @@ function updateLimitsSpin(){
         var ts2=document.querySelector('.limits-table thead th:nth-child(4)');
         if(td2){td2.classList.remove('lbl-spin');void td2.offsetWidth;td2.innerHTML=LSPIN_D[lspinIdxD];td2.classList.add('lbl-spin');}
         if(ts2){ts2.classList.remove('lbl-spin');void ts2.offsetWidth;ts2.innerHTML=LSPIN_S[lspinIdxS];ts2.classList.add('lbl-spin');}
+        document.querySelectorAll('.limits-table tbody tr').forEach(function(row,i){
+            var c3=row.querySelector('td:nth-child(3)'),c4=row.querySelector('td:nth-child(4)');
+            if(c3){c3.classList.remove('lbl-spin');void c3.offsetWidth;c3.style.animationDelay=(170+i*170)+'ms';c3.classList.add('lbl-spin');}
+            if(c4){c4.classList.remove('lbl-spin');void c4.offsetWidth;c4.style.animationDelay=(170+i*170)+'ms';c4.classList.add('lbl-spin');}
+        });
     },3500);
 }
 function checkThemes(){
