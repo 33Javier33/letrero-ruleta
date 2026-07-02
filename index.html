@@ -191,6 +191,17 @@
             78%  { opacity:1; }
             100% { opacity:0; }
         }
+        /* All WC26 pizarra balls permanently show the Trionda soccer ball */
+        .history-board.pizarra-wc26 .ball-circle {
+            background:url('/wc26-ball.jpg') center / 115% !important;
+            box-shadow:inset -3px -4px 9px rgba(0,0,0,0.45),inset 1px 2px 5px rgba(255,255,255,0.15),0 3px 9px rgba(0,0,0,0.65) !important;
+            text-shadow:0 1px 4px #000,0 0 10px rgba(0,0,0,0.9) !important;
+        }
+        /* Number color indicates roulette color */
+        .history-board.pizarra-wc26 .color-red .ball-circle   { color:#ff6666 !important; }
+        .history-board.pizarra-wc26 .color-black .ball-circle { color:#ffd700 !important; }
+        .history-board.pizarra-wc26 .color-green .ball-circle { color:#44ff88 !important; }
+        /* Entry overlay: soccer ball fades in during spin → fades out revealing number on ball bg */
         .history-board.pizarra-wc26 .ball-new::after {
             content:''; position:absolute; inset:0; border-radius:50%;
             background:url('/wc26-ball.jpg') center / 115%;
@@ -650,14 +661,19 @@ function drawBallOnCanvas(canvas){
     ctx.beginPath();ctx.arc(bx+br*.55,by+br*.55,br*.88,0,Math.PI*2);
     ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fill();
     if(localStorage.getItem('rlt_pizarra_theme')==='wc26'&&_wc26BallImg.complete&&_wc26BallImg.naturalWidth){
-        // Soccer ball (Trionda) for WC26 theme — rotate with ballAnim angle for spin effect
         ctx.save();
         ctx.beginPath();ctx.arc(bx,by,br,0,Math.PI*2);ctx.clip();
-        ctx.translate(bx,by);ctx.rotate(ballAnim.bAngle*2);ctx.translate(-bx,-by);
-        var sc=1.15;ctx.drawImage(_wc26BallImg,bx-br*sc,by-br*sc,br*2*sc,br*2*sc);
+        // Dark base so white jpg edges never bleed through
+        ctx.fillStyle='#111';ctx.fill();
+        ctx.translate(bx,by);
+        ctx.rotate(-ballAnim.bAngle);
+        ctx.translate(-bx,-by);
+        var sc=1.25;ctx.drawImage(_wc26BallImg,bx-br*sc,by-br*sc,br*2*sc,br*2*sc);
         ctx.restore();
-        // Thin border
-        ctx.beginPath();ctx.arc(bx,by,br,0,Math.PI*2);ctx.strokeStyle='rgba(0,0,0,0.3)';ctx.lineWidth=.6;ctx.stroke();
+        // Specular highlight on top of ball image
+        ctx.beginPath();ctx.arc(bx-br*.32,by-br*.38,br*.22,0,Math.PI*2);
+        ctx.fillStyle='rgba(255,255,255,0.38)';ctx.fill();
+        ctx.beginPath();ctx.arc(bx,by,br,0,Math.PI*2);ctx.strokeStyle='rgba(0,0,0,0.35)';ctx.lineWidth=.7;ctx.stroke();
     } else {
         // Ivory ball body
         var g=ctx.createRadialGradient(bx-br*.42,by-br*.46,br*.04,bx,by,br);
