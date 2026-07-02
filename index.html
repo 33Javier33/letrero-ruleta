@@ -1298,6 +1298,14 @@ window.onload=function(){
         bc.classList.add('chile-entry');
         setTimeout(function(){bc.classList.remove('chile-entry');},2500);
     },8000);
+    // WC26 soccer ball overlay every 8s
+    setInterval(function(){
+        if(localStorage.getItem('rlt_pizarra_theme')!=='wc26')return;
+        var bc=document.querySelector('#history-items .ball-circle');
+        if(!bc)return;
+        bc.classList.remove('wc26-new');void bc.offsetWidth;
+        bc.classList.add('wc26-new');
+    },8000);
     var cp=0;
     function goPanel(i){
         var p=document.getElementById('panel-'+cp),d=document.getElementById('dot-'+cp);
