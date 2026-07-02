@@ -184,17 +184,18 @@
             opacity:0.18; pointer-events:none; z-index:0;
         }
         .history-board.pizarra-wc26 .history-items-wrapper { position:relative; z-index:1; }
-        /* Soccer ball entry overlay: fades in during spin → fades out revealing the roulette color */
+        /* Soccer ball overlay: fades in during spin, stays visible, then fades to roulette color */
         @keyframes wcBallOverlay {
             0%   { opacity:0; }
-            18%  { opacity:1; }
-            78%  { opacity:1; }
+            10%  { opacity:1; }
+            80%  { opacity:1; }
             100% { opacity:0; }
         }
-        .history-board.pizarra-wc26 .ball-new::after {
+        .history-board.pizarra-wc26 .ball-new::after,
+        .history-board.pizarra-wc26 .wc26-new::after {
             content:''; position:absolute; inset:0; border-radius:50%;
             background:url('/wc26-ball.jpg') center / 115%;
-            animation:wcBallOverlay 1.5s ease-out forwards;
+            animation:wcBallOverlay 4s ease-out forwards;
             pointer-events:none;
         }
         .history-board.pizarra-beige .color-red, .history-board.pizarra-humo .color-red   { color:#aa0000; }
@@ -860,14 +861,16 @@ function updatePizarra(data){
     iW.innerHTML='';
     var nums=data.history.slice().reverse().slice(0,MAX_H);
     var bp=localStorage.getItem('rlt_ballpizarra')==='1';
-    var brd=document.getElementById('history-board');if(brd)brd.classList.toggle('ball-mode',bp);
-    var bpCount=bp?10:MAX_H;
+    var isWC26=localStorage.getItem('rlt_pizarra_theme')==='wc26';
+    var bp2=bp||isWC26;
+    var brd=document.getElementById('history-board');if(brd)brd.classList.toggle('ball-mode',bp2);
+    var bpCount=bp2?10:MAX_H;
     for(var i=0;i<bpCount;i++){
         var d=document.createElement('div');d.className='history-item';
         if(i<nums.length){
             var num=nums[i];var c=numberColors[num];
             d.classList.add(c==='red'?'color-red':c==='black'?'color-black':'color-green');
-            if(bp){var s=document.createElement('span');s.className='ball-circle';s.textContent=num;if(i===0&&localStorage.getItem('rlt_fx_entry')!=='0')s.classList.add('ball-new');if(i===0&&localStorage.getItem('rlt_theme')==='chile18')s.classList.add('chile-entry');d.appendChild(s);}
+            if(bp2){var s=document.createElement('span');s.className='ball-circle';s.textContent=num;if(i===0&&localStorage.getItem('rlt_fx_entry')!=='0')s.classList.add('ball-new');if(i===0&&localStorage.getItem('rlt_theme')==='chile18')s.classList.add('chile-entry');if(i===0&&isWC26)s.classList.add('wc26-new');d.appendChild(s);}
             else{d.textContent=num;}
         }
         iW.appendChild(d);
