@@ -184,15 +184,18 @@
             opacity:0.18; pointer-events:none; z-index:0;
         }
         .history-board.pizarra-wc26 .history-items-wrapper { position:relative; z-index:1; }
-        /* Soccer ball: all balls use the actual Trionda ball image */
-        .history-board.pizarra-wc26 .ball-circle,
-        .history-board.pizarra-wc26 .color-red .ball-circle,
-        .history-board.pizarra-wc26 .color-black .ball-circle,
-        .history-board.pizarra-wc26 .color-green .ball-circle {
-            background: url('/wc26-ball.jpg') center / 115% !important;
-            box-shadow:inset -3px -4px 8px rgba(0,0,0,0.4),inset 2px 2px 4px rgba(255,255,255,0.25),0 4px 10px rgba(0,0,0,0.7) !important;
-            color:#fff !important;
-            text-shadow:0 0 6px #000,0 1px 3px #000,0 0 14px rgba(0,0,0,0.95) !important;
+        /* Soccer ball entry overlay: spins in as Trionda ball then fades revealing the number color */
+        @keyframes wcBallOverlay {
+            0%   { opacity:0; }
+            18%  { opacity:1; }
+            78%  { opacity:1; }
+            100% { opacity:0; }
+        }
+        .history-board.pizarra-wc26 .ball-new::after {
+            content:''; position:absolute; inset:0; border-radius:50%;
+            background:url('/wc26-ball.jpg') center / 115%;
+            animation:wcBallOverlay 1.5s ease-out forwards;
+            pointer-events:none;
         }
         .history-board.pizarra-beige .color-red, .history-board.pizarra-humo .color-red   { color:#aa0000; }
         .history-board.pizarra-beige .color-black, .history-board.pizarra-humo .color-black { color:#333; }
