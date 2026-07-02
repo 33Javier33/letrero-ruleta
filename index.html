@@ -180,28 +180,19 @@
         .history-board.pizarra-wc26 { position:relative; }
         .history-board.pizarra-wc26::before {
             content:''; position:absolute; inset:0;
-            background:url('/wc26-logo.jpg') center 38% / 80% auto no-repeat;
+            background:url('/wc26-logo.jpg') center center / cover no-repeat;
             opacity:0.18; pointer-events:none; z-index:0;
         }
         .history-board.pizarra-wc26 .history-items-wrapper { position:relative; z-index:1; }
-        /* Soccer ball: all balls become Trionda-style multicolor */
+        /* Soccer ball: all balls use the actual Trionda ball image */
         .history-board.pizarra-wc26 .ball-circle,
         .history-board.pizarra-wc26 .color-red .ball-circle,
         .history-board.pizarra-wc26 .color-black .ball-circle,
         .history-board.pizarra-wc26 .color-green .ball-circle {
-            background:
-                radial-gradient(circle at 38% 28%, rgba(255,255,255,0.5) 0%, transparent 34%),
-                conic-gradient(from 22deg,
-                    #1456c0 0deg 68deg,
-                    #f0f0f0 68deg 108deg,
-                    #c41230 108deg 163deg,
-                    #f0f0f0 163deg 198deg,
-                    #0a7814 198deg 262deg,
-                    #1a90e0 262deg 308deg,
-                    #f0f0f0 308deg 360deg) !important;
-            box-shadow:inset -3px -4px 8px rgba(0,0,0,0.5),inset 2px 2px 5px rgba(255,255,255,0.3),0 4px 10px rgba(0,0,0,0.7),0 0 14px rgba(20,86,192,0.4) !important;
+            background: url('/wc26-ball.jpg') center / 115% !important;
+            box-shadow:inset -3px -4px 8px rgba(0,0,0,0.4),inset 2px 2px 4px rgba(255,255,255,0.25),0 4px 10px rgba(0,0,0,0.7) !important;
             color:#fff !important;
-            text-shadow:0 1px 4px #000,0 0 10px rgba(0,0,0,0.9) !important;
+            text-shadow:0 0 6px #000,0 1px 3px #000,0 0 14px rgba(0,0,0,0.95) !important;
         }
         .history-board.pizarra-beige .color-red, .history-board.pizarra-humo .color-red   { color:#aa0000; }
         .history-board.pizarra-beige .color-black, .history-board.pizarra-humo .color-black { color:#333; }
@@ -632,6 +623,8 @@ function drawWheel(canvas,angle,o){
 
 var wA=0;
 var mO={ob:72,or:68,no:65,ni:47,ii:43,hr:10,fs:7,aw:3.5,br:3.5,diamonds:true};
+// Preload soccer ball image for WC26 theme
+var _wc26BallImg=new Image();_wc26BallImg.src='/wc26-ball.jpg';
 // ---- BALL SPIN ANIMATION ----
 var ballAnim={
     active:false, phase:'idle',
@@ -653,15 +646,26 @@ function drawBallOnCanvas(canvas){
     // Drop shadow
     ctx.beginPath();ctx.arc(bx+br*.55,by+br*.55,br*.88,0,Math.PI*2);
     ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fill();
-    // Ivory ball body
-    var g=ctx.createRadialGradient(bx-br*.42,by-br*.46,br*.04,bx,by,br);
-    g.addColorStop(0,'#ffffff');g.addColorStop(.28,'#f4ede0');g.addColorStop(.65,'#d6cabb');g.addColorStop(1,'#9a8e80');
-    ctx.beginPath();ctx.arc(bx,by,br,0,Math.PI*2);
-    ctx.fillStyle=g;ctx.fill();
-    ctx.strokeStyle='rgba(0,0,0,0.22)';ctx.lineWidth=.5;ctx.stroke();
-    // Specular highlight dot
-    ctx.beginPath();ctx.arc(bx-br*.36,by-br*.42,br*.22,0,Math.PI*2);
-    ctx.fillStyle='rgba(255,255,255,0.72)';ctx.fill();
+    if(localStorage.getItem('rlt_pizarra_theme')==='wc26'&&_wc26BallImg.complete&&_wc26BallImg.naturalWidth){
+        // Soccer ball (Trionda) for WC26 theme — rotate with ballAnim angle for spin effect
+        ctx.save();
+        ctx.beginPath();ctx.arc(bx,by,br,0,Math.PI*2);ctx.clip();
+        ctx.translate(bx,by);ctx.rotate(ballAnim.bAngle*2);ctx.translate(-bx,-by);
+        var sc=1.15;ctx.drawImage(_wc26BallImg,bx-br*sc,by-br*sc,br*2*sc,br*2*sc);
+        ctx.restore();
+        // Thin border
+        ctx.beginPath();ctx.arc(bx,by,br,0,Math.PI*2);ctx.strokeStyle='rgba(0,0,0,0.3)';ctx.lineWidth=.6;ctx.stroke();
+    } else {
+        // Ivory ball body
+        var g=ctx.createRadialGradient(bx-br*.42,by-br*.46,br*.04,bx,by,br);
+        g.addColorStop(0,'#ffffff');g.addColorStop(.28,'#f4ede0');g.addColorStop(.65,'#d6cabb');g.addColorStop(1,'#9a8e80');
+        ctx.beginPath();ctx.arc(bx,by,br,0,Math.PI*2);
+        ctx.fillStyle=g;ctx.fill();
+        ctx.strokeStyle='rgba(0,0,0,0.22)';ctx.lineWidth=.5;ctx.stroke();
+        // Specular highlight dot
+        ctx.beginPath();ctx.arc(bx-br*.36,by-br*.42,br*.22,0,Math.PI*2);
+        ctx.fillStyle='rgba(255,255,255,0.72)';ctx.fill();
+    }
     ctx.restore();
 }
 
