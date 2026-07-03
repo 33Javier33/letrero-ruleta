@@ -729,6 +729,12 @@
         .btn-spin-toggle.active { background:linear-gradient(135deg,#0a280a,#0f420f); border-color:#33cc33; color:#33ff33; }
         .btn-spin-toggle:active { opacity:0.8; transform:scale(0.98); }
         .toggle-row { grid-column:1/-1; display:flex; align-items:stretch; gap:8px; }
+
+        /* PESTAÑAS DE CONFIGURACIÓN */
+        .cfg-tabs { grid-column:1/-1; display:flex; gap:6px; margin-bottom:4px; }
+        .cfg-tab  { flex:1; padding:11px 4px; background:#111; border:2px solid #333; border-radius:10px; color:#777; font-size:13px; font-weight:bold; cursor:pointer; text-align:center; transition:all 0.18s; -webkit-tap-highlight-color:transparent; }
+        .cfg-tab:active { opacity:0.75; transform:scale(0.97); }
+        .cfg-tab.active { background:#002244; border-color:#0055cc; color:#66aaff; }
     </style>
 </head>
 <body>
@@ -827,8 +833,15 @@
     </div>
     <div class="settings-modal-body">
 
+        <!-- PESTAÑAS -->
+        <div class="cfg-tabs">
+            <button class="cfg-tab active" data-tab="mesa">⚙️ Mesa</button>
+            <button class="cfg-tab" data-tab="visual">🎨 Visual</button>
+            <button class="cfg-tab" data-tab="efectos">✨ Efectos</button>
+        </div>
+
         <!-- URL PANTALLA — ancho completo -->
-        <div class="nombre-ruleta-section cfg-full">
+        <div class="nombre-ruleta-section cfg-full" data-tab="mesa">
             <h3>🔗 URL Pantalla de la Mesa
                 <button class="help-btn" onclick="openHelp('pantalla')" title="Ayuda: segunda pantalla" style="margin-left:8px;">?</button>
             </h3>
@@ -841,7 +854,7 @@
         </div>
 
         <!-- LÍMITES — ancho completo -->
-        <div class="admin-section cfg-full">
+        <div class="admin-section cfg-full" data-tab="mesa">
             <div class="limits-header" id="toggleLimitsBtn">
                 3. Configuración de Límites
                 <div style="display:flex;align-items:center;gap:8px;">
@@ -869,7 +882,7 @@
         </div>
 
         <!-- NOMBRE CASINO — columna izquierda -->
-        <div class="nombre-ruleta-section">
+        <div class="nombre-ruleta-section" data-tab="mesa">
             <h3>Nombre del Casino</h3>
             <p style="font-size:12px;color:#777;margin-bottom:10px;">Aparece al pie de la tarjeta de límites.</p>
             <input type="text" id="inputCasinoNombre" maxlength="40" placeholder="CASINO PUERTO VARAS"
@@ -881,7 +894,7 @@
         </div>
 
         <!-- NOMBRE RULETA — columna derecha (was left) -->
-        <div class="nombre-ruleta-section">
+        <div class="nombre-ruleta-section" data-tab="mesa">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">
                 4. Nombre de la Ruleta
                 <button class="help-btn" onclick="openHelp('nombre')" title="Ayuda: tipos de ruleta">?</button>
@@ -893,7 +906,7 @@
         </div>
 
         <!-- ANIMACIÓN DE BOLA — columna derecha -->
-        <div class="nombre-ruleta-section">
+        <div class="nombre-ruleta-section" data-tab="efectos">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">6. Animación Ruleta
                 <button class="help-btn" onclick="openHelp('ballspin')" title="Ayuda: animación de la bolita">?</button>
             </h3>
@@ -904,7 +917,7 @@
         </div>
 
         <!-- TEMA DE RULETA — columna izquierda -->
-        <div class="nombre-ruleta-section">
+        <div class="nombre-ruleta-section" data-tab="visual">
             <h3>Tema de Ruleta</h3>
             <p style="font-size:12px;color:#777;margin-bottom:12px;">Vista de la ruleta en pantalla.</p>
             <button id="btnThemeTop" class="btn-nombre selected" data-wtheme="top" style="margin-bottom:8px;">
@@ -916,7 +929,7 @@
         </div>
 
         <!-- CENTRO DE LA RULETA — fondo del hub -->
-        <div class="nombre-ruleta-section cfg-full">
+        <div class="nombre-ruleta-section cfg-full" data-tab="visual">
             <h3 style="margin-bottom:10px;">Centro de la Ruleta</h3>
             <p style="font-size:12px;color:#777;margin-bottom:12px;">Color del círculo central cuando no hay número.</p>
             <div class="tema-grid" style="grid-template-columns:repeat(3,1fr);">
@@ -933,7 +946,7 @@
         </div>
 
         <!-- PIZARRA EN BOLAS — columna izquierda -->
-        <div class="nombre-ruleta-section">
+        <div class="nombre-ruleta-section" data-tab="efectos">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">7. Pizarra en Bolas
                 <button class="help-btn" onclick="openHelp('ballpizarra')" title="Ayuda: historial en bolas">?</button>
             </h3>
@@ -944,7 +957,7 @@
         </div>
 
         <!-- EFECTOS DE BOLAS — columna derecha -->
-        <div class="nombre-ruleta-section">
+        <div class="nombre-ruleta-section" data-tab="efectos">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">10. Efectos de Bolas
                 <button class="help-btn" onclick="openHelp('efectos')" title="Ayuda: efectos de bolas">?</button>
             </h3>
@@ -964,7 +977,7 @@
         </div>
 
         <!-- TEMA DE FONDO — ancho completo -->
-        <div class="tema-section cfg-full">
+        <div class="tema-section cfg-full" data-tab="visual">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">5. Tema de Fondo
                 <button class="help-btn" onclick="openHelp('tema')" title="Ayuda: temas y textura">?</button>
             </h3>
@@ -1004,7 +1017,7 @@
         </div>
 
         <!-- COLOR PIZARRA — columna izquierda -->
-        <div class="nombre-ruleta-section">
+        <div class="nombre-ruleta-section" data-tab="visual">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">8. Color Pizarra
                 <button class="help-btn" onclick="openHelp('pizarra')" title="Ayuda: color de la pizarra">?</button>
             </h3>
@@ -1042,7 +1055,7 @@
         </div>
 
         <!-- COLOR TARJETA LÍMITES — columna derecha -->
-        <div class="nombre-ruleta-section">
+        <div class="nombre-ruleta-section" data-tab="visual">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">9. Color Límites
                 <button class="help-btn" onclick="openHelp('limtheme')" title="Ayuda: color tarjeta límites">?</button>
             </h3>
@@ -1064,7 +1077,7 @@
         </div>
 
         <!-- EFECTOS DE LÍMITES -->
-        <div class="nombre-ruleta-section cfg-full">
+        <div class="nombre-ruleta-section cfg-full" data-tab="visual">
             <h3 style="margin-bottom:12px;">Efectos de Límites</h3>
             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
                 <button class="tema-swatch lim-fx-btn" data-lim-fx="none" style="background:#0a0a18;min-height:52px;">
@@ -1086,7 +1099,7 @@
         </div>
 
         <!-- CALIENTES Y FRÍOS — ancho completo -->
-        <div class="nombre-ruleta-section cfg-full">
+        <div class="nombre-ruleta-section cfg-full" data-tab="efectos">
             <h3 style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
                 11. Números Calientes y Fríos
                 <button class="help-btn" onclick="openHelp('hotcold')" title="Ayuda: números calientes y fríos">?</button>
@@ -2269,6 +2282,33 @@
         deferredInstall = null;
         showToast('✔ App instalada correctamente', 'success');
     });
+
+    /* =========================================
+       PESTAÑAS DE CONFIGURACIÓN
+       ========================================= */
+    (function(){
+        var activeCfgTab = 'mesa';
+        function applyCfgTab(tab) {
+            activeCfgTab = tab;
+            document.querySelectorAll('.cfg-tab').forEach(function(t) {
+                t.classList.toggle('active', t.dataset.tab === tab);
+            });
+            document.querySelectorAll('.settings-modal-body > [data-tab]').forEach(function(s) {
+                s.style.display = s.dataset.tab === tab ? '' : 'none';
+            });
+        }
+        document.querySelectorAll('.cfg-tab').forEach(function(tab) {
+            tab.addEventListener('click', function() { applyCfgTab(this.dataset.tab); });
+        });
+        // Al abrir el modal, resetear a pestaña Mesa
+        var origOpen = window.openSettings;
+        window.openSettings = function() {
+            if(origOpen) origOpen();
+            applyCfgTab('mesa');
+        };
+        // Inicializar: ocultar tabs no activos
+        applyCfgTab('mesa');
+    })();
 </script>
 <!-- ========== MODAL DE AYUDA ========== -->
 <div class="help-overlay" id="helpOverlay">
