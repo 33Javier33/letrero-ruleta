@@ -1290,12 +1290,7 @@ function checkThemes(){
 }
 window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();if(e.key==='rlt_ballpizarra'||e.key==='rlt_hotcold_colors'){lastD=null;checkStorage();}if(e.key==='rlt_hc_hot_fx'||e.key==='rlt_hc_cold_fx')applyHcFx();if(e.key==='rlt_fullscreen'){try{var want=e.newValue==='1';if(want){var el=document.documentElement;var req=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;if(req)req.call(el);}else{var ex=document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen||document.msExitFullscreen;if(ex)ex.call(document);}}catch(ex2){}}});
 
-(function(){
-    var wl=null;
-    function aqWL(){if('wakeLock' in navigator){navigator.wakeLock.request('screen').then(function(l){wl=l;l.addEventListener('release',function(){wl=null;});}).catch(function(){});}}
-    aqWL();
-    document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')aqWL();});
-})();
+/* Wake Lock removido — el equipo maneja suspensión desde opciones del SO */
 
 window.onload=function(){
     resizeCanvas();
