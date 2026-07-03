@@ -730,6 +730,12 @@
         .btn-spin-toggle:active { opacity:0.8; transform:scale(0.98); }
         .toggle-row { grid-column:1/-1; display:flex; align-items:stretch; gap:8px; }
 
+        /* ACORDEONES DENTRO DE PESTAÑA VISUAL */
+        .acc-header { grid-column:1/-1; cursor:pointer; display:flex; justify-content:space-between; align-items:center; padding:11px 14px; background:#111a11; border:1px solid #2a3a2a; border-radius:10px; color:#88cc88; font-size:14px; font-weight:bold; user-select:none; -webkit-tap-highlight-color:transparent; transition:background 0.15s; margin-top:4px; }
+        .acc-header:hover { background:#162016; }
+        .acc-header:active { opacity:0.8; }
+        .acc-icon { font-size:11px; color:#55aa55; margin-left:6px; }
+
         /* PESTAÑAS DE CONFIGURACIÓN */
         .cfg-tabs { grid-column:1/-1; display:flex; gap:6px; margin-bottom:4px; }
         .cfg-tab  { flex:1; padding:11px 4px; background:#111; border:2px solid #333; border-radius:10px; color:#777; font-size:13px; font-weight:bold; cursor:pointer; text-align:center; transition:all 0.18s; -webkit-tap-highlight-color:transparent; }
@@ -916,8 +922,11 @@
             </button>
         </div>
 
+        <!-- ACORDEÓN: RULETA -->
+        <div class="acc-header" data-tab="visual" data-acc-toggle="ruleta">🎡 Ruleta <span class="acc-icon">▲</span></div>
+
         <!-- TEMA DE RULETA — columna izquierda -->
-        <div class="nombre-ruleta-section" data-tab="visual">
+        <div class="nombre-ruleta-section" data-tab="visual" data-acc-group="ruleta">
             <h3>Tema de Ruleta</h3>
             <p style="font-size:12px;color:#777;margin-bottom:12px;">Vista de la ruleta en pantalla.</p>
             <button id="btnThemeTop" class="btn-nombre selected" data-wtheme="top" style="margin-bottom:8px;">
@@ -929,7 +938,7 @@
         </div>
 
         <!-- CENTRO DE LA RULETA — fondo del hub -->
-        <div class="nombre-ruleta-section cfg-full" data-tab="visual">
+        <div class="nombre-ruleta-section cfg-full" data-tab="visual" data-acc-group="ruleta">
             <h3 style="margin-bottom:10px;">Centro de la Ruleta</h3>
             <p style="font-size:12px;color:#777;margin-bottom:12px;">Color del círculo central cuando no hay número.</p>
             <div class="tema-grid" style="grid-template-columns:repeat(3,1fr);">
@@ -977,7 +986,7 @@
         </div>
 
         <!-- TEMA DE FONDO — ancho completo -->
-        <div class="tema-section cfg-full" data-tab="visual">
+        <div class="tema-section cfg-full" data-tab="visual" data-acc-group="ruleta">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">5. Tema de Fondo
                 <button class="help-btn" onclick="openHelp('tema')" title="Ayuda: temas y textura">?</button>
             </h3>
@@ -1016,8 +1025,11 @@
             </div>
         </div>
 
+        <!-- ACORDEÓN: PIZARRA -->
+        <div class="acc-header" data-tab="visual" data-acc-toggle="pizarra">📋 Pizarra <span class="acc-icon">▼</span></div>
+
         <!-- COLOR PIZARRA — columna izquierda -->
-        <div class="nombre-ruleta-section" data-tab="visual">
+        <div class="nombre-ruleta-section" data-tab="visual" data-acc-group="pizarra">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">8. Color Pizarra
                 <button class="help-btn" onclick="openHelp('pizarra')" title="Ayuda: color de la pizarra">?</button>
             </h3>
@@ -1054,8 +1066,11 @@
             </div>
         </div>
 
+        <!-- ACORDEÓN: TARJETA LÍMITES -->
+        <div class="acc-header" data-tab="visual" data-acc-toggle="tarjeta">💳 Tarjeta Límites <span class="acc-icon">▼</span></div>
+
         <!-- COLOR TARJETA LÍMITES — columna derecha -->
-        <div class="nombre-ruleta-section" data-tab="visual">
+        <div class="nombre-ruleta-section" data-tab="visual" data-acc-group="tarjeta">
             <h3 style="display:flex;align-items:center;justify-content:space-between;">9. Color Límites
                 <button class="help-btn" onclick="openHelp('limtheme')" title="Ayuda: color tarjeta límites">?</button>
             </h3>
@@ -1077,7 +1092,7 @@
         </div>
 
         <!-- EFECTOS DE LÍMITES -->
-        <div class="nombre-ruleta-section cfg-full" data-tab="visual">
+        <div class="nombre-ruleta-section cfg-full" data-tab="visual" data-acc-group="tarjeta">
             <h3 style="margin-bottom:12px;">Efectos de Límites</h3>
             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
                 <button class="tema-swatch lim-fx-btn" data-lim-fx="none" style="background:#0a0a18;min-height:52px;">
@@ -2284,29 +2299,53 @@
     });
 
     /* =========================================
-       PESTAÑAS DE CONFIGURACIÓN
+       PESTAÑAS + ACORDEONES DE CONFIGURACIÓN
        ========================================= */
     (function(){
         var activeCfgTab = 'mesa';
+        var accStates = { ruleta:true, pizarra:false, tarjeta:false };
+
+        function applyAccordions() {
+            Object.keys(accStates).forEach(function(grp) {
+                var open = accStates[grp];
+                var hdr = document.querySelector('[data-acc-toggle="'+grp+'"]');
+                if(hdr) hdr.querySelector('.acc-icon').textContent = open ? '▲' : '▼';
+                document.querySelectorAll('[data-acc-group="'+grp+'"]').forEach(function(s) {
+                    s.style.display = open ? '' : 'none';
+                });
+            });
+        }
+
         function applyCfgTab(tab) {
             activeCfgTab = tab;
             document.querySelectorAll('.cfg-tab').forEach(function(t) {
                 t.classList.toggle('active', t.dataset.tab === tab);
             });
             document.querySelectorAll('.settings-modal-body > [data-tab]').forEach(function(s) {
-                s.style.display = s.dataset.tab === tab ? '' : 'none';
+                if(s.dataset.tab !== tab) { s.style.display = 'none'; return; }
+                if(s.dataset.accGroup) return; // acordeón controla visibilidad
+                s.style.display = '';
             });
+            if(tab === 'visual') applyAccordions();
         }
+
         document.querySelectorAll('.cfg-tab').forEach(function(tab) {
             tab.addEventListener('click', function() { applyCfgTab(this.dataset.tab); });
         });
-        // Al abrir el modal, resetear a pestaña Mesa
+
+        document.querySelectorAll('[data-acc-toggle]').forEach(function(hdr) {
+            hdr.addEventListener('click', function() {
+                var grp = this.dataset.accToggle;
+                accStates[grp] = !accStates[grp];
+                applyAccordions();
+            });
+        });
+
         var origOpen = window.openSettings;
         window.openSettings = function() {
             if(origOpen) origOpen();
             applyCfgTab('mesa');
         };
-        // Inicializar: ocultar tabs no activos
         applyCfgTab('mesa');
     })();
 </script>
