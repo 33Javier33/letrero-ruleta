@@ -879,9 +879,16 @@ function spinToNumber(data){
     ballAnim.pendingData=data;
 }
 
-function animW(){
+var _lastAnimTs=0;
+function animW(ts){
+    var ph=ballAnim.phase;
+    var moving=ph==='spin'||ph==='settle';
+    if(!moving){
+        if(ts-_lastAnimTs<50){requestAnimationFrame(animW);return;}
+        _lastAnimTs=ts;
+    }
     tickBall();
-    if(ballAnim.phase==='idle'||ballAnim.phase==='rest')wA+=.008;
+    if(ph==='idle'||ph==='rest')wA+=.008;
     var c=document.getElementById('wheelCanvas');
     var wTheme=localStorage.getItem('rlt_wheel_theme')||'top';
     if(wTheme==='classic'){drawWheelClassic(c,wA,mO);}else{drawWheel(c,wA,mO);}
@@ -1320,8 +1327,8 @@ window.onload=function(){
         if(e.key==='rlt_demo'){if(e.newValue==='1')startDemoSim();else stopDemoSim();}
         if(e.key==='rlt_demo_tutorial'&&demoSimActive&&demoOv&&demoOv.classList.contains('active'))showDemoOverlayContent();
     });
-    checkStorage();setInterval(checkStorage,300);
-    checkThemes();setInterval(checkThemes,300);
+    checkStorage();setInterval(checkStorage,500);
+    checkThemes();setInterval(checkThemes,500);
     applyHcFx();
     animW();
     // Card suits mosaic watermark for lim-cartas theme (::before, very subtle)
