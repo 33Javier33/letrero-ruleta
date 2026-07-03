@@ -879,12 +879,12 @@ function spinToNumber(data){
     ballAnim.pendingData=data;
 }
 
-var _lastAnimTs=0;
+var _lastAnimTs=0,_animRunning=false;
 function animW(ts){
     var ph=ballAnim.phase;
     var moving=ph==='spin'||ph==='settle';
     if(!moving){
-        if(ts-_lastAnimTs<50){requestAnimationFrame(animW);return;}
+        if(ts-_lastAnimTs<220){requestAnimationFrame(animW);return;} // ~4fps en reposo
         _lastAnimTs=ts;
     }
     tickBall();
