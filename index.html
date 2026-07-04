@@ -890,7 +890,7 @@ function animW(){
     var ph=ballAnim.phase;
     var moving=ph==='spin'||ph==='settle';
     tickBall();
-    if(ph==='idle'||ph==='rest')wA+=.004;
+    if(ph==='idle'||ph==='rest'){if(localStorage.getItem('rlt_wheel_idle_spin')!=='0')wA+=.004;}
     var c=document.getElementById('wheelCanvas');
     var wTheme=localStorage.getItem('rlt_wheel_theme')||'top';
     if(wTheme==='classic'){drawWheelClassic(c,wA,mO);}else{drawWheel(c,wA,mO);}

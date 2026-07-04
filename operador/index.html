@@ -813,6 +813,13 @@
         <button class="help-btn" onclick="openHelp('ballspin')" title="Ayuda: giro de bola" style="width:40px;flex-shrink:0;font-size:16px;">?</button>
     </div>
 
+    <!-- TOGGLE RUEDA EN REPOSO -->
+    <div class="toggle-row">
+        <button id="btnWheelIdleToggle" class="btn-spin-toggle" style="flex:1;" onclick="window.toggleWheelIdle()">
+            🎡 Rueda en reposo: <span id="wheelIdleLabel">GIRANDO</span>
+        </button>
+    </div>
+
     <!-- TOGGLE PANTALLA DEMO -->
     <div class="toggle-row">
         <button id="btnDemoToggle" class="btn-spin-toggle" style="flex:1;" onclick="window.toggleDemo()">
@@ -1687,6 +1694,23 @@
             localStorage.setItem('rlt_fx_entry',fxEntryOn?'1':'0');
             updateFxEntry(fxEntryOn);
             showToast('Giro de bola: '+(fxEntryOn?'ACTIVADO':'DESACTIVADO'),'');
+        };
+
+        // ===== RUEDA EN REPOSO =====
+        var btnWheelIdle=document.getElementById('btnWheelIdleToggle');
+        var wheelIdleLabel=document.getElementById('wheelIdleLabel');
+        function updateWheelIdle(on){
+            if(!wheelIdleLabel)return;
+            wheelIdleLabel.textContent=on?'GIRANDO':'DETENIDA';
+            if(btnWheelIdle)btnWheelIdle.classList.toggle('selected',!on);
+        }
+        var wheelIdleOn=localStorage.getItem('rlt_wheel_idle_spin')!=='0';
+        updateWheelIdle(wheelIdleOn);
+        window.toggleWheelIdle=function(){
+            wheelIdleOn=!wheelIdleOn;
+            localStorage.setItem('rlt_wheel_idle_spin',wheelIdleOn?'1':'0');
+            updateWheelIdle(wheelIdleOn);
+            showToast('Rueda en reposo: '+(wheelIdleOn?'GIRANDO':'DETENIDA'),'');
         };
 
         var btnFxGlow=document.getElementById('btnFxGlow'),fxGlowLabel=document.getElementById('fxGlowLabel');

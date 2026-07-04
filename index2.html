@@ -449,6 +449,9 @@
         @keyframes hcMistAura{0%,100%{opacity:.3;transform:scale(1);}50%{opacity:.8;transform:scale(1.3);}}
         .fx-cold-mist .stat-number::before{content:'';position:absolute;top:calc(var(--u)*-5.5);left:calc(var(--u)*-5.5);right:calc(var(--u)*-5.5);bottom:calc(var(--u)*-5.5);border-radius:50%;background:radial-gradient(circle,transparent 32%,rgba(155,205,255,.48) 54%,rgba(200,232,255,.18) 74%,transparent 94%);animation:hcMistAura 3s ease-in-out infinite;filter:blur(calc(var(--u)*3));z-index:-1;pointer-events:none;}
         /* ====== LAYOUT V2: PIZARRA EXTENDIDA ====== */
+        body.pg-paused * { animation-play-state:paused !important; }
+        .fire-layer { animation-duration:0.9s !important; }
+        .fire-layer::after { animation-duration:1.4s !important; }
         .top-section { height:75% !important; }
         .bottom-section { gap:calc(var(--u)*3) !important; padding:calc(var(--u)*3) calc(var(--u)*15) calc(var(--u)*4) !important; }
         .title-card { padding:calc(var(--u)*3) calc(var(--u)*8) !important; }
@@ -459,16 +462,19 @@
         .limits-table th { font-size:calc(var(--u)*13) !important; }
         .limits-table td { font-size:calc(var(--u)*20) !important; }
         .casino-name { font-size:calc(var(--u)*14) !important; padding:calc(var(--u)*4) 0 0 !important; }
-        .hot-cold-box { height:calc(var(--u)*62) !important; }
-        .num-circle { width:calc(var(--u)*42) !important; height:calc(var(--u)*42) !important; font-size:calc(var(--u)*17) !important; }
-        .stat-number { width:calc(var(--u)*42) !important; height:calc(var(--u)*42) !important; font-size:calc(var(--u)*17) !important; }
-        .flame { font-size:calc(var(--u)*21) !important; }
-        .snowflake { font-size:calc(var(--u)*19) !important; }
-        .stats-container { gap:calc(var(--u)*9) !important; }
-        .pct-bar-container { height:calc(var(--u)*15) !important; }
+        .right-column { width:calc(var(--u)*215) !important; }
+        .history-board { border-width:calc(var(--u)*10) !important; }
+        .ruleta-pie { border-width:calc(var(--u)*10) !important; }
+        .hot-cold-box { height:calc(var(--u)*74) !important; }
+        .num-circle { width:calc(var(--u)*46) !important; height:calc(var(--u)*46) !important; font-size:calc(var(--u)*19) !important; }
+        .stat-number { width:calc(var(--u)*46) !important; height:calc(var(--u)*46) !important; font-size:calc(var(--u)*19) !important; }
+        .flame { font-size:calc(var(--u)*23) !important; }
+        .snowflake { font-size:calc(var(--u)*21) !important; }
+        .stats-container { gap:calc(var(--u)*11) !important; }
+        .pct-bar-container { height:calc(var(--u)*18) !important; }
         .pct-label { font-size:calc(var(--u)*13) !important; }
-        .pct-label span { font-size:calc(var(--u)*27) !important; }
-        .pct-labels { margin-bottom:calc(var(--u)*7) !important; }
+        .pct-label span { font-size:calc(var(--u)*29) !important; }
+        .pct-labels { margin-bottom:calc(var(--u)*8) !important; }
     </style>
 </head>
 <body>
@@ -900,21 +906,22 @@ function spinToNumber(data){
     ballAnim.pendingData=data;
 }
 
-var _lastAnimTs=0,_animRunning=false;
-function animW(ts){
+var _animHandle=null;
+function _schedAnim(moving){
+    if(moving){_animHandle=requestAnimationFrame(animW);}
+    else{_animHandle=setTimeout(function(){_animHandle=requestAnimationFrame(animW);},240);}
+}
+function _wakeAnim(){clearTimeout(_animHandle);cancelAnimationFrame(_animHandle);_animHandle=requestAnimationFrame(animW);}
+function animW(){
     var ph=ballAnim.phase;
     var moving=ph==='spin'||ph==='settle';
-    if(!moving){
-        if(ts-_lastAnimTs<220){requestAnimationFrame(animW);return;} // ~4fps en reposo
-        _lastAnimTs=ts;
-    }
     tickBall();
-    if(ph==='idle'||ph==='rest')wA+=.008;
+    if(ph==='idle'||ph==='rest'){if(localStorage.getItem('rlt_wheel_idle_spin')!=='0')wA+=.004;}
     var c=document.getElementById('wheelCanvas');
     var wTheme=localStorage.getItem('rlt_wheel_theme')||'top';
     if(wTheme==='classic'){drawWheelClassic(c,wA,mO);}else{drawWheel(c,wA,mO);}
     drawBallOnCanvas(c);
-    requestAnimationFrame(animW);
+    _schedAnim(moving);
 }
 
 var MAX_H=12,LS='ruleta_casino_data',lastD='';
@@ -1229,7 +1236,7 @@ function checkStorage(){
             if(demoSimActive&&d.history&&d.history.length){
                 stopDemoSim();
             }
-            if(d.history&&d.history.length&&localStorage.getItem('rlt_ballspin')==='1'&&!ballAnim.active){spinToNumber(d);}
+            if(d.history&&d.history.length&&localStorage.getItem('rlt_ballspin')==='1'&&!ballAnim.active){spinToNumber(d);_wakeAnim();}
             else{updateScreen(d);}
         }catch(ex){}
     }
@@ -1343,10 +1350,14 @@ window.onload=function(){
         if(e.key==='rlt_demo'){if(e.newValue==='1')startDemoSim();else stopDemoSim();}
         if(e.key==='rlt_demo_tutorial'&&demoSimActive&&demoOv&&demoOv.classList.contains('active'))showDemoOverlayContent();
     });
-    checkStorage();setInterval(checkStorage,500);
-    checkThemes();setInterval(checkThemes,500);
+    checkStorage();setInterval(checkStorage,1000);
+    checkThemes();setInterval(checkThemes,1000);
     applyHcFx();
-    animW();
+    document.addEventListener('visibilitychange',function(){
+        if(document.hidden){clearTimeout(_animHandle);cancelAnimationFrame(_animHandle);document.body.classList.add('pg-paused');}
+        else{document.body.classList.remove('pg-paused');_wakeAnim();}
+    });
+    _wakeAnim();
     // Card suits mosaic watermark for lim-cartas theme (::before, very subtle)
     (function(){
         var tc=document.createElement('canvas');tc.width=80;tc.height=80;
