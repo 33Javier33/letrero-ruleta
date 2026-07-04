@@ -486,6 +486,20 @@
         body.hc-mode-3 .snowflake { font-size:calc(var(--u)*11) !important; }
         body.hc-mode-3 .num-circle,
         body.hc-mode-3 .stat-number { width:calc(var(--u)*27) !important; height:calc(var(--u)*27) !important; font-size:calc(var(--u)*11) !important; }
+        /* Modo 4: Fila sin efectos */
+        body.hc-mode-4 .stats-container { display:grid !important; grid-template-columns:1fr 1fr !important; grid-template-rows:auto auto !important; gap:calc(var(--u)*4) !important; }
+        body.hc-mode-4 .stats-carousel { grid-column:1/-1 !important; }
+        body.hc-mode-4 .hot-cold-box.hot-box { grid-column:1 !important; grid-row:2 !important; }
+        body.hc-mode-4 .hot-cold-box.cold-box { grid-column:2 !important; grid-row:2 !important; }
+        body.hc-mode-4 .hot-cold-box { height:calc(var(--u)*42) !important; }
+        body.hc-mode-4 .fire-layer,
+        body.hc-mode-4 .snow-layer { opacity:0 !important; animation:none !important; }
+        body.hc-mode-4 .flame,
+        body.hc-mode-4 .snowflake { display:none !important; }
+        body.hc-mode-4 .hot-box { background:linear-gradient(135deg,rgba(180,40,0,.9),rgba(90,5,0,.95)) !important; box-shadow:0 0 calc(var(--u)*8) rgba(255,80,0,.4) !important; }
+        body.hc-mode-4 .cold-box { background:linear-gradient(135deg,rgba(0,50,160,.9),rgba(0,10,80,.95)) !important; box-shadow:0 0 calc(var(--u)*8) rgba(60,140,255,.4) !important; }
+        body.hc-mode-4 .num-circle,
+        body.hc-mode-4 .stat-number { width:calc(var(--u)*27) !important; height:calc(var(--u)*27) !important; font-size:calc(var(--u)*11) !important; }
     </style>
 </head>
 <body>

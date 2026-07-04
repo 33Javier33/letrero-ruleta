@@ -1141,15 +1141,18 @@
         <div class="acc-header" data-tab="visual" data-acc-toggle="hcmode">🔥❄ Calientes / Fríos <span class="acc-icon">▼</span></div>
         <div class="nombre-ruleta-section cfg-full" data-tab="visual" data-acc-group="hcmode" style="display:none;">
             <h3 style="margin-bottom:12px;">Modo de visualización</h3>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
                 <button class="btn-nombre hc-mode-btn" data-hc-mode="1" style="padding:14px 6px;font-size:12px;line-height:1.4;text-align:center;">
-                    🔥❄ Cajas<br><span style="font-size:10px;opacity:0.7;">Fuego y nieve</span>
+                    🔥❄ Normal<br><span style="font-size:10px;opacity:0.7;">Con efectos</span>
                 </button>
                 <button class="btn-nombre hc-mode-btn" data-hc-mode="2" style="padding:14px 6px;font-size:12px;line-height:1.4;text-align:center;">
-                    ⭕ Limpio<br><span style="font-size:10px;opacity:0.7;">Solo círculos</span>
+                    ⭕ Normal<br><span style="font-size:10px;opacity:0.7;">Sin efectos</span>
                 </button>
                 <button class="btn-nombre hc-mode-btn" data-hc-mode="3" style="padding:14px 6px;font-size:12px;line-height:1.4;text-align:center;">
-                    ↔ Fila<br><span style="font-size:10px;opacity:0.7;">Lado a lado</span>
+                    🔥↔❄ Fila<br><span style="font-size:10px;opacity:0.7;">Con efectos</span>
+                </button>
+                <button class="btn-nombre hc-mode-btn" data-hc-mode="4" style="padding:14px 6px;font-size:12px;line-height:1.4;text-align:center;">
+                    ↔ Fila<br><span style="font-size:10px;opacity:0.7;">Sin efectos</span>
                 </button>
             </div>
         </div>
@@ -1778,7 +1781,7 @@
                 curHcMode=this.dataset.hcMode;
                 localStorage.setItem('rlt_hc_mode',curHcMode);
                 updateHcModeButtons();
-                var names=['','Cajas','Limpio','Fila'];
+                var names=['','Normal con efectos','Normal sin efectos','Fila con efectos','Fila sin efectos'];
                 showToast('Calientes/Fríos: '+names[curHcMode],'');
             });
         });
