@@ -140,7 +140,7 @@
         @keyframes snow{0%{transform:translateY(0)}100%{transform:translateY(38px)}}
         .stat-number-hot { display:flex; flex-direction:column; align-items:center; z-index:2; gap:calc(var(--u)*1); }
         .stat-number-cold { display:flex; flex-direction:column; align-items:center; z-index:2; gap:calc(var(--u)*1); }
-        .flame { font-size:calc(var(--u)*16); line-height:1; animation:flameF 0.55s ease-in-out infinite alternate; filter:drop-shadow(0 0 calc(var(--u)*5) #ff8800) drop-shadow(0 0 calc(var(--u)*8) #ff4400); }
+        .flame { font-size:calc(var(--u)*16); line-height:1; animation:flameF 1.5s ease-in-out infinite alternate; filter:drop-shadow(0 0 calc(var(--u)*5) #ff8800) drop-shadow(0 0 calc(var(--u)*8) #ff4400); }
         @keyframes flameF{0%{transform:translateY(0) scale(1) rotate(-4deg)}100%{transform:translateY(calc(var(--u)*-3)) scale(1.18) rotate(4deg)}}
         .snowflake { font-size:calc(var(--u)*15); line-height:1; color:#c8eeff; animation:snowF 1.6s ease-in-out infinite alternate; filter:drop-shadow(0 0 calc(var(--u)*4) rgba(180,230,255,1)) drop-shadow(0 0 calc(var(--u)*6) rgba(100,180,255,0.7)); }
         @keyframes snowF{0%{transform:rotate(-15deg) scale(1)}100%{transform:rotate(15deg) scale(1.12)}}
@@ -418,8 +418,8 @@
         /* === HOT: Llamas === */
         @keyframes hcFlameHalo{0%,100%{box-shadow:0 0 calc(var(--u)*8) calc(var(--u)*3) rgba(255,100,0,.8),0 calc(var(--u)*-14) calc(var(--u)*20) calc(var(--u)*6) rgba(255,190,0,.55);}35%{box-shadow:0 0 calc(var(--u)*16) calc(var(--u)*7) rgba(255,55,0,1),0 calc(var(--u)*-24) calc(var(--u)*32) calc(var(--u)*10) rgba(255,230,0,.65);}70%{box-shadow:0 0 calc(var(--u)*5) calc(var(--u)*2) rgba(255,130,0,.6),0 calc(var(--u)*-7) calc(var(--u)*12) calc(var(--u)*2) rgba(255,160,0,.4);}}
         @keyframes hcFlameSide{0%,100%{box-shadow:calc(var(--u)*-12) 0 calc(var(--u)*12) calc(var(--u)*4) rgba(255,100,0,.55),calc(var(--u)*12) 0 calc(var(--u)*12) calc(var(--u)*4) rgba(255,100,0,.55);}50%{box-shadow:calc(var(--u)*-17) 0 calc(var(--u)*18) calc(var(--u)*6) rgba(255,180,0,.75),calc(var(--u)*17) 0 calc(var(--u)*18) calc(var(--u)*6) rgba(255,180,0,.75);}}
-        .fx-hot-flame .num-circle::before{content:'';position:absolute;inset:-3px;border-radius:50%;animation:hcFlameHalo .28s ease-in-out infinite;pointer-events:none;z-index:-1;}
-        .fx-hot-flame .num-circle::after{content:'';position:absolute;inset:2px;border-radius:50%;animation:hcFlameSide .4s ease-in-out infinite .1s;pointer-events:none;z-index:-1;}
+        .fx-hot-flame .num-circle::before{content:'';position:absolute;inset:-3px;border-radius:50%;animation:hcFlameHalo .85s ease-in-out infinite;pointer-events:none;z-index:-1;}
+        .fx-hot-flame .num-circle::after{content:'';position:absolute;inset:2px;border-radius:50%;animation:hcFlameSide 1.2s ease-in-out infinite .1s;pointer-events:none;z-index:-1;}
 
         /* === HOT: Anillo de fuego === */
         @keyframes hcFireRingR{from{transform:rotate(0);}to{transform:rotate(360deg);}}
@@ -427,7 +427,7 @@
 
         /* === HOT: Brasas pulsantes === */
         @keyframes hcEmberPulse{0%,100%{box-shadow:0 0 calc(var(--u)*7) calc(var(--u)*2) rgba(255,80,0,.55);}50%{box-shadow:0 0 calc(var(--u)*20) calc(var(--u)*8) rgba(255,160,0,1),0 0 calc(var(--u)*32) calc(var(--u)*10) rgba(255,80,0,.45);}}
-        .fx-hot-ember .num-circle::before{content:'';position:absolute;inset:0;border-radius:50%;animation:hcEmberPulse .55s ease-in-out infinite;pointer-events:none;z-index:-1;}
+        .fx-hot-ember .num-circle::before{content:'';position:absolute;inset:0;border-radius:50%;animation:hcEmberPulse 1.4s ease-in-out infinite;pointer-events:none;z-index:-1;}
 
         /* === COLD: Nieve === */
         @keyframes hcSnow1{0%{opacity:0;transform:translateY(-6px) rotate(0);}25%{opacity:.95;}100%{opacity:0;transform:translateY(calc(var(--u)*40)) translateX(8px) rotate(210deg);}}
@@ -494,7 +494,7 @@
         body.stats-mode-3 .stats-container { gap:0 !important; }
         /* Modos calientes/fríos V2 */
         body.hc-mode-2 .fire-layer,
-        body.hc-mode-2 .snow-layer { opacity:0 !important; animation:none !important; }
+        body.hc-mode-2 .snow-layer { display:none !important; }
         body.hc-mode-2 .flame, body.hc-mode-2 .snowflake { display:none !important; }
         body.hc-mode-2 .hot-box { background:linear-gradient(135deg,rgba(180,40,0,.9),rgba(90,5,0,.95)) !important; box-shadow:0 0 calc(var(--u)*10) rgba(255,80,0,.4) !important; }
         body.hc-mode-2 .cold-box { background:linear-gradient(135deg,rgba(0,50,160,.9),rgba(0,10,80,.95)) !important; box-shadow:0 0 calc(var(--u)*10) rgba(60,140,255,.4) !important; }
@@ -514,7 +514,7 @@
         body.hc-mode-4 .hot-cold-box.cold-box { grid-column:2 !important; grid-row:2 !important; }
         body.hc-mode-4 .hot-cold-box { height:calc(var(--u)*50) !important; }
         body.hc-mode-4 .fire-layer,
-        body.hc-mode-4 .snow-layer { opacity:0 !important; animation:none !important; }
+        body.hc-mode-4 .snow-layer { display:none !important; }
         body.hc-mode-4 .flame,
         body.hc-mode-4 .snowflake { display:none !important; }
         body.hc-mode-4 .hot-box { background:linear-gradient(135deg,rgba(180,40,0,.9),rgba(90,5,0,.95)) !important; box-shadow:0 0 calc(var(--u)*10) rgba(255,80,0,.4) !important; }
