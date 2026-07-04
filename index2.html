@@ -477,6 +477,36 @@
         .pct-labels { margin-bottom:calc(var(--u)*8) !important; }
         .history-item { font-size:calc(var(--u)*41) !important; }
         .ball-circle { width:calc(var(--u)*62) !important; height:calc(var(--u)*62) !important; font-size:calc(var(--u)*31) !important; }
+        /* Modos estadísticas V2 (valores ajustados al layout extendido) */
+        body.stats-mode-2 .stat-panel { display:block !important; animation:none !important; padding-bottom:calc(var(--u)*6) !important; }
+        body.stats-mode-2 .carousel-dots { display:none !important; }
+        body.stats-mode-2 .panel-title { font-size:calc(var(--u)*9) !important; padding-bottom:calc(var(--u)*1) !important; }
+        body.stats-mode-2 .pct-labels { margin-bottom:calc(var(--u)*2) !important; }
+        body.stats-mode-2 .pct-label { font-size:calc(var(--u)*8) !important; }
+        body.stats-mode-2 .pct-label span { font-size:calc(var(--u)*15) !important; }
+        body.stats-mode-2 .pct-bar-container { height:calc(var(--u)*7) !important; }
+        body.stats-mode-2 .stats-container { gap:0 !important; }
+        body.stats-mode-3 .stat-panel { display:block !important; animation:none !important; padding-bottom:calc(var(--u)*4) !important; }
+        body.stats-mode-3 .carousel-dots { display:none !important; }
+        body.stats-mode-3 .panel-title { font-size:calc(var(--u)*9) !important; opacity:0.7; margin-bottom:calc(var(--u)*3) !important; }
+        body.stats-mode-3 .pct-labels { display:none !important; }
+        body.stats-mode-3 .pct-bar-container { height:calc(var(--u)*20) !important; border-radius:calc(var(--u)*10) !important; }
+        body.stats-mode-3 .stats-container { gap:0 !important; }
+        /* Modos calientes/fríos V2 */
+        body.hc-mode-2 .fire-layer,
+        body.hc-mode-2 .snow-layer { opacity:0 !important; animation:none !important; }
+        body.hc-mode-2 .flame, body.hc-mode-2 .snowflake { display:none !important; }
+        body.hc-mode-2 .hot-box { background:linear-gradient(135deg,rgba(180,40,0,.9),rgba(90,5,0,.95)) !important; box-shadow:0 0 calc(var(--u)*10) rgba(255,80,0,.4) !important; }
+        body.hc-mode-2 .cold-box { background:linear-gradient(135deg,rgba(0,50,160,.9),rgba(0,10,80,.95)) !important; box-shadow:0 0 calc(var(--u)*10) rgba(60,140,255,.4) !important; }
+        body.hc-mode-3 .stats-container { display:grid !important; grid-template-columns:1fr 1fr !important; grid-template-rows:auto auto !important; gap:calc(var(--u)*5) !important; }
+        body.hc-mode-3 .stats-carousel { grid-column:1/-1 !important; }
+        body.hc-mode-3 .hot-cold-box.hot-box { grid-column:1 !important; grid-row:2 !important; }
+        body.hc-mode-3 .hot-cold-box.cold-box { grid-column:2 !important; grid-row:2 !important; }
+        body.hc-mode-3 .hot-cold-box { height:calc(var(--u)*50) !important; }
+        body.hc-mode-3 .flame { font-size:calc(var(--u)*14) !important; }
+        body.hc-mode-3 .snowflake { font-size:calc(var(--u)*13) !important; }
+        body.hc-mode-3 .num-circle,
+        body.hc-mode-3 .stat-number { width:calc(var(--u)*32) !important; height:calc(var(--u)*32) !important; font-size:calc(var(--u)*13) !important; }
     </style>
 </head>
 <body>
@@ -1317,8 +1347,14 @@ function checkThemes(){
     if(lf!==lastLimFx){lastLimFx=lf;window.wLF(lf);}
     if(hb!==lastHubBg){lastHubBg=hb;window.wHB(hb);}
     updateLimitsSpin();
+    var sm=localStorage.getItem('rlt_stats_mode')||'1';
+    document.body.classList.remove('stats-mode-1','stats-mode-2','stats-mode-3');
+    document.body.classList.add('stats-mode-'+sm);
+    var hm=localStorage.getItem('rlt_hc_mode')||'1';
+    document.body.classList.remove('hc-mode-1','hc-mode-2','hc-mode-3');
+    document.body.classList.add('hc-mode-'+hm);
 }
-window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();if(e.key==='rlt_ballpizarra'||e.key==='rlt_hotcold_colors'){lastD=null;checkStorage();}if(e.key==='rlt_hc_hot_fx'||e.key==='rlt_hc_cold_fx')applyHcFx();if(e.key==='rlt_fullscreen'){try{var want=e.newValue==='1';if(want){var el=document.documentElement;var req=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;if(req)req.call(el);}else{var ex=document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen||document.msExitFullscreen;if(ex)ex.call(document);}}catch(ex2){}}});
+window.addEventListener('storage',function(e){if(e.key===LS)checkStorage();if(e.key==='rlt_ballpizarra'||e.key==='rlt_hotcold_colors'){lastD=null;checkStorage();}if(e.key==='rlt_hc_hot_fx'||e.key==='rlt_hc_cold_fx')applyHcFx();if(e.key==='rlt_stats_mode'||e.key==='rlt_hc_mode')checkThemes();if(e.key==='rlt_fullscreen'){try{var want=e.newValue==='1';if(want){var el=document.documentElement;var req=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;if(req)req.call(el);}else{var ex=document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen||document.msExitFullscreen;if(ex)ex.call(document);}}catch(ex2){}}});
 
 /* Wake Lock removido — el equipo maneja suspensión desde opciones del SO */
 

@@ -1120,6 +1120,40 @@
             </div>
         </div>
 
+        <!-- ACORDEÓN: ESTADÍSTICAS -->
+        <div class="acc-header" data-tab="visual" data-acc-toggle="stats">📊 Estadísticas <span class="acc-icon">▼</span></div>
+        <div class="nombre-ruleta-section cfg-full" data-tab="visual" data-acc-group="stats" style="display:none;">
+            <h3 style="margin-bottom:12px;">Modo de visualización</h3>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+                <button class="btn-nombre stats-mode-btn" data-stats-mode="1" style="padding:14px 6px;font-size:12px;line-height:1.4;text-align:center;">
+                    🎠 Carrusel<br><span style="font-size:10px;opacity:0.7;">Un panel a la vez</span>
+                </button>
+                <button class="btn-nombre stats-mode-btn" data-stats-mode="2" style="padding:14px 6px;font-size:12px;line-height:1.4;text-align:center;">
+                    📋 Resumen<br><span style="font-size:10px;opacity:0.7;">Todos apilados</span>
+                </button>
+                <button class="btn-nombre stats-mode-btn" data-stats-mode="3" style="padding:14px 6px;font-size:12px;line-height:1.4;text-align:center;">
+                    📊 Solo barras<br><span style="font-size:10px;opacity:0.7;">Visual puro</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ACORDEÓN: CALIENTES Y FRÍOS MODO -->
+        <div class="acc-header" data-tab="visual" data-acc-toggle="hcmode">🔥❄ Calientes / Fríos <span class="acc-icon">▼</span></div>
+        <div class="nombre-ruleta-section cfg-full" data-tab="visual" data-acc-group="hcmode" style="display:none;">
+            <h3 style="margin-bottom:12px;">Modo de visualización</h3>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+                <button class="btn-nombre hc-mode-btn" data-hc-mode="1" style="padding:14px 6px;font-size:12px;line-height:1.4;text-align:center;">
+                    🔥❄ Cajas<br><span style="font-size:10px;opacity:0.7;">Fuego y nieve</span>
+                </button>
+                <button class="btn-nombre hc-mode-btn" data-hc-mode="2" style="padding:14px 6px;font-size:12px;line-height:1.4;text-align:center;">
+                    ⭕ Limpio<br><span style="font-size:10px;opacity:0.7;">Solo círculos</span>
+                </button>
+                <button class="btn-nombre hc-mode-btn" data-hc-mode="3" style="padding:14px 6px;font-size:12px;line-height:1.4;text-align:center;">
+                    ↔ Fila<br><span style="font-size:10px;opacity:0.7;">Lado a lado</span>
+                </button>
+            </div>
+        </div>
+
         <!-- CALIENTES Y FRÍOS — ancho completo -->
         <div class="nombre-ruleta-section cfg-full" data-tab="efectos">
             <h3 style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
@@ -1712,6 +1746,42 @@
             updateWheelIdle(wheelIdleOn);
             showToast('Rueda en reposo: '+(wheelIdleOn?'GIRANDO':'DETENIDA'),'');
         };
+
+        // ===== MODOS ESTADÍSTICAS =====
+        var curStatsMode=localStorage.getItem('rlt_stats_mode')||'1';
+        function updateStatsModeButtons(){
+            document.querySelectorAll('.stats-mode-btn').forEach(function(b){
+                b.classList.toggle('selected',b.dataset.statsMode===curStatsMode);
+            });
+        }
+        updateStatsModeButtons();
+        document.querySelectorAll('.stats-mode-btn').forEach(function(b){
+            b.addEventListener('click',function(){
+                curStatsMode=this.dataset.statsMode;
+                localStorage.setItem('rlt_stats_mode',curStatsMode);
+                updateStatsModeButtons();
+                var names=['','Carrusel','Resumen','Solo barras'];
+                showToast('Estadísticas: '+names[curStatsMode],'');
+            });
+        });
+
+        // ===== MODOS CALIENTES/FRÍOS =====
+        var curHcMode=localStorage.getItem('rlt_hc_mode')||'1';
+        function updateHcModeButtons(){
+            document.querySelectorAll('.hc-mode-btn').forEach(function(b){
+                b.classList.toggle('selected',b.dataset.hcMode===curHcMode);
+            });
+        }
+        updateHcModeButtons();
+        document.querySelectorAll('.hc-mode-btn').forEach(function(b){
+            b.addEventListener('click',function(){
+                curHcMode=this.dataset.hcMode;
+                localStorage.setItem('rlt_hc_mode',curHcMode);
+                updateHcModeButtons();
+                var names=['','Cajas','Limpio','Fila'];
+                showToast('Calientes/Fríos: '+names[curHcMode],'');
+            });
+        });
 
         var btnFxGlow=document.getElementById('btnFxGlow'),fxGlowLabel=document.getElementById('fxGlowLabel');
         function updateFxGlow(on){if(!btnFxGlow||!fxGlowLabel)return;fxGlowLabel.textContent=on?'ACTIVADA':'DESACTIVADA';btnFxGlow.classList.toggle('selected',on);}
@@ -2327,7 +2397,7 @@
        ========================================= */
     (function(){
         var activeCfgTab = 'mesa';
-        var accStates = { ruleta:true, pizarra:false, tarjeta:false };
+        var accStates = { ruleta:true, pizarra:false, tarjeta:false, stats:false, hcmode:false };
 
         function applyAccordions() {
             Object.keys(accStates).forEach(function(grp) {
