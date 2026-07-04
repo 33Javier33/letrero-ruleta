@@ -1455,13 +1455,15 @@ window.onload=function(){
         bc.classList.add('ball-glow-anim');
         setTimeout(function(){bc.classList.remove('ball-glow-anim');},2500);
     },20000);
-    // Hot/cold balls staggered pulse: ball 1 at 8s, 2 at 16s, 3 at 24s, repeat
-    var hcPulseIdx=0;
+    // Hot/cold balls pulse — rlt_hc_pulse_mode: 0=off, 1=juntos, 2=secuencial
+    var hcPulseIdx=0,_hcPM=localStorage.getItem('rlt_hc_pulse_mode')||'1';
     setInterval(function(){
-        var targets=[h1,h2,h3,c1,c2,c3];var el=targets[hcPulseIdx]||targets[hcPulseIdx-3];
-        [h1,h2,h3][hcPulseIdx]&&(function(e){e.classList.remove('hc-pulse');void e.offsetWidth;e.classList.add('hc-pulse');setTimeout(function(){e.classList.remove('hc-pulse');},750);}([h1,h2,h3][hcPulseIdx]));
-        [c1,c2,c3][hcPulseIdx]&&(function(e){e.classList.remove('hc-pulse');void e.offsetWidth;e.classList.add('hc-pulse');setTimeout(function(){e.classList.remove('hc-pulse');},750);}([c1,c2,c3][hcPulseIdx]));
-        hcPulseIdx=(hcPulseIdx+1)%3;
+        var pm=localStorage.getItem('rlt_hc_pulse_mode')||'1';
+        if(pm!==_hcPM){hcPulseIdx=0;_hcPM=pm;}
+        if(pm==='0')return;
+        function pulse(e){if(!e)return;e.classList.remove('hc-pulse');void e.offsetWidth;e.classList.add('hc-pulse');setTimeout(function(){e.classList.remove('hc-pulse');},750);}
+        if(pm==='1'){pulse([h1,h2,h3][hcPulseIdx]);pulse([c1,c2,c3][hcPulseIdx]);hcPulseIdx=(hcPulseIdx+1)%3;}
+        else{if(hcPulseIdx<3)pulse([h1,h2,h3][hcPulseIdx]);else pulse([c1,c2,c3][hcPulseIdx-3]);hcPulseIdx=(hcPulseIdx+1)%6;}
     },8000);
     // Ball pulse every 8s
     setInterval(function(){

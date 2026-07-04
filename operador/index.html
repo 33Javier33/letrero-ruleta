@@ -1157,6 +1157,23 @@
             </div>
         </div>
 
+        <!-- ACORDEÓN: PULSO CALIENTES/FRÍOS -->
+        <div class="acc-header" data-tab="visual" data-acc-toggle="hcpulse">💫 Pulso Cal/Frío <span class="acc-icon">▼</span></div>
+        <div class="nombre-ruleta-section cfg-full" data-tab="visual" data-acc-group="hcpulse" style="display:none;">
+            <h3 style="margin-bottom:12px;">Pulso cada 8 segundos</h3>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+                <button class="btn-nombre hc-pulse-btn" data-hc-pulse="0" style="padding:14px 6px;font-size:12px;line-height:1.4;text-align:center;">
+                    🚫 Apagado<br><span style="font-size:10px;opacity:0.7;">Sin pulso</span>
+                </button>
+                <button class="btn-nombre hc-pulse-btn" data-hc-pulse="1" style="padding:14px 6px;font-size:12px;line-height:1.4;text-align:center;">
+                    💫 Juntos<br><span style="font-size:10px;opacity:0.7;">Cal+Frío a la vez</span>
+                </button>
+                <button class="btn-nombre hc-pulse-btn" data-hc-pulse="2" style="padding:14px 6px;font-size:12px;line-height:1.4;text-align:center;">
+                    🔁 Secuencial<br><span style="font-size:10px;opacity:0.7;">Cal luego Frío</span>
+                </button>
+            </div>
+        </div>
+
         <!-- CALIENTES Y FRÍOS — ancho completo -->
         <div class="nombre-ruleta-section cfg-full" data-tab="efectos">
             <h3 style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
@@ -1786,6 +1803,24 @@
             });
         });
 
+        // ===== PULSO CALIENTES/FRÍOS =====
+        var curHcPulse=localStorage.getItem('rlt_hc_pulse_mode')||'1';
+        function updateHcPulseButtons(){
+            document.querySelectorAll('.hc-pulse-btn').forEach(function(b){
+                b.classList.toggle('selected',b.dataset.hcPulse===curHcPulse);
+            });
+        }
+        updateHcPulseButtons();
+        document.querySelectorAll('.hc-pulse-btn').forEach(function(b){
+            b.addEventListener('click',function(){
+                curHcPulse=this.dataset.hcPulse;
+                localStorage.setItem('rlt_hc_pulse_mode',curHcPulse);
+                updateHcPulseButtons();
+                var names=['Apagado','Juntos (Cal+Frío)','Secuencial (Cal luego Frío)'];
+                showToast('Pulso: '+names[+curHcPulse],'');
+            });
+        });
+
         var btnFxGlow=document.getElementById('btnFxGlow'),fxGlowLabel=document.getElementById('fxGlowLabel');
         function updateFxGlow(on){if(!btnFxGlow||!fxGlowLabel)return;fxGlowLabel.textContent=on?'ACTIVADA':'DESACTIVADA';btnFxGlow.classList.toggle('selected',on);}
         var fxGlowOn=localStorage.getItem('rlt_fx_glow')==='1';
@@ -2400,7 +2435,7 @@
        ========================================= */
     (function(){
         var activeCfgTab = 'mesa';
-        var accStates = { ruleta:true, pizarra:false, tarjeta:false, stats:false, hcmode:false };
+        var accStates = { ruleta:true, pizarra:false, tarjeta:false, stats:false, hcmode:false, hcpulse:false };
 
         function applyAccordions() {
             Object.keys(accStates).forEach(function(grp) {
