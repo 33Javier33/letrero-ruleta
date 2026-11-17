@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.WindowManager
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -48,6 +49,7 @@ class MainActivity : Activity() {
                 loadWithOverviewMode = true
                 mediaPlaybackRequiresUserGesture = false
             }
+            wv.webChromeClient = WebChromeClient()
         }
     }
 

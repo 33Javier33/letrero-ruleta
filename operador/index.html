@@ -741,6 +741,14 @@
         .cfg-tab  { flex:1; padding:11px 4px; background:#111; border:2px solid #333; border-radius:10px; color:#777; font-size:13px; font-weight:bold; cursor:pointer; text-align:center; transition:all 0.18s; -webkit-tap-highlight-color:transparent; }
         .cfg-tab:active { opacity:0.75; transform:scale(0.97); }
         .cfg-tab.active { background:#002244; border-color:#0055cc; color:#66aaff; }
+        /* Confirmación propia (los diálogos nativos fallan en las apps .exe / .apk) */
+        .ask-overlay { position:fixed; inset:0; background:rgba(0,0,0,.65); display:flex; align-items:center; justify-content:center; z-index:99999; padding:16px; }
+        .ask-box { background:#1c1f2b; border:1px solid #4da6ff; border-radius:14px; padding:20px; max-width:380px; width:100%; color:#fff; box-shadow:0 10px 40px rgba(0,0,0,.6); }
+        .ask-msg { font-size:16px; line-height:1.45; margin-bottom:18px; }
+        .ask-btns { display:flex; gap:10px; }
+        .ask-btns button { flex:1; padding:13px; border-radius:10px; font-size:15px; font-weight:bold; cursor:pointer; border:none; }
+        .ask-no { background:#333; color:#ddd; }
+        .ask-yes { background:#d93030; color:#fff; }
     </style>
 </head>
 <body>
@@ -1428,16 +1436,44 @@
         }
     }
 
+    function askConfirm(msg, onYes) {
+        var ov = document.createElement('div');
+        ov.className = 'ask-overlay';
+        ov.innerHTML = '<div class="ask-box" role="dialog" aria-modal="true">' +
+            '<div class="ask-msg"></div>' +
+            '<div class="ask-btns"><button class="ask-no">Cancelar</button><button class="ask-yes">Sí, borrar</button></div></div>';
+        ov.querySelector('.ask-msg').textContent = msg;
+        function close(ok) {
+            document.removeEventListener('keydown', onKey, true);
+            ov.remove();
+            if (ok) onYes();
+            var kb = document.getElementById('kbInput');
+            if (kb) kb.focus();
+        }
+        function onKey(e) {
+            if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(false); }
+            if (e.key === 'Enter')  { e.preventDefault(); e.stopPropagation(); close(true); }
+        }
+        ov.querySelector('.ask-no').onclick = function() { close(false); };
+        ov.querySelector('.ask-yes').onclick = function() { close(true); };
+        ov.addEventListener('click', function(e) { if (e.target === ov) close(false); });
+        document.addEventListener('keydown', onKey, true);
+        document.body.appendChild(ov);
+        ov.querySelector('.ask-yes').focus();
+    }
+
     /* =========================================
        ACCIONES
        ========================================= */
     window.deleteIndividualNumber = function(index) {
         if (index < 0 || index >= appData.history.length) return;
         var numToDelete = appData.history[index];
-        if (!confirm('¿Eliminar el número ' + numToDelete + ' del historial?')) return;
-        appData.history.splice(index, 1);
-        saveLocal();
-        renderAdminHistory();
+        askConfirm('¿Eliminar el número ' + numToDelete + ' del historial?', function() {
+            if (appData.history[index] !== numToDelete) return;
+            appData.history.splice(index, 1);
+            saveLocal();
+            renderAdminHistory();
+        });
     };
 
     window.editHistoryItem = function(index) {
@@ -1490,20 +1526,23 @@
     document.getElementById('btnDeleteLast').addEventListener('click', function() {
         if (appData.history.length === 0) { showToast('No hay números para borrar', 'error'); return; }
         var numToDelete = appData.history[appData.history.length - 1];
-        if (!confirm('¿Borrar el último número ingresado (' + numToDelete + ')?')) return;
-        appData.history.pop();
-        saveLocal();
-        renderAdminHistory();
-        showToast('Número ' + numToDelete + ' eliminado', '');
+        askConfirm('¿Borrar el último número ingresado (' + numToDelete + ')?', function() {
+            if (appData.history[appData.history.length - 1] !== numToDelete) return;
+            appData.history.pop();
+            saveLocal();
+            renderAdminHistory();
+            showToast('Número ' + numToDelete + ' eliminado', '');
+        });
     });
 
     document.getElementById('btnClearAll').addEventListener('click', function() {
         if (appData.history.length === 0) { showToast('La pizarra ya está en blanco', 'error'); return; }
-        if (!confirm('⚠️ ¿Eliminar TODOS los números de la pantalla? Esta acción no se puede deshacer.')) return;
-        appData.history = [];
-        saveLocal();
-        renderAdminHistory();
-        showToast('Pizarra limpiada', '');
+        askConfirm('⚠️ ¿Eliminar TODOS los números de la pantalla? Esta acción no se puede deshacer.', function() {
+            appData.history = [];
+            saveLocal();
+            renderAdminHistory();
+            showToast('Pizarra limpiada', '');
+        });
     });
 
     document.getElementById('btnUpdateLimits').addEventListener('click', function() {
