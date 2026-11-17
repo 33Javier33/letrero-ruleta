@@ -2,9 +2,13 @@ name: Build Apps (Windows + Android)
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [main]
+    paths: ['version.json']
   workflow_dispatch:
+
+concurrency:
+  group: build-apps
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -50,17 +54,9 @@ jobs:
         with:
           name: windows-installer
           path: |
-            electron-app/dist/*.exe
+            electron-app/dist/LetreroRuleta-Setup.exe
+            electron-app/dist/LetreroRuleta-Portable.exe
           retention-days: 30
-
-      - name: Publish to Release (on tag)
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "electron-app/dist/*.exe"
-          allowUpdates: true
-          omitBodyDuringUpdate: true
-          token: ${{ secrets.GITHUB_TOKEN }}
 
   # ── Android APK ─────────────────────────────────────────────────────────────
   build-android:
@@ -111,11 +107,31 @@ jobs:
           path: android-app/app/build/outputs/apk/debug/letrero-ruleta.apk
           retention-days: 30
 
-      - name: Publish to Release (on tag)
-        if: startsWith(github.ref, 'refs/tags/')
+  # ── Publica el Release (links fijos en releases/latest/download/...) ────────
+  release:
+    needs: [build-windows, build-android]
+    if: always() && (needs.build-windows.result == 'success' || needs.build-android.result == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version
+        id: ver
+        run: echo "v=$(jq -r .version version.json)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: release
+
+      - name: Publish Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "android-app/app/build/outputs/apk/debug/letrero-ruleta.apk"
+          tag: v1.${{ steps.ver.outputs.v }}.0
+          commit: ${{ github.sha }}
+          name: Letrero Ruleta v${{ steps.ver.outputs.v }}
+          body: "Descargas: Windows (Setup / Portable) y Android (APK). Funcionan sin internet y se actualizan solas."
+          artifacts: "release/**/*.exe,release/**/*.apk"
           allowUpdates: true
-          omitBodyDuringUpdate: true
+          replacesArtifacts: true
+          makeLatest: true
           token: ${{ secrets.GITHUB_TOKEN }}
