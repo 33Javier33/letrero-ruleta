@@ -1,0 +1,10 @@
+{
+  "version": "177",
+  "files": [
+    "index.html",
+    "index2.html",
+    "sw.js",
+    "manifest.json",
+    "operador/index.html"
+  ]
+}

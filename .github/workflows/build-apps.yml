@@ -1,0 +1,123 @@
+name: Build Apps (Windows + Android)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  # ── Windows .exe via Electron ───────────────────────────────────────────────
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Electron dependencies
+        run: npm install
+        working-directory: electron-app
+
+      - name: Copy web files into Electron bundle
+        shell: pwsh
+        run: |
+          $webDir = "electron-app\bundled-web"
+          New-Item -ItemType Directory -Force -Path "$webDir\operador" | Out-Null
+          $files = @("index.html","index2.html","sw.js","manifest.json","version.json",
+                     "dreams-logo.png","roulette-pie.png","casino-bg.jpg",
+                     "chile-flag.jpg","chile-flag-wood.jpg","wc26-logo.jpg",
+                     "wc26-ball.jpg","chile18-bg.jpg","roulette-3d.jpg",
+                     "roulette-pie.jpg","roulette-table.jpg")
+          foreach ($f in $files) {
+            if (Test-Path $f) { Copy-Item $f "$webDir\" }
+          }
+          Copy-Item "operador\index.html" "$webDir\operador\"
+
+      - name: Build Windows installer
+        run: npm run build
+        working-directory: electron-app
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: |
+            electron-app/dist/*.exe
+          retention-days: 30
+
+      - name: Publish to Release (on tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "electron-app/dist/*.exe"
+          allowUpdates: true
+          omitBodyDuringUpdate: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── Android APK ─────────────────────────────────────────────────────────────
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses || true
+
+      - name: Install Android build tools
+        run: sdkmanager "build-tools;34.0.0" "platforms;android-34"
+
+      - name: Copy web files into Android assets
+        run: |
+          WEB="android-app/app/src/main/assets/web"
+          mkdir -p "$WEB/operador"
+          for f in index.html index2.html sw.js manifest.json version.json \
+                   dreams-logo.png roulette-pie.png casino-bg.jpg \
+                   chile-flag.jpg chile-flag-wood.jpg wc26-logo.jpg \
+                   wc26-ball.jpg chile18-bg.jpg roulette-3d.jpg \
+                   roulette-pie.jpg roulette-table.jpg; do
+            [ -f "$f" ] && cp "$f" "$WEB/"
+          done
+          cp operador/index.html "$WEB/operador/"
+
+      - name: Build debug APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+        working-directory: android-app
+
+      - name: Rename APK
+        run: |
+          mv android-app/app/build/outputs/apk/debug/app-debug.apk \
+             android-app/app/build/outputs/apk/debug/letrero-ruleta.apk
+
+      - name: Upload Android artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: android-app/app/build/outputs/apk/debug/letrero-ruleta.apk
+          retention-days: 30
+
+      - name: Publish to Release (on tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "android-app/app/build/outputs/apk/debug/letrero-ruleta.apk"
+          allowUpdates: true
+          omitBodyDuringUpdate: true
+          token: ${{ secrets.GITHUB_TOKEN }}
