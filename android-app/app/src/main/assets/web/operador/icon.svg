@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Dark background -->
+  <circle cx="256" cy="256" r="256" fill="#111111"/>
+
+  <!-- Chip body (red) -->
+  <circle cx="256" cy="256" r="220" fill="#C0392B"/>
+
+  <!-- Gold outer ring (stroke centered at r=220, width=34 → band from r=203 to r=237) -->
+  <circle cx="256" cy="256" r="220" fill="none" stroke="#F1C40F" stroke-width="34"/>
+
+  <!-- 8 white rectangular inlay notches inside the gold band
+       Band outer edge: 256-237=19, band inner edge: 256-203=53
+       Notch: y=19, height=34, centered at x=256 (x=242, w=28) -->
+  <rect x="242" y="19" width="28" height="34" rx="5" fill="white" transform="rotate(0 256 256)"/>
+  <rect x="242" y="19" width="28" height="34" rx="5" fill="white" transform="rotate(45 256 256)"/>
+  <rect x="242" y="19" width="28" height="34" rx="5" fill="white" transform="rotate(90 256 256)"/>
+  <rect x="242" y="19" width="28" height="34" rx="5" fill="white" transform="rotate(135 256 256)"/>
+  <rect x="242" y="19" width="28" height="34" rx="5" fill="white" transform="rotate(180 256 256)"/>
+  <rect x="242" y="19" width="28" height="34" rx="5" fill="white" transform="rotate(225 256 256)"/>
+  <rect x="242" y="19" width="28" height="34" rx="5" fill="white" transform="rotate(270 256 256)"/>
+  <rect x="242" y="19" width="28" height="34" rx="5" fill="white" transform="rotate(315 256 256)"/>
+
+  <!-- Re-fill interior circle over notch lower halves -->
+  <circle cx="256" cy="256" r="198" fill="#C0392B"/>
+
+  <!-- Inner decorative gold rings -->
+  <circle cx="256" cy="256" r="164" fill="none" stroke="#F1C40F" stroke-width="9"/>
+  <circle cx="256" cy="256" r="108" fill="none" stroke="#F1C40F" stroke-width="5"/>
+
+  <!-- Center "R" for Ruleta -->
+  <text x="256" y="322"
+        text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="195"
+        font-weight="bold"
+        fill="#F1C40F">R</text>
+</svg>

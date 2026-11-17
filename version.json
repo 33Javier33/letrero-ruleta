@@ -1,10 +1,12 @@
 {
-  "version": "181",
+  "version": "182",
   "files": [
     "index.html",
     "index2.html",
     "sw.js",
     "manifest.json",
-    "operador/index.html"
+    "operador/index.html",
+    "operador/sw.js",
+    "operador/manifest.json"
   ]
 }

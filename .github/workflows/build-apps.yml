@@ -41,7 +41,7 @@ jobs:
           foreach ($f in $files) {
             if (Test-Path $f) { Copy-Item $f "$webDir\" }
           }
-          Copy-Item "operador\index.html" "$webDir\operador\"
+          Copy-Item "operador\*" "$webDir\operador\" -Recurse
 
       - name: Build Windows installer
         run: npm run build
@@ -87,7 +87,7 @@ jobs:
                    roulette-pie.jpg roulette-table.jpg; do
             [ -f "$f" ] && cp "$f" "$WEB/"
           done
-          cp operador/index.html "$WEB/operador/"
+          cp -r operador/. "$WEB/operador/"
 
       - name: Build debug APK
         run: |

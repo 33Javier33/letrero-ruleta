@@ -11,7 +11,10 @@ class LocalServer(port: Int, private val context: Context) : NanoHTTPD(port) {
 
     override fun serve(session: IHTTPSession): Response {
         var path = session.uri.trimStart('/')
-        if (path.isEmpty() || path == "/") path = "index.html"
+        if (path.isEmpty() || path.endsWith("/")) path += "index.html"
+        if (path.split('/').contains("..")) {
+            return newFixedLengthResponse(Response.Status.FORBIDDEN, "text/plain", "Forbidden")
+        }
 
         // Priority 1: updated files downloaded from GitHub
         val updatedFile = File(updatedDir, path)

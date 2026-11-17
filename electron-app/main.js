@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, Tray } = require('electron');
+const { app, BrowserWindow, Menu, screen } = require('electron');
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -31,7 +31,9 @@ function startServer(callback) {
 
     // Priority 1: updated files in userData/web/
     srv.use(function(req, res, next) {
-        var relPath = req.path === '/' ? 'index.html' : req.path.replace(/^\//, '');
+        var relPath = decodeURIComponent(req.path).replace(/^\//, '');
+        if (relPath === '' || relPath.endsWith('/')) relPath += 'index.html';
+        if (relPath.split('/').indexOf('..') !== -1) return next();
         var userFile = path.join(userWebDir, relPath);
         try {
             if (fs.existsSync(userFile) && fs.statSync(userFile).isFile()) {
@@ -118,33 +120,60 @@ function finalize(destDir, version) {
     console.log('Actualización descargada. Se aplicará en el próximo inicio.');
 }
 
-// ── Create window ─────────────────────────────────────────────────────────────
+// ── Windows ───────────────────────────────────────────────────────────────────
+var WEB_PREFS = { nodeIntegration: false, contextIsolation: true };
+
+function addFullscreenKeys(win) {
+    win.webContents.on('before-input-event', function(event, input) {
+        if (input.type !== 'keyDown') return;
+        if (input.key === 'F11') win.setFullScreen(!win.isFullScreen());
+        if (input.key === 'Escape' && win.isFullScreen()) win.setFullScreen(false);
+    });
+}
+
+// Pantalla de la mesa: en el segundo monitor/proyector si existe
+function displayBoundsFor(opWin) {
+    var displays = screen.getAllDisplays();
+    var opDisplay = screen.getDisplayMatching(opWin.getBounds());
+    var target = displays.find(function(d) { return d.id !== opDisplay.id; }) || opDisplay;
+    return target.bounds;
+}
+
 function createWindow() {
     mainWindow = new BrowserWindow({
-        fullscreen: true,
-        frame: false,
-        backgroundColor: '#000022',
-        webPreferences: {
-            nodeIntegration: false,
-            contextIsolation: true,
-            webSecurity: false
-        }
+        width: 1200,
+        height: 850,
+        backgroundColor: '#111111',
+        title: 'Letrero Ruleta — Operador',
+        webPreferences: WEB_PREFS
+    });
+    mainWindow.maximize();
+    addFullscreenKeys(mainWindow);
+
+    // Botón "Abrir Pantalla de la Mesa" → ventana aparte a pantalla completa
+    mainWindow.webContents.setWindowOpenHandler(function() {
+        var b = displayBoundsFor(mainWindow);
+        return {
+            action: 'allow',
+            overrideBrowserWindowOptions: {
+                x: b.x, y: b.y, width: b.width, height: b.height,
+                fullscreen: true,
+                frame: false,
+                autoHideMenuBar: true,
+                backgroundColor: '#000022',
+                title: 'Letrero Ruleta — Pantalla Mesa',
+                webPreferences: WEB_PREFS
+            }
+        };
+    });
+    mainWindow.webContents.on('did-create-window', function(win) {
+        win.setMenu(null);
+        addFullscreenKeys(win);
     });
 
-    mainWindow.loadURL('http://127.0.0.1:' + PORT + '/');
-
-    // F11 = toggle fullscreen, ESC = exit fullscreen
-    mainWindow.webContents.on('before-input-event', function(event, input) {
-        if (input.key === 'F11' && input.type === 'keyDown') {
-            mainWindow.setFullScreen(!mainWindow.isFullScreen());
-        }
-        if (input.key === 'Escape' && input.type === 'keyDown' && mainWindow.isFullScreen()) {
-            mainWindow.setFullScreen(false);
-        }
-    });
+    mainWindow.loadURL('http://127.0.0.1:' + PORT + '/operador/');
 
     mainWindow.webContents.once('did-finish-load', function() {
-        // Check for updates 5 seconds after load
         setTimeout(checkForUpdates, 5000);
     });
 

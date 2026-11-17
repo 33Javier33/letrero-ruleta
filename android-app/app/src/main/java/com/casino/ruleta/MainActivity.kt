@@ -2,8 +2,12 @@ package com.casino.ruleta
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.WindowManager
+import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -15,52 +19,69 @@ import java.net.URL
 class MainActivity : Activity() {
 
     private lateinit var webView: WebView
-    private var server: LocalServer? = null
 
     companion object {
-        private const val PORT = 8765
+        const val PORT = 8765
+        const val BASE = "http://127.0.0.1:$PORT"
         private const val VERSION_URL =
             "https://raw.githubusercontent.com/33Javier33/letrero-ruleta/main/version.json"
         private const val BASE_RAW_URL =
             "https://raw.githubusercontent.com/33Javier33/letrero-ruleta/main/"
-    }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        private var server: LocalServer? = null
 
-        // Fullscreen + keep screen on
-        window.addFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN or
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-        )
-
-        // Start local server
-        server = LocalServer(PORT, this).also { it.start() }
-
-        // Setup WebView
-        webView = WebView(this)
-        setContentView(webView)
-
-        webView.settings.apply {
-            javaScriptEnabled = true
-            domStorageEnabled = true
-            allowFileAccess = true
-            cacheMode = WebSettings.LOAD_DEFAULT
-            databaseEnabled = true
-            useWideViewPort = true
-            loadWithOverviewMode = true
-        }
-
-        webView.webViewClient = object : WebViewClient() {
-            override fun onReceivedError(view: WebView, errorCode: Int, desc: String, url: String) {
-                // Ignore connection errors to localhost during startup
+        // Un solo servidor para todo el proceso (operador + pantalla de la mesa)
+        fun ensureServer(ctx: Context) {
+            if (server == null) {
+                server = LocalServer(PORT, ctx.applicationContext).also { it.start() }
             }
         }
 
-        webView.loadUrl("http://127.0.0.1:$PORT/")
+        @SuppressLint("SetJavaScriptEnabled")
+        fun setupWebView(wv: WebView) {
+            wv.settings.apply {
+                javaScriptEnabled = true
+                domStorageEnabled = true
+                databaseEnabled = true
+                cacheMode = WebSettings.LOAD_DEFAULT
+                useWideViewPort = true
+                loadWithOverviewMode = true
+                mediaPlaybackRequiresUserGesture = false
+            }
+        }
+    }
 
-        // Check for updates in background
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        ensureServer(this)
+
+        webView = WebView(this)
+        setContentView(webView)
+        setupWebView(webView)
+
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                val uri = request.url
+                val local = uri.host == "127.0.0.1" || uri.host == "localhost"
+                if (local && !(uri.path ?: "/").startsWith("/operador")) {
+                    // "Abrir Pantalla de la Mesa" → pantalla completa aparte
+                    startActivity(Intent(this@MainActivity, DisplayActivity::class.java)
+                        .putExtra("url", uri.toString()))
+                    return true
+                }
+                if (!local) {
+                    // Links externos (descargas, etc.) → navegador del sistema
+                    startActivity(Intent(Intent.ACTION_VIEW, uri))
+                    return true
+                }
+                return false
+            }
+        }
+
+        webView.loadUrl("$BASE/operador/")
+
         Thread { checkForUpdates() }.start()
     }
 
@@ -110,13 +131,8 @@ class MainActivity : Activity() {
                 if (allOk) versionFile.writeText(remoteVersion.toString())
             }
         } catch (e: Exception) {
-            // Sin internet — continuar con versión actual sin modificar nada
+            // Sin internet — continuar con la versión actual
         }
-    }
-
-    override fun onDestroy() {
-        server?.stop()
-        super.onDestroy()
     }
 
     @Deprecated("Deprecated in Java")
