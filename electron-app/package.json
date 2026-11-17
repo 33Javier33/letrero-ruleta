@@ -33,7 +33,11 @@
         { "target": "portable", "arch": ["x64"] }
       ]
     },
+    "portable": {
+      "artifactName": "LetreroRuleta-Portable.exe"
+    },
     "nsis": {
+      "artifactName": "LetreroRuleta-Setup.exe",
       "oneClick": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
