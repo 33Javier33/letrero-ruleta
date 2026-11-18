@@ -2,6 +2,7 @@
   "name": "letrero-ruleta",
   "version": "1.176.0",
   "description": "Pantalla Ruleta Americana - Casino",
+  "author": "Carlos P. Nauto Interactive",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -29,8 +30,18 @@
     ],
     "win": {
       "target": [
-        { "target": "nsis", "arch": ["x64"] },
-        { "target": "portable", "arch": ["x64"] }
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
       ]
     },
     "portable": {
@@ -44,9 +55,12 @@
       "shortcutName": "Letrero Ruleta"
     },
     "linux": {
-      "target": ["AppImage"],
+      "target": [
+        "AppImage"
+      ],
       "category": "Utility"
     },
-    "publish": null
+    "publish": null,
+    "copyright": "© Carlos P. Nauto Interactive"
   }
 }
